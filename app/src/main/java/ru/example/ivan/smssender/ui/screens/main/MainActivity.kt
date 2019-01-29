@@ -1,31 +1,30 @@
 package ru.example.ivan.smssender.ui.screens.main
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import dagger.android.support.DaggerAppCompatActivity
+import ru.example.ivan.smssender.App
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.ActivityMainBinding
 import ru.example.ivan.smssender.ui.rvadapters.ChainRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.uimodels.Chain
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), ChainRecyclerViewAdapter.OnItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private val chainRecyclerViewAdapter = ChainRecyclerViewAdapter(arrayListOf(), this)
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModel: ChainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.appComponent.inject(activity = this@MainActivity)
+
         super.onCreate(savedInstanceState)
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(ChainViewModel::class.java)
+
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
@@ -37,7 +36,7 @@ class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemC
     }
 
     override fun onItemClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //
     }
 }
 

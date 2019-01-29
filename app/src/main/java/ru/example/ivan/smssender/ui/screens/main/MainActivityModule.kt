@@ -1,22 +1,17 @@
 package ru.example.ivan.smssender.ui.screens.main
 
-import android.arch.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
-import ru.example.ivan.smssender.utility.di.ViewModelKey
+import dagger.Provides
+import ru.example.ivan.smssender.data.ChainRepository
 
 @Module
-internal abstract class MainActivityModule {
+class MainActivityModule {
 
-    @ContributesAndroidInjector
-    internal abstract fun mainActivity(): MainActivity
+    @Provides
+    fun provideChainViewModel(chainRepository: ChainRepository) : ChainViewModel =
+        ChainViewModel(chainRepository)
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(ChainViewModel::class)
-    abstract fun bindMainViewModel(viewModel: ChainViewModel): ViewModel
-
-
+    @Provides
+    fun provideChainRepository() : ChainRepository =
+            ChainRepository()
 }

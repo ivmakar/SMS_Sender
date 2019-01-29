@@ -1,21 +1,18 @@
 package ru.example.ivan.smssender.ui.screens.group
 
-import android.arch.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
-import ru.example.ivan.smssender.utility.di.ViewModelKey
+import dagger.Provides
+import ru.example.ivan.smssender.data.GroupRepository
 
 @Module
-internal abstract class GroupActivityModule {
+class GroupActivityModule {
 
-    @ContributesAndroidInjector
-    internal abstract fun groupActivity(): GroupActivity
+    @Provides
+    fun provideGroupViewModel(groupRepository: GroupRepository) : GroupViewModel =
+        GroupViewModel(groupRepository)
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(GroupViewModel::class)
-    abstract fun bindMainViewModel(viewModel: GroupViewModel): ViewModel
+    @Provides
+    fun provideGroupRepository() : GroupRepository =
+        GroupRepository()
 
 }

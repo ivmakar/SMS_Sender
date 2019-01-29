@@ -6,7 +6,7 @@ import ru.example.ivan.smssender.ui.uimodels.Chain
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ChainRepository @Inject constructor() {
+class ChainRepository {
 
     fun getChains() : Observable<ArrayList<Chain>> {
         var arrayList = ArrayList<Chain>()
