@@ -18,9 +18,9 @@ import javax.inject.Singleton
         MainActivityModule::class,
         GroupActivityModule::class])
 
-interface AppComponent : AndroidInjector<SMSSender> {
+interface AppComponent : AndroidInjector<App> {
 
 
     @Component.Builder
-    abstract class Builder : AndroidInjector.Builder<SMSSender>()
+    abstract class Builder : AndroidInjector.Builder<App>()
 }

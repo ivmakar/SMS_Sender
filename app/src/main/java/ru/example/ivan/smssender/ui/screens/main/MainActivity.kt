@@ -3,14 +3,22 @@ package ru.example.ivan.smssender.ui.screens.main
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import dagger.android.support.DaggerAppCompatActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.ActivityMainBinding
 import ru.example.ivan.smssender.ui.rvadapters.ChainRecyclerViewAdapter
+import ru.example.ivan.smssender.ui.screens.group.GroupActivity
+import ru.example.ivan.smssender.ui.screens.messages.MessagesActivity
 import ru.example.ivan.smssender.ui.uimodels.Chain
+import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemClickListener {
@@ -34,10 +42,21 @@ class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemC
         viewModel.chains.observe(this,
             Observer<ArrayList<Chain>> { it?.let{ chainRecyclerViewAdapter.replaceData(it)} })
 
+        viewModel.navigateToGroups.observe(this, Observer {
+            startActivity(Intent(this, GroupActivity::class.java))
+        })
+
     }
 
     override fun onItemClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(ChainViewModel::class.java)
+//        viewModel.chainOnClick(position)*/
+
+        intent = Intent(this, MessagesActivity::class.java)
+        intent.putExtra("chainName", viewModel.getChainNameByPosition(position))
+        startActivity(intent)
     }
+
 }
 

@@ -1,20 +1,26 @@
 package ru.example.ivan.smssender.ui.screens.main
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
+import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import ru.example.ivan.smssender.data.ChainRepository
 import ru.example.ivan.smssender.ui.uimodels.Chain
+import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
-class ChainViewModel @Inject constructor(var chainRepository: ChainRepository): ViewModel() {
+class ChainViewModel @Inject constructor(private var chainRepository: ChainRepository): ViewModel() {
 
-
+    private var _navigateToGroups = SingleLiveEvent<Any>()
+    val navigateToGroups: LiveData<Any>
+        get() = _navigateToGroups
 
     val isLoading = ObservableBoolean()
 
@@ -22,7 +28,11 @@ class ChainViewModel @Inject constructor(var chainRepository: ChainRepository): 
 
     private var compositeDisposable = CompositeDisposable()
 
-    fun loadChains(){
+    init{
+        loadChains()
+    }
+
+    private fun loadChains(){
         isLoading.set(true)
         compositeDisposable += chainRepository
             .getChains()
@@ -44,6 +54,14 @@ class ChainViewModel @Inject constructor(var chainRepository: ChainRepository): 
             }
 
         })
+    }
+
+    fun chainOnClick() {
+        _navigateToGroups.call()
+    }
+
+    fun getChainNameByPosition(position: Int) : String {
+        return chains.value?.get(position)?.chainName.toString()
     }
 
     override fun onCleared() {

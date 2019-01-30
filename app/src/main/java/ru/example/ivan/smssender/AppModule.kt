@@ -8,7 +8,7 @@ import dagger.Provides
 class AppModule {
 
     @Provides
-    fun providesContext(application: SMSSender) : Context {
+    fun providesContext(application: App) : Context {
         return application.applicationContext
     }
 }

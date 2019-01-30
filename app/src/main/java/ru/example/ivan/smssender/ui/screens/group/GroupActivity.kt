@@ -3,6 +3,7 @@ package ru.example.ivan.smssender.ui.screens.group
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -33,6 +34,10 @@ class GroupActivity : DaggerAppCompatActivity(), GroupRecyclerViewAdapter.OnItem
         binding.groupRv.adapter = groupRecyclerViewAdapter
         viewModel.groups.observe(this,
             Observer<ArrayList<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it)} })
+
+        viewModel.navigateToGroups.observe(this, Observer {
+//            startActivity(Intent(this, GroupActivity::class.java))
+        })
     }
 
     override fun onItemClick(position: Int) {

@@ -1,5 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.group
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
@@ -9,16 +10,25 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import ru.example.ivan.smssender.data.GroupRepository
 import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
 class GroupViewModel @Inject constructor(var groupRepository: GroupRepository) : ViewModel() {
+
+    private var _navigateToGroups = SingleLiveEvent<Any>()
+    val navigateToGroups: LiveData<Any>
+        get() = _navigateToGroups
 
     val isLoading = ObservableBoolean()
 
     var groups = MutableLiveData<ArrayList<Group>>()
 
     private var compositeDisposable = CompositeDisposable()
+
+    init{
+        loadGroups()
+    }
 
     fun loadGroups(){
         isLoading.set(true)
@@ -40,6 +50,10 @@ class GroupViewModel @Inject constructor(var groupRepository: GroupRepository) :
                     isLoading.set(false)
                 }
             })
+    }
+
+    fun chainOnClick() {
+        _navigateToGroups.call()
     }
 
     override fun onCleared() {
