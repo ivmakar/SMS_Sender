@@ -23,6 +23,8 @@
         </activity>
         <activity android:name=".ui.screens.new_group.NewGroupActivity">
         </activity>
+        <activity android:name=".ui.screens.contacts.ContactActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.ui.rvadapters.GroupRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.uimodels.Group
 import ru.example.ivan.smssender.databinding.ActivityGroupBinding
+import ru.example.ivan.smssender.ui.screens.new_group.NewGroupActivity
 import javax.inject.Inject
 
 class GroupActivity : DaggerAppCompatActivity(), GroupRecyclerViewAdapter.OnItemClickListener {
@@ -22,7 +23,9 @@ class GroupActivity : DaggerAppCompatActivity(), GroupRecyclerViewAdapter.OnItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group)
+        //setContentView(R.layout.activity_group)
+
+        //viewModelFactory = ViewModelProvider.Factory()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -35,8 +38,8 @@ class GroupActivity : DaggerAppCompatActivity(), GroupRecyclerViewAdapter.OnItem
         viewModel.groups.observe(this,
             Observer<ArrayList<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it)} })
 
-        viewModel.navigateToGroups.observe(this, Observer {
-//            startActivity(Intent(this, GroupActivity::class.java))
+        viewModel.navigateToNewGroup.observe(this, Observer {
+            startActivity(Intent(this, NewGroupActivity::class.java))
         })
     }
 

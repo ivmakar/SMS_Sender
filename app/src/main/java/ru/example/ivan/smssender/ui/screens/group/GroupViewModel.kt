@@ -14,11 +14,11 @@ import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
-class GroupViewModel @Inject constructor(var groupRepository: GroupRepository) : ViewModel() {
+class GroupViewModel @Inject constructor(private var groupRepository: GroupRepository) : ViewModel() {
 
-    private var _navigateToGroups = SingleLiveEvent<Any>()
-    val navigateToGroups: LiveData<Any>
-        get() = _navigateToGroups
+    private var _navigateToNewGroup = SingleLiveEvent<Any>()
+    val navigateToNewGroup: LiveData<Any>
+        get() = _navigateToNewGroup
 
     val isLoading = ObservableBoolean()
 
@@ -30,7 +30,7 @@ class GroupViewModel @Inject constructor(var groupRepository: GroupRepository) :
         loadGroups()
     }
 
-    fun loadGroups(){
+    private fun loadGroups(){
         isLoading.set(true)
         compositeDisposable += groupRepository
             .getGroups()
@@ -52,8 +52,8 @@ class GroupViewModel @Inject constructor(var groupRepository: GroupRepository) :
             })
     }
 
-    fun chainOnClick() {
-        _navigateToGroups.call()
+    fun groupOnClick() {
+        _navigateToNewGroup.call()
     }
 
     override fun onCleared() {

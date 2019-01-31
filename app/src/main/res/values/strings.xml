@@ -1,3 +1,7 @@
 <resources>
 
+    <string name="add_contacts_button">Добавить контакты</string>
+    <string name="group_name_text_view">Название группы</string>
+    <string name="group_name_edit_text_hint">Введите название группы</string>
+    <string name="contacts_text_view">Контакты</string>
 </resources>

@@ -8,17 +8,12 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
-import io.reactivex.schedulers.Schedulers
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.ActivityMainBinding
 import ru.example.ivan.smssender.ui.rvadapters.ChainRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.screens.group.GroupActivity
 import ru.example.ivan.smssender.ui.screens.messages.MessagesActivity
 import ru.example.ivan.smssender.ui.uimodels.Chain
-import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemClickListener {
