@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.new_group
 
-import android.app.Activity
+
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import dagger.android.support.DaggerAppCompatActivity
 import ru.example.ivan.smssender.R
-import ru.example.ivan.smssender.data.ContactRepository
 import ru.example.ivan.smssender.databinding.ActivityNewGroupBinding
 import ru.example.ivan.smssender.ui.rvadapters.NewGroupRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.screens.contacts.ContactActivity

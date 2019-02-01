@@ -7,6 +7,7 @@ import ru.example.ivan.smssender.ui.screens.contacts.ContactActivityModule
 import ru.example.ivan.smssender.ui.screens.group.GroupActivity
 import ru.example.ivan.smssender.ui.screens.group.GroupActivityModule
 import ru.example.ivan.smssender.ui.screens.main.MainActivityModule
+import ru.example.ivan.smssender.ui.screens.messages.MessagesActivityModule
 import ru.example.ivan.smssender.ui.screens.new_group.NewGroupActivityModule
 import ru.example.ivan.smssender.utility.di.ViewModelBuilder
 import javax.inject.Singleton
@@ -20,7 +21,8 @@ import javax.inject.Singleton
         MainActivityModule::class,
         GroupActivityModule::class,
         NewGroupActivityModule::class,
-        ContactActivityModule::class])
+        ContactActivityModule::class,
+        MessagesActivityModule::class])
 
 interface AppComponent : AndroidInjector<App> {
 

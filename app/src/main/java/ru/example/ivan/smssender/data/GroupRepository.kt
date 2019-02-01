@@ -10,9 +10,9 @@ class GroupRepository @Inject constructor() {
 
     fun getGroups() : Observable<ArrayList<Group>> {
         var arrayList = ArrayList<Group>()
-        arrayList.add(Group("Молодежь", 45))
-        arrayList.add(Group("Группа НГ", 25))
-        arrayList.add(Group("Братья", 30))
+        arrayList.add(Group(1, "Молодежь", 45))
+        arrayList.add(Group(2, "Группа НГ", 25))
+        arrayList.add(Group(3, "Братья", 30))
 
         return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
     }
