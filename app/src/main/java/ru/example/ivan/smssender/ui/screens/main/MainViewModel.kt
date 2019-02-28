@@ -16,7 +16,7 @@ import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import javax.inject.Inject
 
-class ChainViewModel @Inject constructor(private var chainRepository: ChainRepository): ViewModel() {
+class MainViewModel @Inject constructor(private var chainRepository: ChainRepository): ViewModel() {
 
     private var _navigateToGroups = SingleLiveEvent<Any>()
     val navigateToGroups: LiveData<Any>

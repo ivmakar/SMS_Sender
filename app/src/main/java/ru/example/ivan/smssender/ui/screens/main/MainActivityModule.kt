@@ -15,8 +15,8 @@ internal abstract class MainActivityModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ChainViewModel::class)
-    abstract fun bindMainViewModel(viewModel: ChainViewModel): ViewModel
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 
 
 }

@@ -9,7 +9,7 @@
 
         <variable
                 name="viewModel"
-                type="ru.example.ivan.smssender.ui.screens.main.ChainViewModel" />
+                type="ru.example.ivan.smssender.ui.screens.main.MainViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

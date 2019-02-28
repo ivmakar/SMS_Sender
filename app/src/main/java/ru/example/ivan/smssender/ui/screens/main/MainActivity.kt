@@ -28,7 +28,7 @@ class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemC
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(ChainViewModel::class.java)
+            .get(MainViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
@@ -45,7 +45,7 @@ class MainActivity : DaggerAppCompatActivity(), ChainRecyclerViewAdapter.OnItemC
 
     override fun onItemClick(position: Int) {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(ChainViewModel::class.java)
+            .get(MainViewModel::class.java)
 //        viewModel.chainOnClick(position)*/
 
         intent = Intent(this, MessagesActivity::class.java)
