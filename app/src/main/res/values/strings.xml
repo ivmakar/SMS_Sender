@@ -8,4 +8,7 @@
     <string name="random_interval_sending_text_view">Случайный интервал между отправкой сообщений</string>
     <string name="schedule_sending_text_view">Запланировать</string>
     <string name="no_schedule_sending_text_view">Отправить сразу</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

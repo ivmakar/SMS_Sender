@@ -3,6 +3,7 @@ package ru.example.ivan.smssender
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import ru.example.ivan.smssender.ui.screens.chain.ChainViewModule
 import ru.example.ivan.smssender.ui.screens.contacts.ContactActivityModule
 import ru.example.ivan.smssender.ui.screens.group.GroupActivity
 import ru.example.ivan.smssender.ui.screens.group.GroupActivityModule
@@ -22,7 +23,8 @@ import javax.inject.Singleton
         GroupActivityModule::class,
         NewGroupActivityModule::class,
         ContactActivityModule::class,
-        MessagesActivityModule::class])
+        MessagesActivityModule::class,
+        ChainViewModule::class])
 
 interface AppComponent : AndroidInjector<App> {
 
