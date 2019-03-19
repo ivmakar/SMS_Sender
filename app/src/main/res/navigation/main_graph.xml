@@ -4,5 +4,35 @@
             android:id="@+id/main_graph" app:startDestination="@id/chainFragment">
 
     <fragment android:id="@+id/chainFragment" android:name="ru.example.ivan.smssender.ui.screens.chain.ChainFragment"
-              android:label="ChainFragment"/>
+              android:label="ChainFragment">
+        <action android:id="@+id/action_chainFragment_to_groupFragment" app:destination="@id/groupFragment"/>
+        <action android:id="@+id/action_chainFragment_to_messagesFragment" app:destination="@id/messagesFragment"/>
+    </fragment>
+    <fragment android:id="@+id/groupFragment" android:name="ru.example.ivan.smssender.ui.screens.group.GroupFragment"
+              android:label="GroupFragment">
+        <action android:id="@+id/action_groupFragment_to_newGroupFragment" app:destination="@id/newGroupFragment"/>
+        <action android:id="@+id/action_groupFragment_to_messagesFragment" app:destination="@id/messagesFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newGroupFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_group.NewGroupFragment"
+              android:label="NewGroupFragment">
+        <action android:id="@+id/action_newGroupFragment_to_contactFragment" app:destination="@id/contactFragment"/>
+    </fragment>
+    <fragment android:id="@+id/contactFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.contacts.ContactFragment"
+              android:label="ContactFragment"/>
+    <fragment android:id="@+id/messagesFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.messages.MessagesFragment"
+              android:label="MessagesFragment">
+        <action android:id="@+id/action_messagesFragment_to_newMessageFragment"
+                app:destination="@id/newMessageFragment"/><argument android:name="group"/><argument android:name="group"/>
+    </fragment>
+    <fragment android:id="@+id/newMessageFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragment"
+              android:label="NewMessageFragment">
+        <action android:id="@+id/action_newMessageFragment_to_chainFragment"
+                app:destination="@id/chainFragment"
+                app:popUpTo="@+id/chainFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

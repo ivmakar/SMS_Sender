@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class MessageRepository @Inject constructor() {
 
-    fun getMessages() : Observable<ArrayList<Message>> {
+    fun getMessages(groupId: Any): Observable<ArrayList<Message>> {
         var arrayList = ArrayList<Message>()
         arrayList.add(Message(1, "Молодежь! Сегодня будет Месяц Молитвы, не забывайте открытки и по 100 рублей!", "12.12.2019"))
         arrayList.add(Message(2, "Собираемся сегодня на ДМ в 12:00", "12:12"))

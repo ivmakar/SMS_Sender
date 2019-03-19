@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.ui.screens.messages
+package ru.example.ivan.smssender.ui.screens.contacts
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
@@ -8,15 +8,15 @@ import dagger.multibindings.IntoMap
 import ru.example.ivan.smssender.utility.di.ViewModelKey
 
 @Module
-internal abstract class MessagesActivityModule {
+internal abstract class ContactFragmentModule {
 
     @ContributesAndroidInjector
-    internal abstract fun messagesActivity(): MessagesActivity
+    internal abstract fun contactFragment(): ContactFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(MessagesViewModel::class)
-    abstract fun bindMessagesViewModel(viewModel: MessagesViewModel): ViewModel
+    @ViewModelKey(ContactViewModel::class)
+    abstract fun bindContactViewModel(viewModel: ContactViewModel): ViewModel
 
 
 }

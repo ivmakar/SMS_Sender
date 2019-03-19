@@ -16,9 +16,9 @@ import javax.inject.Inject
 
 class MessagesViewModel @Inject constructor(private var messageRepository: MessageRepository): ViewModel() {
 
-    private var _navigateToGroups = SingleLiveEvent<Any>()
-    val navigateToGroups: LiveData<Any>
-        get() = _navigateToGroups
+    private var _navigateToNewMessage = SingleLiveEvent<Any>()
+    val navigateToNewMessage: LiveData<Any>
+        get() = _navigateToNewMessage
 
     val isLoading = ObservableBoolean()
 
@@ -26,14 +26,15 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
 
     private var compositeDisposable = CompositeDisposable()
 
-    init{
+/*    init{
         loadChains()
-    }
+    }*/
 
-    private fun loadChains(){
+    public fun loadChains(groupId: Int){
+
         isLoading.set(true)
         compositeDisposable += messageRepository
-            .getMessages()
+            .getMessages(groupId)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<ArrayList<Message>>() {
@@ -55,7 +56,7 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
     }
 
     fun messageOnClick() {
-        _navigateToGroups.call()
+        _navigateToNewMessage.call()
     }
 
     override fun onCleared() {

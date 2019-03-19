@@ -8,10 +8,10 @@ import dagger.multibindings.IntoMap
 import ru.example.ivan.smssender.utility.di.ViewModelKey
 
 @Module
-internal abstract class GroupActivityModule {
+internal abstract class GroupFragmentModule {
 
     @ContributesAndroidInjector
-    internal abstract fun groupActivity(): GroupActivity
+    internal abstract fun groupFragment(): GroupFragment
 
     @Binds
     @IntoMap

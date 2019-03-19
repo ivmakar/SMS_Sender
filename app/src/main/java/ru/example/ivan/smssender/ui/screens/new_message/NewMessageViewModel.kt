@@ -3,20 +3,18 @@ package ru.example.ivan.smssender.ui.screens.new_message
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.databinding.ObservableBoolean
 import ru.example.ivan.smssender.ui.uimodels.Group
-import ru.example.ivan.smssender.ui.uimodels.Message
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import java.util.*
 import javax.inject.Inject
 
-class NewMessageViewModel : ViewModel() {
+class NewMessageViewModel @Inject constructor() : ViewModel() {
 
-    private var _navigateToGroups = SingleLiveEvent<Any>()
-    val navigateToGroups: LiveData<Any>
-        get() = _navigateToGroups
+    private var _navigateComplete = SingleLiveEvent<Any>()
+    val navigateComplete: LiveData<Any>
+        get() = _navigateComplete
 
-    lateinit var group: Group
+    var group = Group(1, "Братья", 30)
 
     var isRandomInterval = false
     var isScheduleSending = false
@@ -43,8 +41,8 @@ class NewMessageViewModel : ViewModel() {
     }
 
 
-    fun messageOnClick() {
-        _navigateToGroups.call()
+    fun sendOnClick() {
+        _navigateComplete.call()
     }
 
 

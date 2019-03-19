@@ -1,53 +1,71 @@
 package ru.example.ivan.smssender.ui.screens.contacts
 
+
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
-import ru.example.ivan.smssender.databinding.ActivityContactBinding
+import ru.example.ivan.smssender.databinding.FragmentContactBinding
 import ru.example.ivan.smssender.ui.rvadapters.ContactRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.uimodels.Contact
+
 import javax.inject.Inject
 
-class ContactActivity : DaggerAppCompatActivity(), ContactRecyclerViewAdapter.OnItemClickListener {
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-    private lateinit var binding: ActivityContactBinding
+/**
+ * A simple [Fragment] subclass.
+ *
+ */
+class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClickListener {
+
+    private lateinit var binding: FragmentContactBinding
     private val contactRecyclerViewAdapter = ContactRecyclerViewAdapter(arrayListOf(), this)
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact, container, false)
+        var view = binding.root
 
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_contact)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(ContactViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        binding.contactRv.layoutManager = LinearLayoutManager(this)
+        binding.contactRv.layoutManager = LinearLayoutManager(activity)
         binding.contactRv.adapter = contactRecyclerViewAdapter
         viewModel.contacts.observe(this,
             Observer<ArrayList<Contact>> { it?.let{ contactRecyclerViewAdapter.replaceData(it)} })
 
         viewModel.showToast.observe(this, Observer {
-            Toast.makeText(this, "Выберите хотябы один контакт", Toast.LENGTH_SHORT)
+            Toast.makeText(activity, "Выберите хотябы один контакт", Toast.LENGTH_SHORT)
         })
 
         viewModel.navigateComplete.observe(this, Observer {
-            intent = Intent()
+/*            var intent = Intent()
             intent.putExtra("selectedContacts", viewModel.selectedContacts)
-            setResult(RESULT_OK, intent)
-            finish()
+            setResult(DaggerAppCompatActivity.RESULT_OK, intent)
+            finish()*/
+            TODO("return result to previous fragment")
         })
 
+        return view
     }
 
     override fun onItemClick(position: Int) {
@@ -56,4 +74,5 @@ class ContactActivity : DaggerAppCompatActivity(), ContactRecyclerViewAdapter.On
 
         viewModel.selectItemByPosition(position)
     }
+
 }

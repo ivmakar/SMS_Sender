@@ -12,12 +12,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentChainBinding
 import ru.example.ivan.smssender.ui.rvadapters.ChainRecyclerViewAdapter
-import ru.example.ivan.smssender.ui.screens.group.GroupActivity
-import ru.example.ivan.smssender.ui.screens.messages.MessagesActivity
 import ru.example.ivan.smssender.ui.uimodels.Chain
 import javax.inject.Inject
 
@@ -58,7 +57,7 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
             Observer<ArrayList<Chain>> { it?.let{ chainRecyclerViewAdapter.replaceData(it)} })
 
         viewModel.navigateToGroups.observe(this, Observer {
-            startActivity(Intent(activity, GroupActivity::class.java))
+            findNavController(this).navigate(R.id.action_chainFragment_to_groupFragment)
         })
 
         return view
@@ -67,11 +66,11 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
     override fun onItemClick(position: Int) {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(ChainViewModel::class.java)
-//        viewModel.chainOnClick(position)*/
 
-        var intent = Intent(activity, MessagesActivity::class.java)
-        intent.putExtra("chainName", viewModel.getChainNameByPosition(position))
-        startActivity(intent)
+        var bundle = Bundle()
+        bundle.putString("chainName", viewModel.getChainByPosition(position).chainName)
+        bundle.putInt("groupId", viewModel.getChainByPosition(position).groupId!!)
+        findNavController(this).navigate(R.id.action_chainFragment_to_messagesFragment, bundle)
     }
 
 }

@@ -58,8 +58,8 @@ class ChainViewModel @Inject constructor(private var chainRepository: ChainRepos
         _navigateToGroups.call()
     }
 
-    fun getChainNameByPosition(position: Int) : String {
-        return chains.value?.get(position)?.chainName.toString()
+    fun getChainByPosition(position: Int) : Chain {
+        return chains.value?.get(position)!!
     }
 
     override fun onCleared() {

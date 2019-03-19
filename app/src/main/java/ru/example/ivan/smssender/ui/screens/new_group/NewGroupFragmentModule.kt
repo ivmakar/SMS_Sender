@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.ui.screens.contacts
+package ru.example.ivan.smssender.ui.screens.new_group
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
@@ -8,15 +8,15 @@ import dagger.multibindings.IntoMap
 import ru.example.ivan.smssender.utility.di.ViewModelKey
 
 @Module
-internal abstract class ContactActivityModule {
+internal abstract class NewGroupFragmentModule {
 
     @ContributesAndroidInjector
-    internal abstract fun contactActivity(): ContactActivity
+    internal abstract fun newGroupFragment(): NewGroupFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(ContactViewModel::class)
-    abstract fun bindContactViewModel(viewModel: ContactViewModel): ViewModel
+    @ViewModelKey(NewGroupViewModel::class)
+    abstract fun bindNewGroupViewModel(viewModel: NewGroupViewModel): ViewModel
 
 
 }

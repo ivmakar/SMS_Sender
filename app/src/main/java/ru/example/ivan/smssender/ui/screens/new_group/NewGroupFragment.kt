@@ -7,33 +7,50 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import dagger.android.support.DaggerAppCompatActivity
+import ru.example.ivan.smssender.databinding.FragmentNewGroupBinding
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment
+import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
-import ru.example.ivan.smssender.databinding.ActivityNewGroupBinding
 import ru.example.ivan.smssender.ui.rvadapters.NewGroupRecyclerViewAdapter
-import ru.example.ivan.smssender.ui.screens.contacts.ContactActivity
 import ru.example.ivan.smssender.ui.uimodels.Contact
+
 import javax.inject.Inject
 
-class NewGroupActivity : DaggerAppCompatActivity(), NewGroupRecyclerViewAdapter.OnItemClickListener {
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-    private lateinit var binding: ActivityNewGroupBinding
+/**
+ * A simple [Fragment] subclass.
+ *
+ */
+class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemClickListener {
+
+    private lateinit var binding: FragmentNewGroupBinding
     private val newGroupRecyclerViewAdapter = NewGroupRecyclerViewAdapter(arrayListOf(), this)
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val REQUEST_CODE: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_group)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_group, container, false)
+        var view = binding.root
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_group)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewGroupViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        binding.groupRv.layoutManager = LinearLayoutManager(this)
+        binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = newGroupRecyclerViewAdapter
 /*        viewModel.contacts.observe(this,
             Observer<ArrayList<Contact>> { it?.let { newGroupRecyclerViewAdapter.replaceData(it) } })*/
@@ -55,22 +72,24 @@ class NewGroupActivity : DaggerAppCompatActivity(), NewGroupRecyclerViewAdapter.
             })
 
         viewModel.navigateComplete.observe(this, Observer {
-            //TODO: close Activity
+            NavHostFragment.findNavController(this).popBackStack()
         })
 
         viewModel.navigateAddContacts.observe(this, Observer {
 
             //TODO: start ContactsActivity for getting result
-            intent = Intent(this, ContactActivity::class.java)
+//            var intent = Intent(activity, ContactActivity::class.java)
 
-            startActivityForResult(intent, REQUEST_CODE)
+//            startActivityForResult(intent, REQUEST_CODE)
         })
+
+        return view
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE){
-            if (resultCode == RESULT_OK){
+            if (resultCode == DaggerAppCompatActivity.RESULT_OK){
                 val viewModel = ViewModelProviders.of(this, viewModelFactory)
                     .get(NewGroupViewModel::class.java)
 
@@ -78,7 +97,7 @@ class NewGroupActivity : DaggerAppCompatActivity(), NewGroupRecyclerViewAdapter.
                 viewModel.addContacts(selectedContacts)
             }
         }
-    }
+    }*/
 
     override fun onItemClick(position: Int) {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -86,4 +105,5 @@ class NewGroupActivity : DaggerAppCompatActivity(), NewGroupRecyclerViewAdapter.
 
         viewModel.deleteItemByPosition(position)
     }
+
 }

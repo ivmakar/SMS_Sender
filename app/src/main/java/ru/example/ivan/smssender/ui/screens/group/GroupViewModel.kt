@@ -56,6 +56,8 @@ class GroupViewModel @Inject constructor(private var groupRepository: GroupRepos
         _navigateToNewGroup.call()
     }
 
+    fun getGroupByPosition (position: Int) = groups.value?.get(position)
+
     override fun onCleared() {
         super.onCleared()
         if (!compositeDisposable.isDisposed){
