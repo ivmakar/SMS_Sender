@@ -25,7 +25,7 @@ import javax.inject.Inject
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
+private const val ARG_HAS_CONTACTS = "arg_has_contacts"
 /**
  * A simple [Fragment] subclass.
  *
@@ -56,7 +56,9 @@ class GroupFragment : DaggerFragment(), GroupRecyclerViewAdapter.OnItemClickList
             Observer<ArrayList<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it)} })
 
         viewModel.navigateToNewGroup.observe(this, Observer {
-            NavHostFragment.findNavController(this).navigate(R.id.action_groupFragment_to_newGroupFragment)
+            var args = Bundle()
+            args.putBoolean(ARG_HAS_CONTACTS, false)
+            NavHostFragment.findNavController(this).navigate(R.id.action_groupFragment_to_newGroupFragment, args)
         })
 
         return view

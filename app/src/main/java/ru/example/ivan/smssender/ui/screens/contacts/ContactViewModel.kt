@@ -3,6 +3,7 @@ package ru.example.ivan.smssender.ui.screens.contacts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.databinding.Observable
 import android.databinding.ObservableBoolean
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,9 +23,6 @@ class ContactViewModel @Inject constructor(private var contactRepository: Contac
     val navigateComplete: LiveData<Any>
         get() = _navigateComplete
 
-    private var _showToast = SingleLiveEvent<Any>()
-    val showToast: LiveData<Any>
-        get() = _showToast
 
     val isLoading = ObservableBoolean()
 
@@ -56,20 +54,20 @@ class ContactViewModel @Inject constructor(private var contactRepository: Contac
 
                 override fun onComplete() {
                     isLoading.set(false)
+                    for (a in selectedContacts) {
+                        contacts.value!!.find { it.id == a.id }!!.isSelected = true
+                    }
+                    contacts.value = contacts.value
                 }
 
             })
     }
 
     fun contactOnClick() {
-        for (i in contacts.value!!) {
+/*        for (i in contacts.value!!) {
             if (i.isSelected)
                 selectedContacts.add(i)
-        }
-        if (selectedContacts.isEmpty()) {
-            _showToast.call()
-            return
-        }
+        }*/
         _navigateComplete.call()
     }
 
@@ -77,7 +75,26 @@ class ContactViewModel @Inject constructor(private var contactRepository: Contac
 
         contacts.value?.get(position)?.isSelected = !contacts.value?.get(position)?.isSelected!!
         contacts.value = contacts.value
+        if (contacts.value?.get(position)?.isSelected!!){
+            selectedContacts.add(contacts.value?.get(position)!!)
+        } else {
+            selectedContacts.remove(selectedContacts.find { val b = contacts.value!![position]
+                it.id == b.id
+            })
+        }
 
+    }
+
+    fun initSelectedContacts(selectedContacts: ArrayList<Contact>?){
+        if (selectedContacts != null) {
+ /*           while (isLoading.get()) {}
+            for (a in selectedContacts) {
+                contacts.value!!.find { it.id == a.id }!!.isSelected = true
+            }
+
+            contacts.value = contacts.value*/
+            this.selectedContacts = selectedContacts
+        }
     }
 
     override fun onCleared() {

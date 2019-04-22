@@ -24,7 +24,7 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
     private var _navigateAddContacts = SingleLiveEvent<Any>()
     val navigateAddContacts: LiveData<Any>
         get() = _navigateAddContacts
-
+/*
     private var _notifyAddContact = SingleLiveEvent<Any>()
     val notifyAddContact: LiveData<Any>
         get() = _notifyAddContact
@@ -35,14 +35,14 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
 
     var notifyPositionStart: Int = 0
     var notifyPositionEnd: Int = 0
-    var multipleChanging = false
+    var multipleChanging = false*/
 
     val isLoading = ObservableBoolean()
 
 //    private var groupName = String()
 
-//    var contacts = MutableLiveData<ArrayList<Contact>>()
-    var contacts = ArrayList<Contact>()
+    var contacts = MutableLiveData<ArrayList<Contact>>()
+//    var contacts = ArrayList<Contact>()
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -76,7 +76,7 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
     }*/
 
     fun addContacts(selectedContacts: ArrayList<Contact>) {
-        var addContacts = ArrayList<Contact>()
+/*        var addContacts = ArrayList<Contact>()
         for (i in selectedContacts) {
             i.isSelected = false
             if (!isArrayContainElem(contacts, i))
@@ -93,7 +93,9 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
         }
         contacts.addAll(addContacts)
         notifyPositionStart = contacts.size
-        _notifyAddContact.call()
+        _notifyAddContact.call()*/
+
+        this.contacts.value = selectedContacts
 
     }
 
@@ -112,9 +114,9 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
     }*/
 
     fun deleteItemByPosition(position: Int){
-        contacts.removeAt(position)
-        notifyPositionStart = position
-        _notifyRemoveContact.call()
+        contacts.value?.removeAt(position)
+//        notifyPositionStart = position
+//        _notifyRemoveContact.call()
     }
 
     override fun onCleared() {

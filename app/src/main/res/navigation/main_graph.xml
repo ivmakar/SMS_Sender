@@ -20,7 +20,8 @@
     </fragment>
     <fragment android:id="@+id/contactFragment"
               android:name="ru.example.ivan.smssender.ui.screens.contacts.ContactFragment"
-              android:label="ContactFragment"/>
+              android:label="ContactFragment">)
+    </fragment>
     <fragment android:id="@+id/messagesFragment"
               android:name="ru.example.ivan.smssender.ui.screens.messages.MessagesFragment"
               android:label="MessagesFragment">
