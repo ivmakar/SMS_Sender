@@ -19,6 +19,6 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(): ViewModel() {
 
-    var selectedContacts = MutableLiveData<ArrayList<Contact>>()
+
 
 }

@@ -9,13 +9,13 @@
 
         <variable
                 name="viewModel"
-                type="ru.example.ivan.smssender.ui.screens.contacts.ContactViewModel" />
+                type="ru.example.ivan.smssender.ui.screens.new_group.NewGroupViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="ru.example.ivan.smssender.ui.screens.contacts.ContactFragment">
+            tools:context="ru.example.ivan.smssender.ui.screens.new_group.ContactFragment">
 
         <ProgressBar
                 android:id="@+id/contact_loading"
@@ -51,7 +51,6 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:src="@android:drawable/ic_delete"
                 android:layout_marginEnd="8dp"
-                android:onClick="@{() -> viewModel.contactOnClick()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>

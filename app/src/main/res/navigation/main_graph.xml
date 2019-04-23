@@ -19,7 +19,7 @@
         <action android:id="@+id/action_newGroupFragment_to_contactFragment" app:destination="@id/contactFragment"/>
     </fragment>
     <fragment android:id="@+id/contactFragment"
-              android:name="ru.example.ivan.smssender.ui.screens.contacts.ContactFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_group.ContactFragment"
               android:label="ContactFragment">)
     </fragment>
     <fragment android:id="@+id/messagesFragment"

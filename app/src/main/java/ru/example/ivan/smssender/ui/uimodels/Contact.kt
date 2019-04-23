@@ -6,9 +6,9 @@ import android.os.Parcelable
 import androidx.versionedparcelable.VersionedParcelize
 import java.io.Serializable
 
-class Contact(var id: Int?, var name: String?, var number: String?, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
+class Contact(var id: Int = -1, var name: String?, var number: String?, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readValue(Int::class.java.classLoader) as Int,
         parcel.readString(),
         parcel.readString(),
         parcel.readByte() != 0.toByte()
@@ -34,5 +34,13 @@ class Contact(var id: Int?, var name: String?, var number: String?, var isSelect
         override fun newArray(size: Int): Array<Contact?> {
             return arrayOfNulls(size)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return this.hashCode() == other?.hashCode() ?: false
+    }
+
+    override fun hashCode(): Int {
+        return id
     }
 }

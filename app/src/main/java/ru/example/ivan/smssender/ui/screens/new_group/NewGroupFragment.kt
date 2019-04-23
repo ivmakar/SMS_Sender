@@ -53,69 +53,28 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-/*        if (arguments?.getBoolean(ARG_HAS_CONTACTS)!!) {
-            var selectedContacts: ArrayList<Contact> =
-                arguments?.getSerializable(ARG_RECEIVE_CONTACTS) as ArrayList<Contact>
-            viewModel.addContacts(selectedContacts)
-        }*/
-        activity?.let {
-            val activityViewModel = ViewModelProviders.of(it).get(MainViewModel::class.java)
-            activityViewModel.selectedContacts.observe(this,
-                Observer<ArrayList<Contact>> { it?.let { viewModel.addContacts(it) } })
-        }
-
 
         binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = newGroupRecyclerViewAdapter
         viewModel.contacts.observe(this,
-            Observer<ArrayList<Contact>> { it?.let { newGroupRecyclerViewAdapter.replaceData(it) } })
+            Observer<ArrayList<Contact>> { it?.let {
+                newGroupRecyclerViewAdapter.replaceData(it)
+            } })
 
-/*        viewModel.notifyAddContact.observe(this,
-            Observer {
-                newGroupRecyclerViewAdapter.replaceData(viewModel.contacts)
-                if (viewModel.multipleChanging)
-                    newGroupRecyclerViewAdapter.notifyItemRangeInserted(viewModel.notifyPositionStart, viewModel.notifyPositionEnd)
-                else
-                    newGroupRecyclerViewAdapter.notifyItemInserted(viewModel.notifyPositionStart)
-//                newGroupRecyclerViewAdapter.notifyDataSetChanged()
-            })
 
-        viewModel.notifyRemoveContact.observe(this,
-            Observer {
-                newGroupRecyclerViewAdapter.replaceData(viewModel.contacts)
-                newGroupRecyclerViewAdapter.notifyItemRemoved(viewModel.notifyPositionStart)
-            })*/
 
         viewModel.navigateComplete.observe(this, Observer {
-            activity?.let {
-                val activityViewModel = ViewModelProviders.of(it).get(MainViewModel::class.java)
-                activityViewModel.selectedContacts.value?.clear()
-            }
+
             //TODO("save new Group")
             NavHostFragment.findNavController(this).popBackStack()
         })
 
         viewModel.navigateAddContacts.observe(this, Observer {
-/*            var args = Bundle()
-            args.putSerializable(ARG_SEND_CONTACTS, viewModel.contacts.value)*/
             NavHostFragment.findNavController(this).navigate(R.id.action_newGroupFragment_to_contactFragment)
         })
 
         return view
     }
-
-/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE){
-            if (resultCode == DaggerAppCompatActivity.RESULT_OK){
-                val viewModel = ViewModelProviders.of(this, viewModelFactory)
-                    .get(NewGroupViewModel::class.java)
-
-                var selectedContacts = data!!.extras.getSerializable("selectedContacts") as ArrayList<Contact>
-                viewModel.addContacts(selectedContacts)
-            }
-        }
-    }*/
 
     override fun onItemClick(position: Int) {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)

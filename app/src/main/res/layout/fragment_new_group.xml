@@ -94,7 +94,7 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:src="@android:drawable/ic_input_add"
                 android:layout_marginEnd="8dp"
-                android:onClick="@{() -> viewModel.newGroupCompleteOnClick()}"
+                android:onClick="@{() -> viewModel.newGroupFabCompleteOnClick()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>

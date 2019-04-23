@@ -14,8 +14,10 @@ import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import java.text.FieldPosition
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository) : ViewModel() {
+@Singleton
+class NewGroupViewModel @Inject constructor(private var contactRepository: ContactRepository) : ViewModel() {
 
     private var _navigateComplete = SingleLiveEvent<Any>()
     val navigateComplete: LiveData<Any>
@@ -24,99 +26,70 @@ class NewGroupViewModel @Inject constructor(contactRepository: ContactRepository
     private var _navigateAddContacts = SingleLiveEvent<Any>()
     val navigateAddContacts: LiveData<Any>
         get() = _navigateAddContacts
-/*
-    private var _notifyAddContact = SingleLiveEvent<Any>()
-    val notifyAddContact: LiveData<Any>
-        get() = _notifyAddContact
-
-    private var _notifyRemoveContact = SingleLiveEvent<Any>()
-    val notifyRemoveContact: LiveData<Any>
-        get() = _notifyRemoveContact
-
-    var notifyPositionStart: Int = 0
-    var notifyPositionEnd: Int = 0
-    var multipleChanging = false*/
 
     val isLoading = ObservableBoolean()
 
-//    private var groupName = String()
-
     var contacts = MutableLiveData<ArrayList<Contact>>()
-//    var contacts = ArrayList<Contact>()
 
     private var compositeDisposable = CompositeDisposable()
 
-/*    init{
-        contacts.value = ArrayList()
-    }*/
 
 
 
-    fun newGroupCompleteOnClick() {
+    init{
+        loadContacts()
+    }
+
+    private fun loadContacts(){
+        isLoading.set(true)
+        compositeDisposable += contactRepository
+            .getContacts()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<ArrayList<Contact>>() {
+
+
+                override fun onError(e: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onNext(t: ArrayList<Contact>) {
+                    contacts.value = t
+                }
+
+                override fun onComplete() {
+                    isLoading.set(false)
+                }
+
+            })
+    }
+
+
+    fun newGroupFabCompleteOnClick() {
         _navigateComplete.call()
         //TODO: creating new group
     }
+
 
     fun newGroupAddContactsOnClick() {
         _navigateAddContacts.call()
     }
 
-/*    fun updateGroupNameField(newGroupName: String){
-        groupName = newGroupName
-    }*/
-
-/*    fun addContacts(selectedContacts: ArrayList<Contact>) {
-
-        for (i in selectedContacts) {
-            i.isSelected = false
-            if (!isArrayContainElem(contacts.value!!, i))
-                contacts.value?.add(i)
-        }
+    fun selectItemByPosition(position: Int){
+        contacts.value!![position].isSelected = !contacts.value?.get(position)?.isSelected!!
         contacts.value = contacts.value
-    }*/
-
-    fun addContacts(selectedContacts: ArrayList<Contact>) {
-/*        var addContacts = ArrayList<Contact>()
-        for (i in selectedContacts) {
-            i.isSelected = false
-            if (!isArrayContainElem(contacts, i))
-                addContacts.add(i)
-        }
-
-        when {
-            addContacts.isEmpty() -> return
-            addContacts.size == 1 -> multipleChanging = false
-            addContacts.size > 1 -> {
-                multipleChanging = true
-                notifyPositionEnd = contacts.size + addContacts.size - 1
-            }
-        }
-        contacts.addAll(addContacts)
-        notifyPositionStart = contacts.size
-        _notifyAddContact.call()*/
-
-        this.contacts.value = selectedContacts
-
     }
-
-    private fun isArrayContainElem(array: ArrayList<Contact>, contact: Contact) : Boolean {
-        var result = false
-        for (i in array) {
-            if (i.id == contact.id)
-                result = true
-        }
-        return result
-    }
-
-/*    fun deleteItemByPosition(position: Int){
-        contacts.value?.removeAt(position)
-        contacts.value = contacts.value
-    }*/
 
     fun deleteItemByPosition(position: Int){
-        contacts.value?.removeAt(position)
-//        notifyPositionStart = position
-//        _notifyRemoveContact.call()
+        var pos = 0
+        var i = 0
+        while (pos != position && i < contacts.value!!.size){
+            if (contacts.value!![i].isSelected)
+                pos++
+            i++
+        }
+        contacts.value!![i].isSelected = !contacts.value!![i].isSelected
+        contacts.value = contacts.value
     }
 
     override fun onCleared() {
