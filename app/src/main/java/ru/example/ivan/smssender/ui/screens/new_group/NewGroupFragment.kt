@@ -37,7 +37,7 @@ private const val ARG_RECEIVE_CONTACTS = "arg_receive_contacts"
 class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentNewGroupBinding
-    private val newGroupRecyclerViewAdapter = NewGroupRecyclerViewAdapter(arrayListOf(), this)
+    private val newGroupRecyclerViewAdapter = NewGroupRecyclerViewAdapter(arrayListOf(), sortedSetOf(), this)
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -56,9 +56,9 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
 
         binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = newGroupRecyclerViewAdapter
-        viewModel.contacts.observe(this,
-            Observer<ArrayList<Contact>> { it?.let {
-                newGroupRecyclerViewAdapter.replaceData(it)
+        viewModel.selectedContacts.observe(this,
+            Observer<Set<Int>> { it?.let {
+                newGroupRecyclerViewAdapter.replaceData(viewModel.contacts.value!!, it)
             } })
 
 
@@ -80,7 +80,7 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewGroupViewModel::class.java)
 
-        viewModel.deleteItemByPosition(position)
+        viewModel.deleteItemByPosition(  position)
     }
 
 }

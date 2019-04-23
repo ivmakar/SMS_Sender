@@ -12,9 +12,10 @@ import ru.example.ivan.smssender.data.ContactRepository
 import ru.example.ivan.smssender.ui.uimodels.Contact
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
-import java.text.FieldPosition
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @Singleton
 class NewGroupViewModel @Inject constructor(private var contactRepository: ContactRepository) : ViewModel() {
@@ -30,6 +31,7 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
     val isLoading = ObservableBoolean()
 
     var contacts = MutableLiveData<ArrayList<Contact>>()
+    var selectedContacts = MutableLiveData<Set<Int>>()
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -76,20 +78,33 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
     }
 
     fun selectItemByPosition(position: Int){
-        contacts.value!![position].isSelected = !contacts.value?.get(position)?.isSelected!!
-        contacts.value = contacts.value
+        contacts.value!![position].isSelected = !contacts.value!![position].isSelected
+        contacts.postValue(contacts.value)
+        if (contacts.value!![position].isSelected){
+            if (selectedContacts.value == null)
+                selectedContacts.value = sortedSetOf()
+
+            selectedContacts.value = selectedContacts.value!!.plus(position)
+        } else {
+
+            selectedContacts.value = selectedContacts.value!!.minus(position)
+        }
+
     }
 
     fun deleteItemByPosition(position: Int){
-        var pos = 0
-        var i = 0
-        while (pos != position && i < contacts.value!!.size){
-            if (contacts.value!![i].isSelected)
-                pos++
-            i++
+        contacts.value!![selectedContacts.value!!.elementAt(position)].isSelected = !contacts.value!![selectedContacts.value!!.elementAt(position)].isSelected
+        contacts.postValue(contacts.value)
+        if (contacts.value!![selectedContacts.value!!.elementAt(position)].isSelected){
+            if (selectedContacts.value == null)
+                selectedContacts.value = sortedSetOf()
+
+            selectedContacts.value = selectedContacts.value!!.plus(selectedContacts.value!!.elementAt(position))
+        } else {
+
+            selectedContacts.value = selectedContacts.value!!.minus(selectedContacts.value!!.elementAt(position))
         }
-        contacts.value!![i].isSelected = !contacts.value!![i].isSelected
-        contacts.value = contacts.value
+
     }
 
     override fun onCleared() {

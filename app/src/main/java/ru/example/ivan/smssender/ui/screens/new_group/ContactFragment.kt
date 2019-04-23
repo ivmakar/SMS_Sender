@@ -49,7 +49,9 @@ class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClick
         binding.contactRv.layoutManager = LinearLayoutManager(activity)
         binding.contactRv.adapter = contactRecyclerViewAdapter
         viewModel.contacts.observe(this,
-            Observer<ArrayList<Contact>> { it?.let{ contactRecyclerViewAdapter.replaceData(it)} })
+            Observer<ArrayList<Contact>> { it?.let{
+                contactRecyclerViewAdapter.replaceData(it)
+            } })
 
         var fab = view.findViewById<FloatingActionButton>(R.id.fab_contact)
         fab.setOnClickListener {

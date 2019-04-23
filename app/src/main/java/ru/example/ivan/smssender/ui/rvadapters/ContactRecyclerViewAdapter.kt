@@ -18,8 +18,6 @@ class ContactRecyclerViewAdapter(private var items: ArrayList<Contact>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position], listener)
-
-//        holder.itemView.isActivated = items[position].isSelected
     }
 
     override fun getItemCount(): Int = items.size

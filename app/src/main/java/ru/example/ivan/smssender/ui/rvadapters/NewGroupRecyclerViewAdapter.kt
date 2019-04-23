@@ -26,13 +26,18 @@ class NewGroupRecyclerViewAdapter(private var items: ArrayList<Contact>,
         fun onItemClick(position: Int)
     }
 
-    fun replaceData(newItems: ArrayList<Contact>) {
-
+    fun replaceData(items: ArrayList<Contact>, newItems: Set<Int>) {
+        this.items = items
+        if (itemsInd.isEmpty()){
+            itemsInd = newItems
+            return
+        }
         var i = 0
-        while(i < items.size){
-//            items[i] = newItems.find { it == items[i] }!!
-            if (!items[i].isSelected){
-                items.removeAt(i)
+        var cur = 0
+        while (i < itemsInd.size){
+            cur = itemsInd.elementAt(i)
+            if (!newItems.contains(cur)){
+                itemsInd = itemsInd.minus(cur)
                 notifyItemRemoved(i)
                 i--
             }
@@ -40,38 +45,11 @@ class NewGroupRecyclerViewAdapter(private var items: ArrayList<Contact>,
         }
 
         for (i in newItems){
-            if (i.isSelected){
-                if (items.find { it == i } == null){
-                    items.add(i)
-                    notifyItemInserted(items.size - 1)
-                }
+            if (!itemsInd.contains(i)){
+                itemsInd = itemsInd.plus(i)
+                notifyItemInserted(itemsInd.size - 1)
             }
         }
-
-//        notifyDataSetChanged()
-    }
-
-    fun removeData(newItems: ArrayList<Contact>){
-        var i = 0
-        while(i < items.size){
-//            items[i] = newItems.find { it == items[i] }!!
-            if (!items[i].isSelected){
-                items.removeAt(i)
-                notifyItemRemoved(i)
-                i--
-            }
-            i++
-        }
-    }
-
-    fun addData(newItems: ArrayList<Contact>){
-        items.clear()
-        for (i in newItems){
-            if (i.isSelected){
-                items.add(i)
-            }
-        }
-        notifyDataSetChanged()
     }
 
     class ViewHolder(private var binding: RvNgItemContactBinding) :
