@@ -5,10 +5,14 @@
     <string name="group_name_edit_text_hint">Введите название группы</string>
     <string name="contacts_text_view">Контакты</string>
     <string name="new_message_group_name_text_view">Группа:</string>
-    <string name="random_interval_sending_text_view">Случайный интервал между отправкой сообщений</string>
+    <string name="random_interval_sending_text_view1">Случайный интервал</string>
+    <string name="random_interval_sending_text_view2">Отправка сообщеий будет осуществляться через случайный интервал времени</string>
     <string name="schedule_sending_text_view">Запланировать</string>
     <string name="no_schedule_sending_text_view">Отправить сразу</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="schedule_sending_text_view1">Запланировать отправку</string>
+    <string name="schedule_sending_text_view2">Отложить отправку сообщения на указанное время</string>
+    <string name="new_message_edit_text_hint">Введите текст сообщения</string>
 </resources>
