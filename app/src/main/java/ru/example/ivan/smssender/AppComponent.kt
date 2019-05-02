@@ -9,6 +9,7 @@ import ru.example.ivan.smssender.ui.screens.main.MainActivityModule
 import ru.example.ivan.smssender.ui.screens.messages.MessagesFragmentModule
 import ru.example.ivan.smssender.ui.screens.new_group.NewGroupFragmentModule
 import ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragmentModule
+import ru.example.ivan.smssender.ui.screens.template.TemplateFragmentModule
 import ru.example.ivan.smssender.utility.di.ViewModelBuilder
 import javax.inject.Singleton
 
@@ -23,7 +24,8 @@ import javax.inject.Singleton
         NewGroupFragmentModule::class,
         MessagesFragmentModule::class,
         ChainViewModule::class,
-        NewMessageFragmentModule::class])
+        NewMessageFragmentModule::class,
+        TemplateFragmentModule::class])
 
 interface AppComponent : AndroidInjector<App> {
 
