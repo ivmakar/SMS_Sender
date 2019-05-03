@@ -17,4 +17,7 @@
     <string name="schedule_sending_text_view1">Запланировать отправку</string>
     <string name="schedule_sending_text_view2">Отложить отправку сообщения на указанное время</string>
     <string name="new_message_edit_text_hint">Введите текст сообщения</string>
+    <string name="new_template_name_hint">Введите название шаблона</string>
+    <string name="new_template_text_hint">Введите текст шаблона</string>
+    <string name="select_template_button_text">Выбрать из шаблонов</string>
 </resources>

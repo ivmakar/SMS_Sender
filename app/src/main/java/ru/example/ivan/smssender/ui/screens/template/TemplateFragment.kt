@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentTemplateBinding
 import ru.example.ivan.smssender.ui.rvadapters.TemplateRecyclerViewAdapter
+import ru.example.ivan.smssender.ui.screens.new_template.NewTemplateViewModel
 import ru.example.ivan.smssender.ui.uimodels.Template
 import javax.inject.Inject
 
@@ -48,10 +50,16 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
         viewModel.templates.observe(this,
             Observer<ArrayList<Template>> { it?.let { templateRecyclerViewAdapter.replaceData(it) } })
 
+        var fab = view.findViewById<FloatingActionButton>(R.id.fab_template)
+        fab.setOnClickListener {
+            NavHostFragment.findNavController(this).navigate(R.id.action_templateFragment_to_newTemplateFragment)
+        }
+
         return view
     }
 
     override fun onItemClick(position: Int) {
         //TODO: return template text
+        NavHostFragment.findNavController(this).popBackStack()
     }
 }

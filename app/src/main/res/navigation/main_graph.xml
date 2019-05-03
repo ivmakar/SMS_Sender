@@ -35,5 +35,16 @@
                 app:destination="@id/chainFragment"
                 app:popUpTo="@+id/chainFragment"
                 app:popUpToInclusive="true"/>
+        <action android:id="@+id/action_newMessageFragment_to_templateFragment" app:destination="@id/templateFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newTemplateFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_template.NewTemplateFragment"
+              android:label="NewTemplateFragment">
+    </fragment>
+    <fragment android:id="@+id/templateFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.template.TemplateFragment"
+              android:label="TemplateFragment">
+        <action android:id="@+id/action_templateFragment_to_newTemplateFragment"
+                app:destination="@id/newTemplateFragment"/>
     </fragment>
 </navigation>

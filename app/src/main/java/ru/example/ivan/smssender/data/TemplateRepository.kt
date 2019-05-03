@@ -15,4 +15,8 @@ class TemplateRepository @Inject constructor() {
 
         return Observable.just(arrayList).delay(1, TimeUnit.SECONDS)
     }
+
+    fun saveNewTemplate(tmp: Template){
+        //TODO: save template
+    }
 }

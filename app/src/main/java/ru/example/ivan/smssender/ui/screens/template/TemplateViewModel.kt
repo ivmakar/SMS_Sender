@@ -25,7 +25,7 @@ class TemplateViewModel @Inject constructor(private var templateRepository: Temp
         loadTemplates()
     }
 
-    public fun loadTemplates(){
+    fun loadTemplates(){
 
         isLoading.set(true)
         compositeDisposable += templateRepository

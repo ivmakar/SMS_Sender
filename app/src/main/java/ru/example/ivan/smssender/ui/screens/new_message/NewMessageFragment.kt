@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
@@ -47,6 +48,11 @@ class NewMessageFragment : DaggerFragment() {
         viewModel.navigateComplete.observe(this, Observer {
             NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_chainFragment)
         })
+
+        var selectTemplateButton = view.findViewById<Button>(R.id.select_template_button)
+        selectTemplateButton.setOnClickListener {
+            NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_templateFragment)
+        }
 
         return view
     }

@@ -15,7 +15,7 @@
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="ru.example.ivan.smssender.ui.screens.template.TemplateFragment">
+            tools:context="ru.example.ivan.smssender.ui.screens.template.NewTemplateFragment">
 
         <ProgressBar
                 android:id="@+id/message_loading"
@@ -41,6 +41,16 @@
                 tools:listitem="@layout/rv_item_template"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintVertical_bias="1.0"/>
+
+        <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:srcCompat="@android:drawable/ic_menu_add"
+                android:id="@+id/fab_template"
+                android:layout_margin="@dimen/fab_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 
