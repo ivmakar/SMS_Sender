@@ -2,7 +2,7 @@
 
     <string name="add_contacts_button">Добавить контакты</string>
     <string name="group_name_text_view">Название группы</string>
-    <string name="group_name_edit_text_hint">Введите название группы</string>
+    <string name="group_name_edit_text_hint">Название группы*</string>
     <string name="contacts_text_view">Контакты</string>
     <string name="new_message_group_name_text_view">Группа:</string>
     <string name="random_interval_sending_text_view1">Случайный интервал</string>

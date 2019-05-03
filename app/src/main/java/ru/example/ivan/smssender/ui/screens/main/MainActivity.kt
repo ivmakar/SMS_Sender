@@ -13,20 +13,11 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
-        navController = Navigation.findNavController(this, R.id.fr_container)
-
-
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(MainViewModel::class.java)
-
-
     }
 
 
