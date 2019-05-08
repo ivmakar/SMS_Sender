@@ -12,320 +12,284 @@
                 type="ru.example.ivan.smssender.ui.screens.new_message.NewMessageViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:context="ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragment">
+    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/new_message_group_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_message_group_name_text_view"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
-
-        <TextView
-                android:id="@+id/new_message_group_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.group.groupName}"
-                app:layout_constraintLeft_toRightOf="@+id/new_message_group_name"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toEndOf="@+id/new_message_group_name"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="4dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/new_message_group_name"
-                android:id="@+id/linear_layout_random">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context="ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragment">
 
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="left"
-                    android:padding="2dp">
-
-                <CheckBox
-                        android:id="@+id/is_random_sending_check_box"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="@{viewModel.isRandomInterval}"
-                        android:onCheckedChanged="@{() -> viewModel.onCheckedChangedRandomInterval()}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                    android:id="@+id/new_message_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:text="@string/new_message_group_name_text_view"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"/>
 
-                <TextView
-                        android:id="@+id/random_interval_sending_text_view1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/random_interval_sending_text_view1"
-                        android:textSize="@dimen/text_large"/>
-
-                <TextView
-                        android:id="@+id/random_interval_sending_text_view2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/random_interval_sending_text_view2"
-                        android:textSize="@dimen/text_small"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="4dp"
-                android:id="@+id/linear_layout_schedule"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_random">
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="left"
-                    android:padding="2dp">
-
-                <CheckBox
-                        android:id="@+id/is_schedule_sending_check_box"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="@{viewModel.isScheduleSending}"
-                        android:onCheckedChanged="@{() -> viewModel.onCheckedChangedScheduleSending()}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                    android:id="@+id/new_message_group_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:text="@{viewModel.group.groupName}"
+                    app:layout_constraintLeft_toRightOf="@+id/new_message_group_name"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/new_message_group_name"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-                <TextView
-                        android:id="@+id/schedule_sending_text_view1"
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/new_message_group_name"
+                    android:id="@+id/linear_layout_random">
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="left"
+                        android:padding="2dp">
+
+                    <CheckBox
+                            android:id="@+id/is_random_sending_check_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="@={viewModel.randomInterval}"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/schedule_sending_text_view1"
-                        android:textSize="@dimen/text_large"/>
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                <TextView
-                        android:id="@+id/schedule_sending_text_view2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/schedule_sending_text_view2"
-                        android:textSize="@dimen/text_small"/>
+                    <TextView
+                            android:id="@+id/random_interval_sending_text_view1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/random_interval_sending_text_view1"
+                            android:textSize="@dimen/text_large"/>
+
+                    <TextView
+                            android:id="@+id/random_interval_sending_text_view2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/random_interval_sending_text_view2"
+                            android:textSize="@dimen/text_small"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp"
+                    android:id="@+id/linear_layout_schedule"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_random">
 
-        <!--        <com.appyvet.materialrangebar.RangeBar
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                custom:mrb_tickStart="0"
-                custom:mrb_tickInterval="1"
-                custom:mrb_tickEnd="10"
-                app:layout_constraintTop_toTopOf="@id/linear_layout_schedule"/>
--->        <!--
-        <CheckBox
-                android:id="@+id/is_random_sending_check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:checked="@{viewModelNew.isRandomInterval}"
-                android:onCheckedChanged="@{() -> viewModelNew.onCheckedChangedRandomInterval()}"
-                app:layout_constraintTop_toBottomOf="@+id/new_message_group_name"/>
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="left"
+                        android:padding="2dp">
 
-        <CheckedTextView
-                android:id="@+id/random_interval_sending_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/random_interval_sending_text_view"
-                app:layout_constraintStart_toEndOf="@+id/is_random_sending_check_box"
-                app:layout_constraintTop_toTopOf="@+id/is_random_sending_check_box"
-                app:layout_constraintBottom_toBottomOf="@+id/is_random_sending_check_box"
-                android:layout_marginEnd="8dp"/>
+                    <CheckBox
+                            android:id="@+id/is_schedule_sending_check_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="@={viewModel.scheduleSending}"/>
 
-        <SeekBar
-                android:id="@+id/random_sending_interval_seek_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/is_random_sending_check_box"/>
+                </LinearLayout>
 
-        <CheckBox
-                android:id="@+id/is_schedule_sending_check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:checked="@{viewModelNew.isScheduleSending}"
-                android:onCheckedChanged="@{() -> viewModelNew.onCheckedChangedScheduleSending()}"
-                app:layout_constraintTop_toBottomOf="@+id/random_sending_interval_seek_bar"/>
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-        <CheckedTextView
-                android:id="@+id/schedule_sending_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@{viewModelNew.isScheduleSending ? @string/schedule_sending_text_view : @string/no_schedule_sending_text_view}"
-                app:layout_constraintStart_toEndOf="@+id/is_schedule_sending_check_box"
-                app:layout_constraintTop_toTopOf="@+id/is_schedule_sending_check_box"
-                app:layout_constraintBottom_toBottomOf="@+id/is_schedule_sending_check_box"
-                android:layout_marginEnd="8dp"/>
--->
+                    <TextView
+                            android:id="@+id/schedule_sending_text_view1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/schedule_sending_text_view1"
+                            android:textSize="@dimen/text_large"/>
 
-        <!--        <ImageButton
-                android:id="@+id/select_template_image_button"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"/>
--->
-        <android.support.design.widget.TextInputEditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/message_input_edit_text"
-                android:text="@{viewModel.messageText}"
-                android:lines="5"
-                android:gravity="top"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:hint="@string/new_message_edit_text_hint"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/symbol_count_text_view"/>
-        <TextView
-                android:text="Интервал отправки"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_schedule"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
-        <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/start_interval_edit_text" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/end_interval_edit_text"
-                android:layout_marginEnd="8dp"/>
-        <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/end_interval_edit_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintStart_toEndOf="@+id/start_interval_edit_text"
-                android:layout_marginStart="8dp"
-                app:layout_constraintTop_toTopOf="@+id/start_interval_edit_text"/>
-        <TextView
-                android:text="Запланировать"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView2" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/start_interval_edit_text"/>
-        <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:inputType="datetime"
-                android:ems="10"
-                android:id="@+id/editText4" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-        />
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button" app:layout_constraintStart_toEndOf="@+id/editText4"
-                android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintTop_toTopOf="@+id/editText4"
-                android:drawableStart="@android:drawable/ic_menu_recent_history" tools:text="Выбрать"
-                app:layout_constraintBottom_toBottomOf="@+id/editText4"/>
-        <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/symbol_count_text_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/editText4"/>
-        <Button
-                android:text="@string/select_template_button_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/select_template_button"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/message_input_edit_text"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"/>
+                    <TextView
+                            android:id="@+id/schedule_sending_text_view2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/schedule_sending_text_view2"
+                            android:textSize="@dimen/text_small"/>
 
-        <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:srcCompat="@android:drawable/ic_menu_send"
-                android:id="@+id/fab_send_message"
-                android:layout_margin="@dimen/fab_margin"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                </LinearLayout>
 
-        <!--        <ImageButton
-                        android:id="@+id/send_message_image_button"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+            </LinearLayout>
+
+
+            <TextView
+                    android:text="Интервал отправки"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_schedule"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"/>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="@{viewModel.randomInterval ? @string/start_interval_caption : @string/interval_caption}"
+                    android:id="@+id/start_interval_text_input_layout"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/end_interval_text_input_layout"
+                    android:layout_marginEnd="8dp">
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@{Integer.toString(viewModel.intervalStart)}"
+                        android:hint="@{viewModel.randomInterval ? @string/start_interval_caption : @string/interval_caption}"
+                        android:id="@+id/start_interval_edit_text"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/message_input_edit_text"
-                        android:layout_marginStart="8dp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.randomInterval ? View.VISIBLE : View.GONE}"
+                    android:id="@+id/end_interval_text_input_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/start_interval_text_input_layout"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintTop_toTopOf="@+id/start_interval_text_input_layout">
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@{Integer.toString(viewModel.intarvalEnd)}"
+                        android:hint="@string/end_interval_caption"
+                        android:id="@+id/end_interval_edit_text"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/schedule_time_text_input_layout"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/start_interval_text_input_layout"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp">
+
+                <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/schedule_time_edit_text_hint"
+                        android:inputType="datetime"
+                        android:enabled="@{viewModel.scheduleSending}"
+                        android:focusableInTouchMode="false"
+                        android:text="@{viewModel.scheduleDateText}"
+                        android:id="@+id/schedule_time_edit_text"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                    android:text="@{@string/messages_text_view + ' ' + Integer.toString(viewModel.curMessageCount)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message_count_text_view"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/schedule_time_text_input_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"/>
+
+            <TextView
+                    android:text="@{@string/symbols_text_view + ' ' + Integer.toString(viewModel.curSimb) + '/' + Integer.toString(viewModel.maxSimb)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/symbol_count_text_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/schedule_time_text_input_layout"/>
+
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message_input_text_input_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/symbol_count_text_view">
+
+                <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/message_input_edit_text"
+                        android:hint="@string/new_message_edit_text_hint"
+                        android:lines="5"
+                        android:gravity="top"
+                        android:afterTextChanged="@{(s) -> viewModel.onMessageTextChanged(s)}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="8dp"
-                        android:onClick="@{() -> viewModelNew.sendOnClick()}"/>
-        -->
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
 
 
-    </android.support.constraint.ConstraintLayout>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                    android:text="@string/select_template_button_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/select_template_button"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/message_input_text_input_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+            <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:srcCompat="@android:drawable/ic_menu_send"
+                    android:id="@+id/fab_send_message"
+                    android:layout_margin="@dimen/fab_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
 </layout>

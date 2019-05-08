@@ -3,8 +3,13 @@ package ru.example.ivan.smssender.ui.screens.new_message
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableBoolean
+import android.databinding.ObservableField
+import android.databinding.ObservableInt
+import android.text.Editable
 import ru.example.ivan.smssender.ui.uimodels.Group
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -14,32 +19,64 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
     val navigateComplete: LiveData<Any>
         get() = _navigateComplete
 
-    var group = Group(1, "Братья", 30)
+    var group = Group(1, "Братья", 30) //TODO:
 
-    var isRandomInterval = false
-    var isScheduleSending = false
+    var isRandomInterval = ObservableBoolean(false)
+    var isScheduleSending = ObservableBoolean(false)
 
-    var intervalStart = 1
-    var intarvalEnd = 10
+    var intervalStart = ObservableInt(1)
+    var intarvalEnd = ObservableInt(10)
 
-    var date = Date()
-    var time = date.time
+    var scheduleDate: Calendar = Calendar.getInstance()
+    var scheduleDateText = ObservableField<String>()
 
-    var messageText = MutableLiveData<String>()
+    var messageText = String()
 
-    var maxSimb = 160
-    var curSimb = 0
-    var curMessageCount = 1
+    var maxSimb = ObservableInt(160)
+    var curSimb = ObservableInt(0)
+    var curMessageCount = ObservableInt(1)
 
+    fun onMessageTextChanged(s: Editable) {
+        messageText = s.toString()
+        if (messageText.isNullOrEmpty()){
+            maxSimb.set(160)
+            curSimb.set(0)
+            curMessageCount.set(1)
+            return
+        }
+        curSimb.set(messageText!!.length)
 
-    fun onCheckedChangedRandomInterval() {
+        maxSimb.set(160)
+
+        for (i in messageText) {
+            if (isRussianText(i)) {
+                maxSimb.set(70)
+                break
+            }
+        }
+
+        if (curSimb.get() > maxSimb.get()) {
+            if (maxSimb.get() == 160)
+                maxSimb.set(153)
+            else
+                maxSimb.set(67)
+
+            curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
+        }
 
     }
 
-    fun onCheckedChangedScheduleSending() {
-
+    private fun isRussianText (ch: Char): Boolean {
+        if (ch in 'а'..'я' || ch in 'А'..'Я') {
+            return true
+        }
+        return false
     }
 
+    fun writeDate() {
+        val sdf = SimpleDateFormat("EE, d MMMM, HH:mm", Locale.getDefault())
+        scheduleDateText.set(sdf.format(Date(scheduleDate.timeInMillis)))
+    }
 
     fun sendOnClick() {
         _navigateComplete.call()

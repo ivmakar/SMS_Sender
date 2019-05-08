@@ -6,18 +6,20 @@
     <string name="contacts_text_view">Контакты</string>
     <string name="new_message_group_name_text_view">Группа:</string>
     <string name="random_interval_sending_text_view1">Случайный интервал</string>
-    <string name="random_interval_sending_text_view2">Отправка сообщеий будет осуществляться через случайный интервал
-        времени
-    </string>
+    <string name="random_interval_sending_text_view2">Отправка сообщеий будет осуществляться через случайный интервал времени</string>
     <string name="schedule_sending_text_view">Запланировать</string>
     <string name="no_schedule_sending_text_view">Отправить сразу</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="schedule_sending_text_view1">Запланировать отправку</string>
     <string name="schedule_sending_text_view2">Отложить отправку сообщения на указанное время</string>
-    <string name="new_message_edit_text_hint">Введите текст сообщения</string>
+    <string name="new_message_edit_text_hint">Текст сообщения*</string>
     <string name="new_template_name_hint">Введите название шаблона</string>
     <string name="new_template_text_hint">Введите текст шаблона</string>
     <string name="select_template_button_text">Выбрать из шаблонов</string>
+    <string name="schedule_time_edit_text_hint">Время отправки</string>
+    <string name="start_interval_caption">Начало интервала</string>
+    <string name="interval_caption">Интервал</string>
+    <string name="end_interval_caption">Конец интервала</string>
+    <string name="messages_text_view">Сообщений</string>
+    <string name="symbols_text_view">Символов</string>
 </resources>
