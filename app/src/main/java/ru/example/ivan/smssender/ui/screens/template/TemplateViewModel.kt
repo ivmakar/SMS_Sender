@@ -50,8 +50,7 @@ class TemplateViewModel @Inject constructor(private var templateRepository: Temp
             })
     }
 
-    fun templateOnClick() {
-    }
+    fun getTemplateTextByPosition(position: Int) = templates.value!![position].text
 
     override fun onCleared() {
         super.onCleared()

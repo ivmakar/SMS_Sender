@@ -1,7 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
@@ -30,25 +29,26 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
     var scheduleDate: Calendar = Calendar.getInstance()
     var scheduleDateText = ObservableField<String>()
 
-    var messageText = String()
+    var messageText = ObservableField<String>()
 
     var maxSimb = ObservableInt(160)
     var curSimb = ObservableInt(0)
     var curMessageCount = ObservableInt(1)
 
     fun onMessageTextChanged(s: Editable) {
-        messageText = s.toString()
-        if (messageText.isNullOrEmpty()){
+        messageText.set(s.toString())
+        if (messageText.get().isNullOrEmpty()){
             maxSimb.set(160)
             curSimb.set(0)
             curMessageCount.set(1)
             return
         }
-        curSimb.set(messageText!!.length)
+        curSimb.set(messageText.get()!!.length)
 
         maxSimb.set(160)
 
-        for (i in messageText) {
+        val str = messageText.get()!!
+        for (i in str) {
             if (isRussianText(i)) {
                 maxSimb.set(70)
                 break
@@ -61,8 +61,9 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
             else
                 maxSimb.set(67)
 
-            curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
         }
+
+        curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
 
     }
 

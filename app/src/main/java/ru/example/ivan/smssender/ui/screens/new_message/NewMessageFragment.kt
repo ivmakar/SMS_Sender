@@ -1,15 +1,21 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,20 +25,22 @@ import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentNewMessageBinding
+import ru.example.ivan.smssender.utility.Constants
 import java.util.*
 
 import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class NewMessageFragment : DaggerFragment() {
+
+    private var broadcastReceiver: BroadcastReceiver? = null
+    private var draftMessageText = String()
+    private var isDraftMessageTextChanged = false
 
     private lateinit var binding: FragmentNewMessageBinding
     @Inject
@@ -64,8 +72,41 @@ class NewMessageFragment : DaggerFragment() {
             showDatePickerDialog()
         }
 
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(contxt: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Constants.SELECTED_TEMPLATE -> {
+                        val bundle = intent.extras
+                        if (bundle != null) {
+//                            val messageEditText = view.findViewById<TextInputEditText>(R.id.message_input_edit_text)
+//                            messageEditText.setText("")
+                            draftMessageText = bundle.getString(Constants.KEY_TEMPLATE, "")
+                            isDraftMessageTextChanged = true
+                        }
+                    }
+                }
+            }
+        }
+
+        val filter = IntentFilter(Constants.SELECTED_TEMPLATE)
+        LocalBroadcastManager.getInstance(context!!)
+            .registerReceiver(broadcastReceiver!!, filter)
+
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(NewMessageViewModel::class.java)
+
+        if (isDraftMessageTextChanged) {
+            viewModel.messageText.set(draftMessageText)
+            isDraftMessageTextChanged = false
+        }
+
     }
 
     private fun showDatePickerDialog() {
@@ -106,4 +147,8 @@ class NewMessageFragment : DaggerFragment() {
 
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        LocalBroadcastManager.getInstance(this.context!!).unregisterReceiver(broadcastReceiver!!)
+    }
 }

@@ -4,10 +4,12 @@ package ru.example.ivan.smssender.ui.screens.template
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,7 @@ import ru.example.ivan.smssender.databinding.FragmentTemplateBinding
 import ru.example.ivan.smssender.ui.rvadapters.TemplateRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.screens.new_template.NewTemplateViewModel
 import ru.example.ivan.smssender.ui.uimodels.Template
+import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 
 /**
@@ -60,6 +63,14 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
 
     override fun onItemClick(position: Int) {
         //TODO: return template text
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(TemplateViewModel::class.java)
+        val localBroadcastIntent = Intent(Constants.SELECTED_TEMPLATE)
+        val bundle = Bundle()
+        bundle.putString(Constants.KEY_TEMPLATE, viewModel.getTemplateTextByPosition(position))
+        localBroadcastIntent.putExtras(bundle)
+        LocalBroadcastManager.getInstance(activity!!).sendBroadcast(localBroadcastIntent)
+
         NavHostFragment.findNavController(this).popBackStack()
     }
 }
