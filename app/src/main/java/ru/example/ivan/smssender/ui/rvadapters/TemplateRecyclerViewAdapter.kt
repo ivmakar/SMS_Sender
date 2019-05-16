@@ -1,5 +1,5 @@
 package ru.example.ivan.smssender.ui.rvadapters
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemChainBinding
@@ -9,7 +9,7 @@ import ru.example.ivan.smssender.ui.uimodels.Template
 
 class TemplateRecyclerViewAdapter(private var items: ArrayList<Template>,
                                private var listener: OnItemClickListener)
-    : RecyclerView.Adapter<TemplateRecyclerViewAdapter.ViewHolder>()  {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<TemplateRecyclerViewAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -32,7 +32,7 @@ class TemplateRecyclerViewAdapter(private var items: ArrayList<Template>,
     }
 
     class ViewHolder(private var binding: RvItemTemplateBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tmp: Template, listener: OnItemClickListener?) {
             binding.template = tmp

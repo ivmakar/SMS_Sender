@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemChainBinding
@@ -8,7 +8,7 @@ import ru.example.ivan.smssender.ui.uimodels.Chain
 
 class ChainRecyclerViewAdapter(private var items: ArrayList<Chain>,
                                private var listener: OnItemClickListener)
-    : RecyclerView.Adapter<ChainRecyclerViewAdapter.ViewHolder>()  {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<ChainRecyclerViewAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -31,7 +31,7 @@ class ChainRecyclerViewAdapter(private var items: ArrayList<Chain>,
     }
 
     class ViewHolder(private var binding: RvItemChainBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ch: Chain, listener: OnItemClickListener?) {
             binding.chain = ch

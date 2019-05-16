@@ -1,10 +1,10 @@
 package ru.example.ivan.smssender.utility.extensions
 
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.support.annotation.MainThread
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.annotation.MainThread
 import android.util.Log
 
 import java.util.concurrent.atomic.AtomicBoolean

@@ -12,7 +12,7 @@
                 type="ru.example.ivan.smssender.ui.screens.new_group.NewGroupViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="ru.example.ivan.smssender.ui.screens.new_group.NewGroupFragment">
@@ -29,7 +29,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"/>
 -->
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_name_text_input_layout"
@@ -40,13 +40,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="8dp">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/group_name_edit_text"
                     android:hint="@string/group_name_edit_text_hint"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <TextView
@@ -84,7 +84,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/add_contacts_button"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/group_rv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -96,7 +96,7 @@
                 tools:listitem="@layout/rv_item_contact" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/add_contacts_button"/>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_new_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,5 +108,5 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

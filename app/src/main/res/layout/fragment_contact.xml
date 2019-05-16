@@ -12,7 +12,7 @@
                 type="ru.example.ivan.smssender.ui.screens.new_group.NewGroupViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="ru.example.ivan.smssender.ui.screens.new_group.ContactFragment">
@@ -39,7 +39,7 @@
                 android:id="@+id/no_contacts_text_view"
                 android:visibility="@{viewModel.hasContacts ? View.GONE : View.VISIBLE}"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contact_rv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -55,7 +55,7 @@
 
 
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
