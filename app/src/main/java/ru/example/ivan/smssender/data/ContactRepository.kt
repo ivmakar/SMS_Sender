@@ -1,7 +1,7 @@
 package ru.example.ivan.smssender.data
 
 import android.content.ContentResolver
-import android.content.ContentUris
+import android.content.Context
 import android.provider.ContactsContract
 import io.reactivex.Observable
 import ru.example.ivan.smssender.ui.uimodels.Contact
@@ -202,41 +202,30 @@ class ContactRepository @Inject constructor() {
 
     private fun readContactsFromPhone(contentResolver: ContentResolver): ArrayList<Contact> {
 
-        val CONTENT_URI = ContactsContract.Contacts.CONTENT_URI
-        val _ID = ContactsContract.Contacts._ID
-        val DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME
-        val HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER
-
-        val PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-        val Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+        val CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+        val DISPLAY_NAME = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+        val CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID
         val NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER
+        val HAS_PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER
 
-        val queryColumnArr = arrayOf(_ID, DISPLAY_NAME, HAS_PHONE_NUMBER)
+        val queryColumnArr = arrayOf(CONTACT_ID, DISPLAY_NAME, NUMBER, HAS_PHONE_NUMBER)
         val cursor = contentResolver.query(CONTENT_URI, queryColumnArr, null, null, null)
 
         var contactsArray = ArrayList<Contact>()
 
-        var id = 1
-        if (cursor != null) {
-            cursor.moveToFirst()
+        if (cursor.moveToFirst()) {
+
             do {
-                val contact_id = cursor.getString(cursor.getColumnIndex(_ID))
-                val name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME))
+                val contactId = cursor.getString(cursor.getColumnIndex(CONTACT_ID))
+                val displayName = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME))
                 val hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)))
+                val number = cursor.getString(cursor.getColumnIndex(NUMBER))
 
                 //Получаем имя:
                 if (hasPhoneNumber > 0) {
 
-                    val phoneCursor = contentResolver.query(PhoneCONTENT_URI, arrayOf(NUMBER),
-                            Phone_CONTACT_ID + " = ?", arrayOf(contact_id), null)
-
-                    if (phoneCursor.moveToFirst()) {
-                        val phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER))
-                        phoneCursor.close()
-                        contactsArray.add(Contact(id, name, phoneNumber, false))
-                    }
+                    contactsArray.add(Contact(contactId, displayName, number, false))
                 }
-                id++
             } while (cursor.moveToNext())
         }
 

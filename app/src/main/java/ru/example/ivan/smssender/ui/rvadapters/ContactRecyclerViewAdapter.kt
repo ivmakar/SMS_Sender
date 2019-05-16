@@ -28,6 +28,7 @@ class ContactRecyclerViewAdapter(private var items: ArrayList<Contact>,
 
     fun replaceData(arrayList: ArrayList<Contact>) {
         items = arrayList
+        items.sortBy { it.name }
         notifyDataSetChanged()
     }
 

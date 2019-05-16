@@ -54,18 +54,30 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:text="@{contact.number}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/contact_name"
-                app:layout_constraintVertical_bias="0.0"
                 tools:text=""
-                android:layout_marginRight="8dp"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 android:ellipsize="end"
                 android:singleLine="true"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"/>
+
+        <TextView
+                android:id="@+id/contact_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{contact.id}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contact_name"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text=""
+                android:ellipsize="end"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"/>
 
         <View
                 android:layout_width="match_parent"

@@ -4,17 +4,16 @@ import android.databinding.BaseObservable
 import android.os.Parcel
 import android.os.Parcelable
 
-class Contact(var id: Int = -1, var name: String?, var number: String?, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
+class Contact(var id: String, var name: String, var number: String, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readValue(Int::class.java.classLoader) as Int,
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readByte() != 0.toByte()
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeValue(id)
+        parcel.writeString(id)
         parcel.writeString(name)
         parcel.writeString(number)
         parcel.writeByte(if (isSelected) 1 else 0)
@@ -39,6 +38,6 @@ class Contact(var id: Int = -1, var name: String?, var number: String?, var isSe
     }
 
     override fun hashCode(): Int {
-        return id
+        return id.hashCode()
     }
 }
