@@ -1,14 +1,14 @@
 package ru.example.ivan.smssender.ui.screens.group
 
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +50,7 @@ class GroupFragment : DaggerFragment(), GroupRecyclerViewAdapter.OnItemClickList
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        binding.groupRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = groupRecyclerViewAdapter
         viewModel.groups.observe(this,
             Observer<ArrayList<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it)} })

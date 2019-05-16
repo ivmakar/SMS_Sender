@@ -1,13 +1,13 @@
 package ru.example.ivan.smssender.ui.screens.messages
 
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +50,7 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.messageRv.layoutManager = LinearLayoutManager(activity)
         binding.messageRv.adapter = messageRecyclerViewAdapter
         viewModel.loadChains(arguments!!.getInt("groupId"))
         viewModel.messages.observe(this,

@@ -12,7 +12,7 @@
                 type="ru.example.ivan.smssender.ui.screens.messages.MessagesViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="ru.example.ivan.smssender.ui.screens.messages.MessagesFragment">
@@ -28,7 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
                 android:id="@+id/message_rv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -43,7 +43,7 @@
 
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
 

@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.ui.uimodels
 
-import androidx.databinding.BaseObservable
+import android.databinding.BaseObservable
 import android.os.Parcel
 import android.os.Parcelable
 

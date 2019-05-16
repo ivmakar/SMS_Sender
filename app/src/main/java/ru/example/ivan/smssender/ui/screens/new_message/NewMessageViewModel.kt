@@ -1,10 +1,10 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableBoolean
+import android.databinding.ObservableField
+import android.databinding.ObservableInt
 import android.text.Editable
 import ru.example.ivan.smssender.ui.uimodels.Group
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent

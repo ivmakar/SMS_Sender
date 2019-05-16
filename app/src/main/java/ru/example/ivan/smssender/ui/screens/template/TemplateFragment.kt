@@ -1,16 +1,16 @@
 package ru.example.ivan.smssender.ui.screens.template
 
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +48,7 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.messageRv.layoutManager = LinearLayoutManager(activity)
         binding.messageRv.adapter = templateRecyclerViewAdapter
         viewModel.templates.observe(this,
             Observer<ArrayList<Template>> { it?.let { templateRecyclerViewAdapter.replaceData(it) } })
@@ -69,7 +69,7 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
         val bundle = Bundle()
         bundle.putString(Constants.KEY_TEMPLATE, viewModel.getTemplateTextByPosition(position))
         localBroadcastIntent.putExtras(bundle)
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(activity!!).sendBroadcast(localBroadcastIntent)
+        LocalBroadcastManager.getInstance(activity!!).sendBroadcast(localBroadcastIntent)
 
         NavHostFragment.findNavController(this).popBackStack()
     }

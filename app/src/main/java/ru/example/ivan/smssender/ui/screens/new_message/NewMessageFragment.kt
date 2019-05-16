@@ -4,18 +4,18 @@ package ru.example.ivan.smssender.ui.screens.new_message
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.databinding.DataBindingUtil
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputEditText
-import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import android.support.design.widget.TextInputEditText
+import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,7 +89,7 @@ class NewMessageFragment : DaggerFragment() {
         }
 
         val filter = IntentFilter(Constants.SELECTED_TEMPLATE)
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!)
+        LocalBroadcastManager.getInstance(context!!)
             .registerReceiver(broadcastReceiver!!, filter)
 
 
@@ -149,6 +149,6 @@ class NewMessageFragment : DaggerFragment() {
 
     override fun onDetach() {
         super.onDetach()
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this.context!!).unregisterReceiver(broadcastReceiver!!)
+        LocalBroadcastManager.getInstance(this.context!!).unregisterReceiver(broadcastReceiver!!)
     }
 }

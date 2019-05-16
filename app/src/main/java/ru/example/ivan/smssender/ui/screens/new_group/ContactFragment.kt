@@ -2,17 +2,17 @@ package ru.example.ivan.smssender.ui.screens.new_group
 
 
 import android.Manifest
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
-import androidx.databinding.DataBindingUtil
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +57,7 @@ class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClick
             readContacts()
         }
 
-        binding.contactRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.contactRv.layoutManager = LinearLayoutManager(activity)
         binding.contactRv.adapter = contactRecyclerViewAdapter
         viewModel.contacts.observe(this,
             Observer<ArrayList<Contact>> { it?.let{

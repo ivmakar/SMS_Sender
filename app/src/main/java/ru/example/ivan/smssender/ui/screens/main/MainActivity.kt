@@ -1,8 +1,8 @@
 package ru.example.ivan.smssender.ui.screens.main
 
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
