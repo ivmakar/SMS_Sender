@@ -7,5 +7,8 @@ class Constants {
 
         //broadcast keys
         const val SELECTED_TEMPLATE = "selected-template"
+
+        //permissions
+        const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 1
     }
 }

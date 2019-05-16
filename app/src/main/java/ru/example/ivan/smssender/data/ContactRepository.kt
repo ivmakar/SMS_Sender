@@ -1,14 +1,22 @@
 package ru.example.ivan.smssender.data
 
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.provider.ContactsContract
 import io.reactivex.Observable
 import ru.example.ivan.smssender.ui.uimodels.Contact
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class ContactRepository @Inject constructor() {
 
-    fun getContacts() : Observable<ArrayList<Contact>> {
-        var arrayList = ArrayList<Contact>()
+    fun getContacts(contentResolver: ContentResolver) : Observable<ArrayList<Contact>> {
+        var contactsList = ArrayList<Contact>()
+
+        contactsList = readContactsFromPhone(contentResolver)
+        return Observable.just(contactsList)
+
+//        var arrayList = ArrayList<Contact>()
 /*        arrayList.add(Contact(1, "Иван Макаров", "+7(929)819-33-40"))
         arrayList.add(Contact(2, "Роман Макаров", "+7(928)195-21-45"))
         arrayList.add(Contact(3, "Андрей Макаров", "+7(928)603-99-34"))
@@ -21,7 +29,7 @@ class ContactRepository @Inject constructor() {
         arrayList.add(Contact(10, "Маша Макарова", "+7(929)819-33-41"))
         arrayList.add(Contact(11, "Ваня Макаров", "+7(988)547-08-67"))
         arrayList.add(Contact(12, "Андрей", "+7(928)603-99-34"))*/
-
+/*
         arrayList.add(Contact(0, "Контакт 0", "+7(929)928-600-00"))
         arrayList.add(Contact(1, "Контакт 1", "+7(929)928-600-01"))
         arrayList.add(Contact(2, "Контакт 2", "+7(929)928-600-02"))
@@ -188,7 +196,51 @@ class ContactRepository @Inject constructor() {
         arrayList.add(Contact(38, "Контакт 38", "+7(929)928-600-38"))
         arrayList.add(Contact(39, "Контакт 39", "+7(929)928-600-39"))
         arrayList.add(Contact(40, "Контакт 40", "+7(929)928-600-40"))
+*/
+//        return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
+    }
 
-        return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
+    private fun readContactsFromPhone(contentResolver: ContentResolver): ArrayList<Contact> {
+
+        val CONTENT_URI = ContactsContract.Contacts.CONTENT_URI
+        val _ID = ContactsContract.Contacts._ID
+        val DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME
+        val HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER
+
+        val PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+        val Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+        val NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER
+
+        val queryColumnArr = arrayOf(_ID, DISPLAY_NAME, HAS_PHONE_NUMBER)
+        val cursor = contentResolver.query(CONTENT_URI, queryColumnArr, null, null, null)
+
+        var contactsArray = ArrayList<Contact>()
+
+        var id = 1
+        if (cursor != null) {
+            cursor.moveToFirst()
+            do {
+                val contact_id = cursor.getString(cursor.getColumnIndex(_ID))
+                val name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME))
+                val hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)))
+
+                //Получаем имя:
+                if (hasPhoneNumber > 0) {
+
+                    val phoneCursor = contentResolver.query(PhoneCONTENT_URI, arrayOf(NUMBER),
+                            Phone_CONTACT_ID + " = ?", arrayOf(contact_id), null)
+
+                    if (phoneCursor.moveToFirst()) {
+                        val phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER))
+                        phoneCursor.close()
+                        contactsArray.add(Contact(id, name, phoneNumber, false))
+                    }
+                }
+                id++
+            } while (cursor.moveToNext())
+        }
+
+
+        return contactsArray
     }
 }

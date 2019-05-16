@@ -3,6 +3,7 @@ package ru.example.ivan.smssender.ui.screens.new_group
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.ContentResolver
 import android.databinding.ObservableBoolean
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -29,6 +30,7 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
         get() = _navigateAddContacts
 
     val isLoading = ObservableBoolean()
+    val hasContacts = ObservableBoolean(false)
 
     var contacts = MutableLiveData<ArrayList<Contact>>()
     var selectedContacts = MutableLiveData<Set<Int>>()
@@ -38,14 +40,15 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
 
 
 
-    init{
+/*    init{
         loadContacts()
-    }
+    }*/
 
-    private fun loadContacts(){
+    fun loadContacts(contentResolver: ContentResolver){
         isLoading.set(true)
+        hasContacts.set(true)
         compositeDisposable += contactRepository
-            .getContacts()
+            .getContacts(contentResolver)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<ArrayList<Contact>>() {
@@ -56,6 +59,8 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
                 }
 
                 override fun onNext(t: ArrayList<Contact>) {
+                    if (t == null)
+                        hasContacts.set(false)
                     contacts.value = t
                 }
 

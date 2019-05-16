@@ -3,8 +3,6 @@ package ru.example.ivan.smssender.ui.uimodels
 import android.databinding.BaseObservable
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.versionedparcelable.VersionedParcelize
-import java.io.Serializable
 
 class Contact(var id: Int = -1, var name: String?, var number: String?, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
     constructor(parcel: Parcel) : this(

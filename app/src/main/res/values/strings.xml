@@ -22,4 +22,5 @@
     <string name="end_interval_caption">Конец интервала</string>
     <string name="messages_text_view">Сообщений</string>
     <string name="symbols_text_view">Символов</string>
+    <string name="no_red_contacts_permission_text_view">Разрешение на чтение контактов не предоставлено</string>
 </resources>
