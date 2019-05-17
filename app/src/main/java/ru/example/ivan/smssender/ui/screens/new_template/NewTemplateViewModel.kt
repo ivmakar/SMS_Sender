@@ -30,7 +30,7 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
     }
 
     fun saveTemplate(){
-        templateRepository.saveNewTemplate(Template(0, templateName.get()!!, templateText.get()!!))
+        templateRepository.saveNewTemplate(Template(null, templateName.get()!!, templateText.get()!!))
     }
 
 }

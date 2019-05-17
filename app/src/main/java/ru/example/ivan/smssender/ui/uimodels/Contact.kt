@@ -4,6 +4,7 @@ import android.databinding.BaseObservable
 import android.os.Parcel
 import android.os.Parcelable
 
+
 class Contact(var id: String, var name: String, var number: String, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

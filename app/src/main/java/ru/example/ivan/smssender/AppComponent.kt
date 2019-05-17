@@ -12,6 +12,7 @@ import ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragmentModule
 import ru.example.ivan.smssender.ui.screens.new_template.NewTemplateFragmentModule
 import ru.example.ivan.smssender.ui.screens.template.TemplateFragmentModule
 import ru.example.ivan.smssender.utility.di.ViewModelBuilder
+import ru.example.ivan.smssender.utility.roomdb.DatabaseModule
 import javax.inject.Singleton
 
 
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 @Component(
     modules = [AndroidSupportInjectionModule::class,
         AppModule::class,
+        DatabaseModule::class,
         ViewModelBuilder::class,
         MainActivityModule::class,
         GroupFragmentModule::class,
