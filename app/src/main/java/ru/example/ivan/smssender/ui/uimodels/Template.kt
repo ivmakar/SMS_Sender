@@ -1,8 +1,8 @@
 package ru.example.ivan.smssender.ui.uimodels
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.databinding.BaseObservable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.databinding.BaseObservable
 
 @Entity
 class Template (

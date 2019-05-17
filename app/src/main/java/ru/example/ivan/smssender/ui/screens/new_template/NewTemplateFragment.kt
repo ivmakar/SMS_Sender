@@ -1,17 +1,18 @@
 package ru.example.ivan.smssender.ui.screens.new_template
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 
@@ -44,8 +45,12 @@ class NewTemplateFragment : DaggerFragment() {
 
         var fab = view.findViewById<FloatingActionButton>(R.id.fab_new_template)
         fab.setOnClickListener {
-            viewModel.saveTemplate()
-            NavHostFragment.findNavController(this).popBackStack()
+            if (viewModel.isCorrectData()) {
+                viewModel.saveTemplate()
+                NavHostFragment.findNavController(this).popBackStack()
+            } else {
+                Toast.makeText(context, viewModel.errMessage, Toast.LENGTH_LONG).show()
+            }
         }
 
         return view

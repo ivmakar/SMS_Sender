@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemContactBinding
@@ -8,7 +8,7 @@ import ru.example.ivan.smssender.ui.uimodels.Contact
 
 class ContactRecyclerViewAdapter(private var items: ArrayList<Contact>,
                                  private var listener: OnItemClickListener)
-    : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()  {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -33,7 +33,7 @@ class ContactRecyclerViewAdapter(private var items: ArrayList<Contact>,
     }
 
     class ViewHolder(private var binding: RvItemContactBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ct: Contact, listener: OnItemClickListener?) {
             binding.contact = ct

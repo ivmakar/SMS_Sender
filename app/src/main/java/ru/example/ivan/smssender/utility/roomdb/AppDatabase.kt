@@ -1,7 +1,7 @@
 package ru.example.ivan.smssender.utility.roomdb
 
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.Database
 import ru.example.ivan.smssender.ui.uimodels.Message
 import ru.example.ivan.smssender.ui.uimodels.Template
 

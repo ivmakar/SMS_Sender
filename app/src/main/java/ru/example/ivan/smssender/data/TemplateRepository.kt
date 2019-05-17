@@ -11,7 +11,7 @@ class TemplateRepository @Inject constructor(private val databaseDao: DatabaseDa
 
     fun getTemplates(): Observable<ArrayList<Template>> {
 
-        val templates = databaseDao.getTemplates
+        val templates = databaseDao.getTemplates() as ArrayList<Template>
 
         return Observable.just(templates)
 /*        var arrayList = ArrayList<Template>()

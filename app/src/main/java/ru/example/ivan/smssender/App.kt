@@ -3,7 +3,7 @@ package ru.example.ivan.smssender
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import ru.example.ivan.smssender.utility.roomdb.AppDatabase
-import android.arch.persistence.room.Room
+import androidx.room.Room
 
 
 

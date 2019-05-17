@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.utility.roomdb
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -12,7 +12,7 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesAppDatabase(applicationContext: Context): AppDatabase {
-        return Room.databaseBuilder(applicationContext, AppDatabase::class.java, "smssender-db").build()
+        return Room.databaseBuilder(applicationContext, AppDatabase::class.java, "smssender-db").allowMainThreadQueries().build()
     }
 
     @Singleton

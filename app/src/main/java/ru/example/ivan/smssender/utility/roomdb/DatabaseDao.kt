@@ -1,9 +1,9 @@
 package ru.example.ivan.smssender.utility.roomdb
 
-import android.arch.persistence.room.Update
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import androidx.room.Update
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 import ru.example.ivan.smssender.ui.uimodels.Message
 import ru.example.ivan.smssender.ui.uimodels.Template
 
@@ -11,11 +11,11 @@ import ru.example.ivan.smssender.ui.uimodels.Template
 @Dao
 interface DatabaseDao {
 
-    @get:Query("SELECT * FROM Message")
-    val getMessages: ArrayList<Message>
+    @Query("SELECT * FROM Message")
+    fun getMessages(): List<Message>
 
-    @get:Query("SELECT * FROM Template")
-    val getTemplates: ArrayList<Template>
+    @Query("SELECT * FROM Template")
+    fun getTemplates(): List<Template>
 
     @Insert
     fun insert(message: Message)
