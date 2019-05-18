@@ -1,10 +1,9 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemMessageSendBinding
-import ru.example.ivan.smssender.ui.uimodels.Message
+import ru.example.ivan.smssender.data.dbmodels.Message
 
 class MessageRecyclerViewAdapter(private var items: ArrayList<Message>,
                                  private var listener: OnItemClickListener)

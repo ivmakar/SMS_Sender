@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentMessagesBinding
 import ru.example.ivan.smssender.ui.rvadapters.MessageRecyclerViewAdapter
-import ru.example.ivan.smssender.ui.uimodels.Message
+import ru.example.ivan.smssender.data.dbmodels.Message
 import javax.inject.Inject
 
 

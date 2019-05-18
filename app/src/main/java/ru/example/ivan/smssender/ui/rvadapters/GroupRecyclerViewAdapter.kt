@@ -1,10 +1,9 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemGroupBinding
-import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Group
 
 class GroupRecyclerViewAdapter(private var items: ArrayList<Group>,
                                private var listener: OnItemClickListener)

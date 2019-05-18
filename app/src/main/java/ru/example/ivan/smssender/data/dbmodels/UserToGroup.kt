@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.ui.uimodels
+package ru.example.ivan.smssender.data.dbmodels
 
 
 import androidx.room.Entity
@@ -9,7 +9,5 @@ import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 class UserToGroup(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val groupId: Long,
-    phoneNumber: String
-) {
-    val userPhoneNumber: String = AppFunctions.standartizePhoneNumber(phoneNumber)
-}
+    val userPhoneNumber: String
+)

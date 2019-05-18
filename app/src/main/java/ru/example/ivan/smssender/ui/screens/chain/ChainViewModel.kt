@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import ru.example.ivan.smssender.data.ChainRepository
+import ru.example.ivan.smssender.data.repositories.ChainRepository
 import ru.example.ivan.smssender.ui.uimodels.Chain
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign

@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.data
+package ru.example.ivan.smssender.data.repositories
 
 import android.os.Handler
 import io.reactivex.Observable

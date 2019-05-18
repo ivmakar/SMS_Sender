@@ -69,7 +69,7 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
 
         var bundle = Bundle()
         bundle.putString("chainName", viewModel.getChainByPosition(position).chainName)
-        bundle.putInt("groupId", viewModel.getChainByPosition(position).groupId!!)
+        bundle.putLong("groupId", viewModel.getChainByPosition(position).groupId!!)
         findNavController(this).navigate(R.id.action_chainFragment_to_messagesFragment, bundle)
     }
 

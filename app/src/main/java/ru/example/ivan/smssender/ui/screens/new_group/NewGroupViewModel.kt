@@ -9,7 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import ru.example.ivan.smssender.data.ContactRepository
+import ru.example.ivan.smssender.data.repositories.ContactRepository
 import ru.example.ivan.smssender.ui.uimodels.Contact
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
@@ -119,5 +119,5 @@ class NewGroupViewModel @Inject constructor(private var contactRepository: Conta
         }
     }
 
-    //TODO: get droupName.text
+    //TODO: get droupName.messageText
 }

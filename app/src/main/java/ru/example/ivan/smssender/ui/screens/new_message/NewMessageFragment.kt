@@ -79,7 +79,7 @@ class NewMessageFragment : DaggerFragment() {
                         val bundle = intent.extras
                         if (bundle != null) {
 //                            val messageEditText = view.findViewById<TextInputEditText>(R.id.message_input_edit_text)
-//                            messageEditText.setText("")
+//                            messageEditText.setTemplateText("")
                             draftMessageText = bundle.getString(Constants.KEY_TEMPLATE, "")
                             isDraftMessageTextChanged = true
                         }
@@ -132,7 +132,7 @@ class NewMessageFragment : DaggerFragment() {
         val curCalendar: Calendar = Calendar.getInstance()
         val timePicker = TimePickerDialog(
             context,
-            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 val viewModel = ViewModelProviders.of(this, viewModelFactory)
                     .get(NewMessageViewModel::class.java)
                 viewModel.scheduleDate.set(Calendar.HOUR_OF_DAY, hourOfDay)

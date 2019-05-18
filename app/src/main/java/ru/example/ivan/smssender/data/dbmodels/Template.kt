@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.ui.uimodels
+package ru.example.ivan.smssender.data.dbmodels
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

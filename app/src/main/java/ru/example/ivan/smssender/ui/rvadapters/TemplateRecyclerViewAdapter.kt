@@ -1,14 +1,11 @@
 package ru.example.ivan.smssender.ui.rvadapters
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import ru.example.ivan.smssender.databinding.RvItemChainBinding
 import ru.example.ivan.smssender.databinding.RvItemTemplateBinding
-import ru.example.ivan.smssender.ui.uimodels.Chain
-import ru.example.ivan.smssender.ui.uimodels.Template
+import ru.example.ivan.smssender.data.dbmodels.Template
 
 class TemplateRecyclerViewAdapter(private var items: ArrayList<Template>,
-                               private var listener: OnItemClickListener)
+                                  private var listener: OnItemClickListener)
     : androidx.recyclerview.widget.RecyclerView.Adapter<TemplateRecyclerViewAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

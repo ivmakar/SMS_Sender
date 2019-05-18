@@ -9,7 +9,7 @@
 
         <variable
                 name="template"
-                type="ru.example.ivan.smssender.ui.uimodels.Template" />
+                type="ru.example.ivan.smssender.data.dbmodels.Template" />
     </data>
 
 
@@ -44,7 +44,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:text="@{template.text}"
+                android:text="@{template.templateText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chain_name"

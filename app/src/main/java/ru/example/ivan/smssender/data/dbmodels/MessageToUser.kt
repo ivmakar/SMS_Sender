@@ -1,4 +1,4 @@
-package ru.example.ivan.smssender.ui.uimodels
+package ru.example.ivan.smssender.data.dbmodels
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,10 +9,8 @@ import java.sql.Date
 class MessageToUser (
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val messageId: Long,
-    phoneNumber: String,
-    val sendDate: Date,
+    val userPhoneNumber: String,
+    val sendDate: Long,
     val status: String,
     val isSending: Boolean
-) {
-    val userPhoneNumber: String = AppFunctions.standartizePhoneNumber(phoneNumber)
-}
+)

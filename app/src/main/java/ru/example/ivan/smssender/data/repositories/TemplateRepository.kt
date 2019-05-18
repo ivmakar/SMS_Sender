@@ -1,10 +1,8 @@
-package ru.example.ivan.smssender.data
+package ru.example.ivan.smssender.data.repositories
 
 import io.reactivex.Observable
-import ru.example.ivan.smssender.ui.uimodels.Template
-import ru.example.ivan.smssender.utility.roomdb.AppDatabase
+import ru.example.ivan.smssender.data.dbmodels.Template
 import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TemplateRepository @Inject constructor(private val databaseDao: DatabaseDao) {
@@ -17,7 +15,7 @@ class TemplateRepository @Inject constructor(private val databaseDao: DatabaseDa
 /*        var arrayList = ArrayList<Template>()
         arrayList.add(Template(1, "Шаблон1", "Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. "))
         arrayList.add(Template(2, "Шаблон2", "Текст шаблона 2. Текст шаблона 2. Текст шаблона 2. Текст шаблона 2."))
-        arrayList.add(Template(3, "Template3", "Template3 text. Template3 text. Template3 text. Template3 text. Template3 text. Template3 text. "))
+        arrayList.add(Template(3, "Template3", "Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. "))
 
         return Observable.just(arrayList).delay(1, TimeUnit.SECONDS)*/
     }

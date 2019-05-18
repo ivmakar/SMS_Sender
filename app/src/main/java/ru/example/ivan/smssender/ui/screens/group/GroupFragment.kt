@@ -4,11 +4,9 @@ package ru.example.ivan.smssender.ui.screens.group
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,7 @@ import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentGroupBinding
 import ru.example.ivan.smssender.ui.rvadapters.GroupRecyclerViewAdapter
-import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Group
 
 import javax.inject.Inject
 
@@ -70,7 +68,7 @@ class GroupFragment : DaggerFragment(), GroupRecyclerViewAdapter.OnItemClickList
 
         var bundle = Bundle()
         bundle.putString("chainName", viewModel.getGroupByPosition(position)?.groupName)
-        bundle.putInt("groupId", viewModel.getGroupByPosition(position)!!.id)
+        bundle.putLong("groupId", viewModel.getGroupByPosition(position)!!.id!!)
         NavHostFragment.findNavController(this).navigate(R.id.action_groupFragment_to_messagesFragment, bundle)
     }
 

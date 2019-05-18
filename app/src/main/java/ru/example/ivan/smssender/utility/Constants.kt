@@ -10,5 +10,8 @@ class Constants {
 
         //permissions
         const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 1
+
+        //sendDate
+        const val DATE_FORMAT = "EE, d MMMM, HH:mm"
     }
 }

@@ -6,7 +6,8 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
-import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Group
+import ru.example.ivan.smssender.utility.Constants
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import java.text.SimpleDateFormat
 import java.util.*
@@ -75,7 +76,7 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
     }
 
     fun writeDate() {
-        val sdf = SimpleDateFormat("EE, d MMMM, HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault())
         scheduleDateText.set(sdf.format(Date(scheduleDate.timeInMillis)))
     }
 

@@ -1,44 +1,20 @@
 package ru.example.ivan.smssender.ui.uimodels
 
 import androidx.databinding.BaseObservable
-import android.os.Parcel
-import android.os.Parcelable
+import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 
 
-class Contact(var id: String, var name: String, var number: String, var isSelected: Boolean = false) : BaseObservable(), Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readByte() != 0.toByte()
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeString(name)
-        parcel.writeString(number)
-        parcel.writeByte(if (isSelected) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Contact> {
-        override fun createFromParcel(parcel: Parcel): Contact {
-            return Contact(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Contact?> {
-            return arrayOfNulls(size)
-        }
-    }
+class Contact(
+    val id: String,
+    val displayName: String,
+    val phoneNumber: String,
+    var isSelected: Boolean = false) : BaseObservable() {
 
     override fun equals(other: Any?): Boolean {
         return this.hashCode() == other?.hashCode() ?: false
     }
 
     override fun hashCode(): Int {
-        return id.hashCode()
+        return AppFunctions.standartizePhoneNumber(phoneNumber).hashCode()
     }
 }

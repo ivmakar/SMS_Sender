@@ -9,8 +9,6 @@ import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +18,7 @@ import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentTemplateBinding
 import ru.example.ivan.smssender.ui.rvadapters.TemplateRecyclerViewAdapter
-import ru.example.ivan.smssender.ui.screens.new_template.NewTemplateViewModel
-import ru.example.ivan.smssender.ui.uimodels.Template
+import ru.example.ivan.smssender.data.dbmodels.Template
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 
@@ -64,7 +61,7 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
     }
 
     override fun onItemClick(position: Int) {
-        //TODO: return template text
+        //TODO: return template messageText
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(TemplateViewModel::class.java)
         val localBroadcastIntent = Intent(Constants.SELECTED_TEMPLATE)

@@ -1,7 +1,7 @@
-package ru.example.ivan.smssender.data
+package ru.example.ivan.smssender.data.repositories
 
 import io.reactivex.Observable
-import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Group
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList

@@ -1,7 +1,10 @@
 package ru.example.ivan.smssender.utility.roomdb
 
 import androidx.room.*
-import ru.example.ivan.smssender.ui.uimodels.*
+import ru.example.ivan.smssender.data.dbmodels.Message
+import ru.example.ivan.smssender.data.dbmodels.MessageToUser
+import ru.example.ivan.smssender.data.dbmodels.Template
+import ru.example.ivan.smssender.data.dbmodels.UserToGroup
 
 
 @Dao
@@ -15,7 +18,7 @@ interface DatabaseDao {
     @Update
     fun update(message: Message)
 
-    @Query("SELECT m.id, m.messageText, m.sendDate, m.srType FROM Message AS m WHERE m.id = :messageId")
+    @Query("SELECT m.id, m.groupId, m.messageText, m.srType, m.sendDate, m.isScheduled FROM Message AS m WHERE m.id = :messageId")
     fun getMessageById(messageId: Long): List<Message>
 
     @Query("SELECT m.id, m.groupId, m.messageText, m.srType, m.sendDate, m.isScheduled FROM Message AS m WHERE m.groupId = :groupId")

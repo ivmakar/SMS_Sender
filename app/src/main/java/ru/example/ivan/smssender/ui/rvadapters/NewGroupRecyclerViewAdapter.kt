@@ -33,7 +33,7 @@ class NewGroupRecyclerViewAdapter(private var items: ArrayList<Contact>,
             return
         }
         var i = 0
-        var cur = 0
+        var cur: Int?
         while (i < itemsInd.size){
             cur = itemsInd.elementAt(i)
             if (!newItems.contains(cur)){

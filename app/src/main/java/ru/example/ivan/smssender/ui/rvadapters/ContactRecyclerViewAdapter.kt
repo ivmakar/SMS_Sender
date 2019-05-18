@@ -1,6 +1,5 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemContactBinding
@@ -28,7 +27,7 @@ class ContactRecyclerViewAdapter(private var items: ArrayList<Contact>,
 
     fun replaceData(arrayList: ArrayList<Contact>) {
         items = arrayList
-        items.sortBy { it.name }
+        items.sortBy { it.displayName }
         notifyDataSetChanged()
     }
 

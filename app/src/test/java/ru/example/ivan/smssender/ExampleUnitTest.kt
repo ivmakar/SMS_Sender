@@ -3,6 +3,7 @@ package ru.example.ivan.smssender
 import org.junit.Test
 
 import org.junit.Assert.*
+import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -21,5 +22,24 @@ class ExampleUnitTest {
         print(sdf.format(Date(date.timeInMillis)) + '\n')
         date.set(2020, 2, 15, 13, 20, 0)
         print(sdf.format(Date(date.timeInMillis)) + '\n')
+    }
+
+    @Test
+    fun isCorrectPhoneParseFunctions() {
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("8 (929) 819 33 40"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("8 (929) 819-33-40"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("8(929)819-33-40"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("89298193340"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("+7 (929) 819 33 40"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("+7(929)819-33-40"))
+        assertEquals("+79298193340", AppFunctions.standartizePhoneNumber("+79298193340"))
+
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("8 (929) 819 33 40"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("8 (929) 819-33-40"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("8(929)819-33-40"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("89298193340"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("+7 (929) 819 33 40"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("+7(929)819-33-40"))
+        assertEquals("+7(929)819-33-40", AppFunctions.formatPhoneNumber("+79298193340"))
     }
 }
