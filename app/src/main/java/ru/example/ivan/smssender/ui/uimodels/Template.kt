@@ -6,6 +6,6 @@ import androidx.databinding.BaseObservable
 
 @Entity
 class Template (
-    @PrimaryKey(autoGenerate = true) var id: Int?,
+    @PrimaryKey(autoGenerate = true) var id: Long?,
     var name: String,
-    var text: String) : BaseObservable()
+    var templateText: String) : BaseObservable()

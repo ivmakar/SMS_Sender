@@ -1,74 +1,72 @@
 package ru.example.ivan.smssender.utility.roomdb
 
-import androidx.room.Update
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import ru.example.ivan.smssender.ui.uimodels.Message
-import ru.example.ivan.smssender.ui.uimodels.Template
+import androidx.room.*
+import ru.example.ivan.smssender.ui.uimodels.*
 
 
 @Dao
 interface DatabaseDao {
 
-    @Query("SELECT * FROM Message")
-    fun getMessages(): List<Message>
-
-    @Query("SELECT * FROM Template")
-    fun getTemplates(): List<Template>
+    //Message
 
     @Insert
     fun insert(message: Message)
+
+    @Update
+    fun update(message: Message)
+
+    @Query("SELECT m.id, m.messageText, m.sendDate, m.srType FROM Message AS m WHERE m.id = :messageId")
+    fun getMessageById(messageId: Long): List<Message>
+
+    @Query("SELECT m.id, m.groupId, m.messageText, m.srType, m.sendDate, m.isScheduled FROM Message AS m WHERE m.groupId = :groupId")
+    fun getMessagesByGroupId(groupId: Long): List<Message>
+
+
+
+    //Template
 
     @Insert
     fun insert(template: Template)
 
-/*    @get:Query("SELECT * FROM Message")
-    val allMessages: List<Message>
+    @Update
+    fun update(template: Template)
 
-    @get:Query("SELECT * FROM User ORDER BY User.displayName")
-    val allUsers: List<User>
+    @Delete
+    fun delete(template: Template)
 
-    @get:Query("SELECT * FROM MessageChain ORDER BY lastDate")
-    val allChains: List<MessageChain>
+    @Query("SELECT * FROM Template")
+    fun getTemplates(): List<Template>
 
-    @get:Query("SELECT * FROM UserGroup")
-    val groups: List<UserGroup>
 
-    @Query("SELECT User.id, User.number, User.displayName FROM User, UserToGroup WHERE UserToGroup.group_id = :id AND UserToGroup.user_id = User.id")
-    fun getUsersByGroupId(id: Long): List<User>
 
-    @Query("SELECT * FROM Message WHERE chainID LIKE :chainID")
-    fun getMessagesByChainID(chainID: Long): List<Message>
-
-    @Query("SELECT UserGroup.id, UserGroup.name, UserGroup.count FROM UserGroup, MessageChain WHERE MessageChain.id = :ChainID AND UserGroup.id =  MessageChain.groupId")
-    fun getGroupByChainId(ChainID: Long): UserGroup
-
-    @Query("SELECT * FROM MessageChain WHERE groupId = :groupId")
-    fun getMessagesChain(groupId: Long): MessageChain
-
-    @Query("SELECT * FROM MessageChain WHERE id = :id")
-    fun getMessagesChainById(id: Long): MessageChain
-
-    @Query("SELECT * FROM User WHERE id LIKE :id")
-    fun getUsersById(id: Long): User
+    //MessageToUser
 
     @Insert
-    fun insert(message: Message)
+    fun insert(messageToUser: MessageToUser)
 
-    @Insert
-    fun insert(group: UserGroup): Long
+    @Update
+    fun update(messageToUser: MessageToUser)
 
-    @Insert
-    fun insert(messageChain: MessageChain)
+    @Delete
+    fun delete(messageToUser: MessageToUser)
 
-    @Insert
-    fun insert(user: User)
+    @Query("SELECT mtu.id, mtu.messageId, mtu.userPhoneNumber, mtu.sendDate, mtu.status, mtu.isSending FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId")
+    fun getMessageToUserByMessageId(messageId: Long): List<MessageToUser>
+
+
+
+    //UserToGroup
 
     @Insert
     fun insert(userToGroup: UserToGroup)
 
     @Update
-    fun update(messageChain: MessageChain)
-*/
+    fun update(userToGroup: UserToGroup)
+
+    @Delete
+    fun delete(userToGroup: UserToGroup)
+
+    @Query("SELECT utg.id, utg.groupId, utg.userPhoneNumber FROM UserToGroup AS utg WHERE utg.groupId = :groupId")
+    fun getUserToGroupByGroupId(groupId: Long): List<UserToGroup>
+
 }
