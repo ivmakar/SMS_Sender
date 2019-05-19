@@ -13,9 +13,11 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
+import ru.example.ivan.smssender.data.dbmodels.Group
 import ru.example.ivan.smssender.databinding.FragmentMessagesBinding
 import ru.example.ivan.smssender.ui.rvadapters.MessageRecyclerViewAdapter
 import ru.example.ivan.smssender.data.dbmodels.Message
+import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 
 
@@ -39,7 +41,6 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activity!!.title = arguments!!.getString("chainName")
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_messages, container, false)
         var view = binding.root
@@ -51,19 +52,28 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
 
         binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.messageRv.adapter = messageRecyclerViewAdapter
-        viewModel.loadChains(arguments!!.getInt("groupId"))
+
+        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+
+        viewModel.curGroup.observe(this,
+            Observer<Group> { it?.let{ activity!!.title = it.groupName } })
+
+        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadMessages(it) }
+
         viewModel.messages.observe(this,
             Observer<ArrayList<Message>> { it?.let{ messageRecyclerViewAdapter.replaceData(it)} })
 
         viewModel.navigateToNewMessage.observe(this, Observer {
-            NavHostFragment.findNavController(this).navigate(R.id.action_messagesFragment_to_newMessageFragment)
+            var bundle = Bundle()
+            bundle.putLong(Constants.KEY_GROUP_ID, viewModel.curGroup.value?.id!!)
+            NavHostFragment.findNavController(this).navigate(R.id.action_messagesFragment_to_newMessageFragment, bundle)
         })
 
         return view
     }
 
     override fun onItemClick(position: Int) {
-        //
+        //TODO: show delivery status by users
     }
 
 }

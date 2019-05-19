@@ -1,10 +1,7 @@
 package ru.example.ivan.smssender.utility.roomdb
 
 import androidx.room.*
-import ru.example.ivan.smssender.data.dbmodels.Message
-import ru.example.ivan.smssender.data.dbmodels.MessageToUser
-import ru.example.ivan.smssender.data.dbmodels.Template
-import ru.example.ivan.smssender.data.dbmodels.UserToGroup
+import ru.example.ivan.smssender.data.dbmodels.*
 
 
 @Dao
@@ -13,16 +10,44 @@ interface DatabaseDao {
     //Message
 
     @Insert
-    fun insert(message: Message)
+    fun insert(message: Message): Long
 
     @Update
     fun update(message: Message)
 
-    @Query("SELECT m.id, m.groupId, m.messageText, m.srType, m.sendDate, m.isScheduled FROM Message AS m WHERE m.id = :messageId")
+    @Delete
+    fun delete(message: Message)
+
+    @Query("SELECT * FROM Message AS m WHERE m.id = :messageId ORDER BY sendDate")
     fun getMessageById(messageId: Long): List<Message>
 
-    @Query("SELECT m.id, m.groupId, m.messageText, m.srType, m.sendDate, m.isScheduled FROM Message AS m WHERE m.groupId = :groupId")
+    @Query("SELECT * FROM Message AS m WHERE m.groupId = :groupId ORDER BY sendDate")
     fun getMessagesByGroupId(groupId: Long): List<Message>
+
+    @Query("SELECT * FROM Message AS m WHERE m.groupId = :groupId ORDER BY m.sendDate")
+    fun getLastMessagesByGroupId(groupId: Long): List<Message>
+
+    @Query("SELECT COUNT(m.id) FROM Message AS m GROUP BY m.groupId HAVING m.groupId = :groupId")
+    fun getMessageCountByGroupId(groupId: Long): List<Int>
+
+
+
+    //Group
+
+    @Insert
+    fun insert(group: Group): Long
+
+    @Update
+    fun update(group: Group)
+
+    @Delete
+    fun delete(group: Group)
+
+    @Query("SELECT * FROM 'Group' ORDER BY groupName")
+    fun getGroups(): List<Group>
+
+    @Query("SELECT * FROM `Group` AS g WHERE g.id = :groupId ORDER BY groupName")
+    fun getGroupById(groupId: Long): Group
 
 
 
@@ -37,7 +62,7 @@ interface DatabaseDao {
     @Delete
     fun delete(template: Template)
 
-    @Query("SELECT * FROM Template")
+    @Query("SELECT * FROM Template ORDER BY name")
     fun getTemplates(): List<Template>
 
 
@@ -53,7 +78,7 @@ interface DatabaseDao {
     @Delete
     fun delete(messageToUser: MessageToUser)
 
-    @Query("SELECT mtu.id, mtu.messageId, mtu.userPhoneNumber, mtu.sendDate, mtu.status, mtu.isSending FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId")
+    @Query("SELECT * FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId ORDER BY sendDate")
     fun getMessageToUserByMessageId(messageId: Long): List<MessageToUser>
 
 
@@ -69,7 +94,7 @@ interface DatabaseDao {
     @Delete
     fun delete(userToGroup: UserToGroup)
 
-    @Query("SELECT utg.id, utg.groupId, utg.userPhoneNumber FROM UserToGroup AS utg WHERE utg.groupId = :groupId")
+    @Query("SELECT * FROM UserToGroup AS utg WHERE utg.groupId = :groupId")
     fun getUserToGroupByGroupId(groupId: Long): List<UserToGroup>
 
 }

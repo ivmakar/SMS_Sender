@@ -8,9 +8,10 @@ import java.sql.Date
 @Entity
 class MessageToUser (
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    val messageId: Long,
+    var messageId: Long,
     val userPhoneNumber: String,
     val sendDate: Long,
     val status: String,
-    val isSending: Boolean
+    val isSend: Boolean,
+    val sim: String
 )

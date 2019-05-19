@@ -18,6 +18,7 @@ import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentChainBinding
 import ru.example.ivan.smssender.ui.rvadapters.ChainRecyclerViewAdapter
 import ru.example.ivan.smssender.ui.uimodels.Chain
+import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 
 // TODO: Rename parameter arguments, choose names that match
@@ -68,8 +69,7 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
             .get(ChainViewModel::class.java)
 
         var bundle = Bundle()
-        bundle.putString("chainName", viewModel.getChainByPosition(position).chainName)
-        bundle.putLong("groupId", viewModel.getChainByPosition(position).groupId!!)
+        bundle.putLong(Constants.KEY_GROUP_ID, viewModel.getChainByPosition(position).groupId!!)
         findNavController(this).navigate(R.id.action_chainFragment_to_messagesFragment, bundle)
     }
 

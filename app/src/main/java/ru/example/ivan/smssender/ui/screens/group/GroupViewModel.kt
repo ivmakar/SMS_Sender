@@ -33,7 +33,7 @@ class GroupViewModel @Inject constructor(private var groupRepository: GroupRepos
     private fun loadGroups(){
         isLoading.set(true)
         compositeDisposable += groupRepository
-            .getGroups()
+            .getAllGroups()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<ArrayList<Group>>() {

@@ -2,14 +2,12 @@ package ru.example.ivan.smssender.utility.roomdb
 
 import androidx.room.RoomDatabase
 import androidx.room.Database
-import ru.example.ivan.smssender.data.dbmodels.Message
-import ru.example.ivan.smssender.data.dbmodels.MessageToUser
-import ru.example.ivan.smssender.data.dbmodels.Template
-import ru.example.ivan.smssender.data.dbmodels.UserToGroup
+import ru.example.ivan.smssender.data.dbmodels.*
 
 
 @Database(
     entities = [
+        Group::class,
         Message::class,
         Template::class,
         MessageToUser::class,

@@ -1,7 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.lifecycle.Observer
@@ -15,12 +14,10 @@ import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputEditText
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
@@ -58,6 +55,10 @@ class NewMessageFragment : DaggerFragment() {
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
+        activity!!.title = "Новое сообщение"
+
+        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+
         viewModel.navigateComplete.observe(this, Observer {
             NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_chainFragment)
         })
@@ -78,8 +79,6 @@ class NewMessageFragment : DaggerFragment() {
                     Constants.SELECTED_TEMPLATE -> {
                         val bundle = intent.extras
                         if (bundle != null) {
-//                            val messageEditText = view.findViewById<TextInputEditText>(R.id.message_input_edit_text)
-//                            messageEditText.setTemplateText("")
                             draftMessageText = bundle.getString(Constants.KEY_TEMPLATE, "")
                             isDraftMessageTextChanged = true
                         }

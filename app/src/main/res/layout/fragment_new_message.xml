@@ -24,6 +24,7 @@
                     android:clickable="true"
                     app:srcCompat="@android:drawable/ic_menu_send"
                     android:id="@+id/fab_send_message"
+                    android:onClick="@{() -> viewModel.sendOnClick()}"
                     android:layout_margin="@dimen/fab_margin"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

@@ -6,20 +6,38 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 import ru.example.ivan.smssender.data.dbmodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Message
+import ru.example.ivan.smssender.data.dbmodels.MessageToUser
+import ru.example.ivan.smssender.data.repositories.ContactRepository
+import ru.example.ivan.smssender.data.repositories.GroupRepository
+import ru.example.ivan.smssender.data.repositories.MessageRepository
+import ru.example.ivan.smssender.ui.uimodels.Contact
 import ru.example.ivan.smssender.utility.Constants
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
+import ru.example.ivan.smssender.utility.extensions.plusAssign
+import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
-class NewMessageViewModel @Inject constructor() : ViewModel() {
+class NewMessageViewModel @Inject constructor(
+    private val messageRepository: MessageRepository,
+    private val groupRepository: GroupRepository,
+    private val contactRepository: ContactRepository) : ViewModel() {
 
     private var _navigateComplete = SingleLiveEvent<Any>()
     val navigateComplete: LiveData<Any>
         get() = _navigateComplete
 
-    var group = Group(1, "Братья", 30) //TODO:
+    var group = Group(null, "", 0) //TODO:
+
+    var groupContactList = ArrayList<Contact>()
 
     var isRandomInterval = ObservableBoolean(false)
     var isScheduleSending = ObservableBoolean(false)
@@ -35,6 +53,57 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
     var maxSimb = ObservableInt(160)
     var curSimb = ObservableInt(0)
     var curMessageCount = ObservableInt(1)
+
+    var messageToUserList = ArrayList<MessageToUser>()
+
+    private var compositeDisposable = CompositeDisposable()
+
+
+    fun loadGroup(groupId: Long){
+        compositeDisposable += groupRepository
+            .getGroupById(groupId)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<Group>() {
+
+
+                override fun onError(e: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onNext(t: Group) {
+                    group = t
+                }
+
+                override fun onComplete() {
+                    loadContactsByGroupId(group.id!!)
+                }
+
+            })
+    }
+
+    fun loadContactsByGroupId(groupId: Long){
+        compositeDisposable += contactRepository
+            .getContactsByGroupId(groupId)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<ArrayList<Contact>>() {
+
+
+                override fun onError(e: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onNext(t: ArrayList<Contact>) {
+
+                    groupContactList = t
+                }
+
+                override fun onComplete() {
+                }
+
+            })
+    }
 
     fun onMessageTextChanged(s: Editable) {
         messageText.set(s.toString())
@@ -80,9 +149,37 @@ class NewMessageViewModel @Inject constructor() : ViewModel() {
         scheduleDateText.set(sdf.format(Date(scheduleDate.timeInMillis)))
     }
 
+    private fun setMessageToUserList(sendDate: Date) {
+        for (i in groupContactList) {
+            messageToUserList.add(MessageToUser(null,
+                0,
+                AppFunctions.standartizePhoneNumber(i.phoneNumber),
+                sendDate.time,
+                Constants.STATUS_SEND,
+                false,
+                Constants.SIM1))
+        }
+    }
+
+    private fun saveNewMessage() {
+        //TODO: analize input fields
+        val sendDate = Date()
+        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate.time, isScheduleSending.get()!!)
+
+        setMessageToUserList(sendDate)
+        messageRepository.saveMessage(message, messageToUserList)
+    }
+
     fun sendOnClick() {
+        saveNewMessage()
         _navigateComplete.call()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        if(!compositeDisposable.isDisposed){
+            compositeDisposable.dispose()
+        }
+    }
 
 }

@@ -22,14 +22,6 @@ import ru.example.ivan.smssender.ui.uimodels.Contact
 
 import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-private const val ARG_HAS_CONTACTS = "arg_has_contacts"
-private const val ARG_SEND_CONTACTS = "arg_send_contacts"
-private const val ARG_RECEIVE_CONTACTS = "arg_receive_contacts"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -53,8 +45,9 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
+        viewModel.loadGroups()
 
-        binding.groupRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
+        binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = newGroupRecyclerViewAdapter
         viewModel.selectedContacts.observe(this,
             Observer<Set<Int>> { it?.let {
@@ -64,8 +57,6 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
 
 
         viewModel.navigateComplete.observe(this, Observer {
-
-            //TODO("save new Group")
             NavHostFragment.findNavController(this).popBackStack()
         })
 
@@ -80,7 +71,7 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewGroupViewModel::class.java)
 
-        viewModel.deleteItemByPosition(  position)
+        viewModel.deleteItemByPosition(position)
     }
 
 }

@@ -2,18 +2,34 @@ package ru.example.ivan.smssender.data.repositories
 
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Group
-import java.util.concurrent.TimeUnit
+import ru.example.ivan.smssender.data.dbmodels.UserToGroup
+import ru.example.ivan.smssender.ui.uimodels.Contact
+import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
+import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class GroupRepository @Inject constructor() {
+class GroupRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getGroups() : Observable<ArrayList<Group>> {
-        var arrayList = ArrayList<Group>()
-        arrayList.add(Group(1, "Молодежь", 45))
-        arrayList.add(Group(2, "Группа НГ", 25))
-        arrayList.add(Group(3, "Братья", 30))
+    fun getAllGroups() : Observable<ArrayList<Group>>
+            = Observable.just(databaseDao.getGroups() as ArrayList<Group>)
 
-        return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
+    fun getGroupById(groupId: Long) : Observable<Group>
+            = Observable.just(databaseDao.getGroupById(groupId))
+
+    fun saveGroup(group: Group, contactList: ArrayList<Contact>) {
+        val groupId = databaseDao.insert(group)
+
+        for (i in contactList) {
+            databaseDao.insert(UserToGroup(null, groupId, AppFunctions.standartizePhoneNumber(i.phoneNumber)))
+        }
+    }
+
+    fun updateGroup(group: Group) {
+        databaseDao.update(group)
+    }
+
+    fun deleteGroup(group: Group) {
+        databaseDao.delete(group)
     }
 }

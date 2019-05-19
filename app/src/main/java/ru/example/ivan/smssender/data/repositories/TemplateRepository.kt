@@ -12,15 +12,13 @@ class TemplateRepository @Inject constructor(private val databaseDao: DatabaseDa
         val templates = databaseDao.getTemplates() as ArrayList<Template>
 
         return Observable.just(templates)
-/*        var arrayList = ArrayList<Template>()
-        arrayList.add(Template(1, "Шаблон1", "Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. Текст шаблона 1. "))
-        arrayList.add(Template(2, "Шаблон2", "Текст шаблона 2. Текст шаблона 2. Текст шаблона 2. Текст шаблона 2."))
-        arrayList.add(Template(3, "Template3", "Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. Template3 messageText. "))
-
-        return Observable.just(arrayList).delay(1, TimeUnit.SECONDS)*/
     }
 
     fun saveNewTemplate(tmp: Template){
         databaseDao.insert(tmp)
+    }
+
+    fun updateTemplate(tmp: Template){
+        databaseDao.update(tmp)
     }
 }

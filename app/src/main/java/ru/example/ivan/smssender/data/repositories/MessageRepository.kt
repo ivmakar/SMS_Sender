@@ -2,29 +2,40 @@ package ru.example.ivan.smssender.data.repositories
 
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Message
-import java.util.concurrent.TimeUnit
+import ru.example.ivan.smssender.data.dbmodels.MessageToUser
+import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
 import javax.inject.Inject
 
-class MessageRepository @Inject constructor() {
+class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getMessages(groupId: Any): Observable<ArrayList<Message>> {
-        var arrayList = ArrayList<Message>()
-/*        arrayList.add(
-            Message(
-                1,
-                "Молодежь! Сегодня будет Месяц Молитвы, не забывайте открытки и по 100 рублей!",
-                "12.12.2019"
-            )
-        )
-        arrayList.add(Message(2, "Собираемся сегодня на ДМ в 12:00", "12:12"))
-        arrayList.add(
-            Message(
-                3,
-                "В пятницу будет брацкое общение, посарайтесь не опаздывать.",
-                "12.12.2019 12:12"
-            )
-        )*/
+    fun getMessagesByGroupId(groupId: Long): Observable<ArrayList<Message>> {
+        var messagesList = ArrayList<Message>()
 
-        return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
+        messagesList = databaseDao.getMessagesByGroupId(groupId) as ArrayList<Message>
+
+        return Observable.just(messagesList)
+    }
+
+    fun saveMessage(message: Message, messageToUserList: ArrayList<MessageToUser>) {
+        val messageId = databaseDao.insert(message)
+        for (i in messageToUserList) {
+            i.messageId = messageId
+            databaseDao.insert(i)
+        }
+    }
+
+    fun updateMessageToUser(messaageToUser: MessageToUser) {
+        databaseDao.update(messaageToUser)
+    }
+
+    fun deleteMessage(message: Message) {
+        val messageToUserList
+                = databaseDao.getMessageToUserByMessageId(message.id!!) as ArrayList<MessageToUser>
+
+        for (i in messageToUserList) {
+            databaseDao.delete(i)
+        }
+
+        databaseDao.delete(message)
     }
 }

@@ -1,19 +1,26 @@
 package ru.example.ivan.smssender.data.repositories
 
-import android.os.Handler
 import io.reactivex.Observable
+import ru.example.ivan.smssender.data.dbmodels.Group
 import ru.example.ivan.smssender.ui.uimodels.Chain
-import java.util.concurrent.TimeUnit
+import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
 import javax.inject.Inject
 
-class ChainRepository @Inject constructor() {
+class ChainRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
     fun getChains() : Observable<ArrayList<Chain>> {
-        var arrayList = ArrayList<Chain>()
-        arrayList.add(Chain(1, "Молодежь", "Молодежь! Сегодня будет Месяц Молитвы, не забывайте открытки и по 100 рублей!", 100 , "12.12.2019 12:12"))
-        arrayList.add(Chain(2, "Группа НГ", "Собираемся сегодня на ДМ в 12:00", 30 , "12:12"))
-        arrayList.add(Chain(3, "Братья", "В пятницу будет брацкое общение, посарайтесь не опаздывать.", 430 , "12.12.2019 12:12"))
+        var chainsList = ArrayList<Chain>()
 
-        return Observable.just(arrayList).delay(2, TimeUnit.SECONDS)
+        val groupsList = databaseDao.getGroups() as ArrayList<Group>
+
+        for (i in groupsList) {
+            val countMessages = databaseDao.getMessageCountByGroupId(i.id!!)
+            if (!(countMessages.isEmpty() || countMessages.first() == 0)) {
+                val lastMessage = databaseDao.getLastMessagesByGroupId(i.id)
+                chainsList.add(Chain(i.id, i.groupName, lastMessage.last().messageText, countMessages.first(), "")) //TODO:LastDate
+            }
+        }
+
+        return Observable.just(chainsList)
     }
 }

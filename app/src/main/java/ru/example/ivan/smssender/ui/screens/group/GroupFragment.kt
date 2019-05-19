@@ -16,6 +16,7 @@ import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentGroupBinding
 import ru.example.ivan.smssender.ui.rvadapters.GroupRecyclerViewAdapter
 import ru.example.ivan.smssender.data.dbmodels.Group
+import ru.example.ivan.smssender.utility.Constants
 
 import javax.inject.Inject
 
@@ -67,8 +68,7 @@ class GroupFragment : DaggerFragment(), GroupRecyclerViewAdapter.OnItemClickList
             .get(GroupViewModel::class.java)
 
         var bundle = Bundle()
-        bundle.putString("chainName", viewModel.getGroupByPosition(position)?.groupName)
-        bundle.putLong("groupId", viewModel.getGroupByPosition(position)!!.id!!)
+        bundle.putLong(Constants.KEY_GROUP_ID, viewModel.getGroupByPosition(position)!!.id!!)
         NavHostFragment.findNavController(this).navigate(R.id.action_groupFragment_to_messagesFragment, bundle)
     }
 

@@ -77,11 +77,11 @@ class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClick
             .get(NewGroupViewModel::class.java)
 
         if (viewModel.contacts.value == null) {
-            viewModel.loadContacts(activity!!.contentResolver)
+            viewModel.loadContacts()
             return
         }
         if (viewModel.contacts.value!!.isEmpty()) {
-            viewModel.loadContacts(activity!!.contentResolver)
+            viewModel.loadContacts()
         }
     }
 
