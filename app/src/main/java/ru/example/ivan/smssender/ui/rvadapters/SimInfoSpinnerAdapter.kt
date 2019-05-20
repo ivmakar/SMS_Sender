@@ -23,7 +23,7 @@ class SimInfoSpinnerAdapter (
         return simInfoList.size
     }
 
-    override fun getItem(i: Int): Any? {
+    override fun getItem(i: Int): SimInfo {
         return simInfoList[i]
     }
 

@@ -16,13 +16,16 @@ class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao
         return Observable.just(messagesList)
     }
 
-    fun saveMessage(message: Message, messageToUserList: ArrayList<MessageToUser>) {
+    fun saveMessage(message: Message, messageToUserList: ArrayList<MessageToUser>): Long {
         val messageId = databaseDao.insert(message)
         for (i in messageToUserList) {
             i.messageId = messageId
             databaseDao.insert(i)
         }
+        return messageId
     }
+
+    fun getMessageToUserListByMessageId(messageId: Long) = databaseDao.getMessageToUserByMessageId(messageId) as java.util.ArrayList<MessageToUser>
 
     fun updateMessageToUser(messaageToUser: MessageToUser) {
         databaseDao.update(messaageToUser)

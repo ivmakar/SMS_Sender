@@ -19,7 +19,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -63,9 +65,21 @@ class NewMessageFragment : DaggerFragment() {
 
         activity!!.title = "Новое сообщение"
 
+        val sendSmsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.SEND_SMS) }
+        if (sendSmsPermission == PackageManager.PERMISSION_DENIED) {
+            checkPermissionSendSms()
+        }
+
         arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
 
         viewModel.navigateComplete.observe(this, Observer {
+            val sendSmsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.SEND_SMS) }
+            if (sendSmsPermission == PackageManager.PERMISSION_DENIED) {
+                checkPermissionSendSms()
+            } else {
+                viewModel.saveNewMessage()
+            }
+
             NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_chainFragment)
         })
 
@@ -100,8 +114,26 @@ class NewMessageFragment : DaggerFragment() {
         viewModel.simInfoList.observe(this, Observer {
             val simSpinner = view.findViewById<AppCompatSpinner>(R.id.select_sim_spinner)
 
-            var simAdapter = SimInfoSpinnerAdapter(activity!!.applicationContext, viewModel.simInfoList.value!!)
-            simSpinner.adapter = simAdapter
+            viewModel.simAdapter = SimInfoSpinnerAdapter(activity!!.applicationContext, viewModel.simInfoList.value!!)
+            simSpinner.adapter = viewModel.simAdapter
+
+            simSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.selectedSimPosition = position
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            };
+
+            viewModel.selectedSimPosition = 0
         })
 
 
@@ -131,6 +163,16 @@ class NewMessageFragment : DaggerFragment() {
 
     }
 
+    private fun checkPermissionSendSms() {
+
+        //TODO: show permission dialog
+
+        ActivityCompat.requestPermissions(activity!!,
+            arrayOf(Manifest.permission.SEND_SMS),
+            Constants.REQUEST_CODE_PERMISSION_SEND_SMS)
+
+    }
+
     private fun checkPermissionReadPhoneState() {
 
         //TODO: show permission dialog
@@ -150,8 +192,9 @@ class NewMessageFragment : DaggerFragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE) {
-            loadSimInfo()
+        when (requestCode) {
+            Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE -> loadSimInfo()
+            Constants.REQUEST_CODE_PERMISSION_SEND_SMS -> Toast.makeText(context, "Повторите попытку", Toast.LENGTH_LONG).show()
         }
     }
 

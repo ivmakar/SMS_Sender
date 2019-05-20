@@ -8,6 +8,8 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,12 +22,14 @@ import ru.example.ivan.smssender.data.repositories.ContactRepository
 import ru.example.ivan.smssender.data.repositories.GroupRepository
 import ru.example.ivan.smssender.data.repositories.MessageRepository
 import ru.example.ivan.smssender.data.repositories.SimRepository
+import ru.example.ivan.smssender.ui.rvadapters.SimInfoSpinnerAdapter
 import ru.example.ivan.smssender.ui.uimodels.Contact
 import ru.example.ivan.smssender.ui.uimodels.SimInfo
 import ru.example.ivan.smssender.utility.Constants
 import ru.example.ivan.smssender.utility.extensions.SingleLiveEvent
 import ru.example.ivan.smssender.utility.extensions.plusAssign
 import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
+import ru.example.ivan.smssender.utility.send_sms.SendExecutor
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -36,7 +40,8 @@ class NewMessageViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val contactRepository: ContactRepository,
     private val simRepository: SimRepository,
-    private val applicationContext: Context) : ViewModel() {
+    private val applicationContext: Context,
+    private val sendExecutor: SendExecutor) : ViewModel() {
 
     private var _navigateComplete = SingleLiveEvent<Any>()
     val navigateComplete: LiveData<Any>
@@ -64,6 +69,9 @@ class NewMessageViewModel @Inject constructor(
     var messageToUserList = ArrayList<MessageToUser>()
 
     var simInfoList = MutableLiveData<ArrayList<SimInfo>>()
+
+    var selectedSimPosition: Int? = null
+    lateinit var simAdapter: SimInfoSpinnerAdapter
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -120,45 +128,16 @@ class NewMessageViewModel @Inject constructor(
         simInfoList.value = ArrayList<SimInfo>()
 
         for (i in list) {
-            val simInfo = SimInfo(i.createIconBitmap(applicationContext), i.displayName.toString(), if(i.number == null) {" "} else {i.number})
+            val simInfo = SimInfo(
+                i.createIconBitmap(applicationContext),
+                i.displayName.toString(),
+                if(i.number == null) {" "} else {i.number},
+                i.subscriptionId)
             simInfoList.value?.add(simInfo)
         }
         simInfoList.value = simInfoList.value
-    }/*
-    *****************************************************
-    fun loadSimInfo() {
-        val list = simRepository.getSubscriptionList() as ArrayList<SubscriptionInfo>
-
-        var str = StringBuilder()
-
-        for (i in list) {
-            str.apply {
-                append("\n******New SimInfo******\n\n")
-
-                append(i.carrierName)
-                append('\n')
-                append(i.countryIso)
-                append('\n')
-                append(i.dataRoaming)
-                append('\n')
-                append(i.displayName)
-                append('\n')
-                append(i.iccId)
-                append('\n')
-                append(i.iconTint)
-                append('\n')
-                append(i.number)
-                append('\n')
-                append(i.simSlotIndex)
-                append('\n')
-                append(i.subscriptionId)
-                append('\n')
-            }
-        }
-
-        messageText.set(str.toString())
     }
-*****************************************************************/
+
     fun onMessageTextChanged(s: Editable) {
         messageText.set(s.toString())
         if (messageText.get().isNullOrEmpty()){
@@ -211,21 +190,23 @@ class NewMessageViewModel @Inject constructor(
                 sendDate.time,
                 Constants.STATUS_SEND,
                 false,
-                Constants.SIM1))
+                if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).simName} else {Constants.NO_SIM},
+                if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0}))
         }
     }
 
-    private fun saveNewMessage() {
+    fun saveNewMessage() {
         //TODO: analize input fields
         val sendDate = Date()
         val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate.time, isScheduleSending.get()!!)
 
         setMessageToUserList(sendDate)
-        messageRepository.saveMessage(message, messageToUserList)
+        message.id = messageRepository.saveMessage(message, messageToUserList)
+
+        sendExecutor.execute(message)
     }
 
     fun sendOnClick() {
-        saveNewMessage()
         _navigateComplete.call()
     }
 

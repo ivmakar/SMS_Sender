@@ -1,5 +1,6 @@
 package ru.example.ivan.smssender
 
+import android.telephony.SmsManager
 import android.telephony.SubscriptionInfo
 import org.junit.Test
 
@@ -17,7 +18,7 @@ import kotlin.collections.ArrayList
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest @Inject constructor(var simRepository: SimRepository) {
+class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         var date: Calendar = Calendar.getInstance()
@@ -48,24 +49,18 @@ class ExampleUnitTest @Inject constructor(var simRepository: SimRepository) {
     }
 
     @Test
-    fun testSimInfo() {
+    fun testSmsDivide() {
+        //170
+        divideSms("qwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoij")
+        //170
+        divideSms("йцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмить")
+    }
 
-        val list = simRepository.getSubscriptionList() as ArrayList<SubscriptionInfo>
-
-        for (i in list) {
-            print("\n******New SimInfo******\n\n")
-
-            print(i.carrierName)
-            print(i.countryIso)
-            print(i.dataRoaming)
-            print(i.displayName)
-            print(i.iccId)
-            print(i.iconTint)
-            print(i.number)
-            print(i.simSlotIndex)
-            print(i.subscriptionId)
-
-
+    fun divideSms(message: String) {
+        val m = SmsManager.getDefault().divideMessage(message)
+        print("\n******message*******\n$message\n******message*******\n")
+        for (i in m) {
+            print("\n***part***\nsymbols: ${i.length}\n")
         }
     }
 }

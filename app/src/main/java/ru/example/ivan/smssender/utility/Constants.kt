@@ -2,27 +2,31 @@ package ru.example.ivan.smssender.utility
 
 class Constants {
     companion object {
-        //bundle keys
+        //Bundle keys
         const val KEY_TEMPLATE = "template"
         const val KEY_GROUP_ID = "group_id"
         const val KEY_GROUP_NAME = "group_name"
         const val KEY_GROUP_MEMBERS = "group_members"
 
-        //broadcast keys
+        //Broadcast keys
         const val SELECTED_TEMPLATE = "selected-template"
 
-        //permissions
+        //Permissions
         const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 1
         const val REQUEST_CODE_PERMISSION_READ_PHONE_STATE = 2
+        const val REQUEST_CODE_PERMISSION_SEND_SMS = 3
 
-        //sendDate
+        //Send date
         const val DATE_FORMAT = "EE, d MMMM, HH:mm"
 
-        //MessageStatus
+        //Message status
         const val STATUS_SEND = "send"
 
         //SIM
-        const val SIM1 = "sim1"
-        const val SIM2 = "sim2"
+        const val NO_SIM = "no_sim"
+
+        //Send status
+        const val STATUS_OK = 0
+        const val STATUS_ERROR_NO_PARAMETERS = 1
     }
 }
