@@ -1,6 +1,7 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.lifecycle.Observer
@@ -10,6 +11,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputEditText
@@ -18,15 +20,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentNewMessageBinding
+import ru.example.ivan.smssender.ui.rvadapters.SimInfoSpinnerAdapter
 import ru.example.ivan.smssender.utility.Constants
 import java.util.*
 
 import javax.inject.Inject
-
+import ru.example.ivan.smssender.ui.rvadapters.SimInfoSpinnerAdapter as SimInfoSpinnerAdapter1
 
 
 /**
@@ -91,8 +97,25 @@ class NewMessageFragment : DaggerFragment() {
         androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!)
             .registerReceiver(broadcastReceiver!!, filter)
 
+        viewModel.simInfoList.observe(this, Observer {
+            val simSpinner = view.findViewById<AppCompatSpinner>(R.id.select_sim_spinner)
+
+            var simAdapter = SimInfoSpinnerAdapter(activity!!.applicationContext, viewModel.simInfoList.value!!)
+            simSpinner.adapter = simAdapter
+        })
+
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val readContactsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.READ_PHONE_STATE) }
+        if (readContactsPermission == PackageManager.PERMISSION_DENIED) {
+            checkPermissionReadPhoneState()
+        } else {
+            loadSimInfo()
+        }
     }
 
     override fun onResume() {
@@ -106,6 +129,30 @@ class NewMessageFragment : DaggerFragment() {
             isDraftMessageTextChanged = false
         }
 
+    }
+
+    private fun checkPermissionReadPhoneState() {
+
+        //TODO: show permission dialog
+
+        ActivityCompat.requestPermissions(activity!!,
+                arrayOf(Manifest.permission.READ_PHONE_STATE),
+                Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE)
+
+    }
+
+    private fun loadSimInfo() {
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(NewMessageViewModel::class.java)
+
+        viewModel.loadSimInfo()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE) {
+            loadSimInfo()
+        }
     }
 
     private fun showDatePickerDialog() {

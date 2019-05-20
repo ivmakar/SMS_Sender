@@ -51,7 +51,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/rv_item_contact"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="1.0"/>
+                app:layout_constraintVertical_bias="1.0"
+                android:paddingBottom="@dimen/padding_fab"/>
 
 
 

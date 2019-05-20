@@ -1,5 +1,8 @@
 package ru.example.ivan.smssender
 
+import android.content.Context
+import android.telephony.SubscriptionInfo
+import android.telephony.SubscriptionManager
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 

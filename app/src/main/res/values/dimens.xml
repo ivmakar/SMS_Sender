@@ -4,4 +4,6 @@
 
     <dimen name="text_large">18sp</dimen>
     <dimen name="text_small">12sp</dimen>
+
+    <dimen name="padding_fab">64dp</dimen>
 </resources>
