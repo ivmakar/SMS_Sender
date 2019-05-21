@@ -1,5 +1,6 @@
 package ru.example.ivan.smssender
 
+import android.Manifest
 import android.telephony.SmsManager
 import android.telephony.SubscriptionInfo
 import org.junit.Test
@@ -51,8 +52,17 @@ class ExampleUnitTest {
     @Test
     fun testLongToInt() {
         var long: Long = 256
-
         var int: Int = long.toInt()
         print(int)
+    }
+
+    @Test
+    fun testToArray() {
+        var permissionArray = ArrayList<String>()
+        permissionArray.add(Manifest.permission.READ_CONTACTS)
+        permissionArray.add(Manifest.permission.SEND_SMS)
+        val arr: Array<String>
+        arr = permissionArray.toTypedArray()
+        print(arr)
     }
 }

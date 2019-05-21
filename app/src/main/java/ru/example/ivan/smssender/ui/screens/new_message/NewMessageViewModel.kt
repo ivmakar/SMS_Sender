@@ -73,6 +73,9 @@ class NewMessageViewModel @Inject constructor(
 
     private var compositeDisposable = CompositeDisposable()
 
+    init {
+        loadSimInfo()
+    }
 
     fun loadGroup(groupId: Long){
         compositeDisposable += groupRepository

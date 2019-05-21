@@ -2,6 +2,14 @@ package ru.example.ivan.smssender.utility
 
 class Constants {
     companion object {
+
+        //showRequestPermissionRationale
+        const val DIALOG_RATIONALE_TEXT = "Для корректной работы приложения необходимо предоставить разрешения.\n\n" +
+                "Разрешение на осуществление телефонных звонков и управление ими необходимо для доступа к списку активных SIM-карт."
+        const val DIALOG_BUTTON_OK = "OK"
+        const val DIALOG_BUTTON_PROVIDE = "Предоставить"
+        const val DIALOG_BUTTON_EXIT = "Выйти"
+
         //Bundle keys
         const val KEY_TEMPLATE = "template"
         const val KEY_GROUP_ID = "group_id"
@@ -13,6 +21,7 @@ class Constants {
         const val SELECTED_TEMPLATE = "selected-template"
 
         //Permissions
+        const val REQUEST_CODE_PERMISSION = 4
         const val REQUEST_CODE_PERMISSION_READ_CONTACTS = 1
         const val REQUEST_CODE_PERMISSION_READ_PHONE_STATE = 2
         const val REQUEST_CODE_PERMISSION_SEND_SMS = 3

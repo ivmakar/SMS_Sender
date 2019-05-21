@@ -50,13 +50,6 @@ class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClick
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        val readContactsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.READ_CONTACTS) }
-        if (readContactsPermission == PackageManager.PERMISSION_DENIED) {
-            requestReadContactsPermission()
-        } else {
-            readContacts()
-        }
-
         binding.contactRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.contactRv.adapter = contactRecyclerViewAdapter
         viewModel.contacts.observe(this,
@@ -70,34 +63,6 @@ class ContactFragment : DaggerFragment(), ContactRecyclerViewAdapter.OnItemClick
         }
 
         return view
-    }
-
-    private fun readContacts() {
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(NewGroupViewModel::class.java)
-
-        if (viewModel.contacts.value == null) {
-            viewModel.loadContacts()
-            return
-        }
-        if (viewModel.contacts.value!!.isEmpty()) {
-            viewModel.loadContacts()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            Constants.REQUEST_CODE_PERMISSION_READ_CONTACTS -> readContacts()
-        }
-    }
-
-    private fun requestReadContactsPermission() {
-        activity?.let {
-            ActivityCompat.requestPermissions(
-                it,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                Constants.REQUEST_CODE_PERMISSION_READ_CONTACTS)
-        }
     }
 
     override fun onItemClick(position: Int) {

@@ -47,8 +47,9 @@ class NewGroupViewModel @Inject constructor(
 
     private var compositeDisposable = CompositeDisposable()
 
-
-
+    init {
+        loadContacts()
+    }
 
     fun loadGroups() {
         compositeDisposable += groupRepository

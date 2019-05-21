@@ -65,21 +65,9 @@ class NewMessageFragment : DaggerFragment() {
 
         activity!!.title = "Новое сообщение"
 
-        val sendSmsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.SEND_SMS) }
-        if (sendSmsPermission == PackageManager.PERMISSION_DENIED) {
-            checkPermissionSendSms()
-        }
-
         arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
 
         viewModel.navigateComplete.observe(this, Observer {
-            val sendSmsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.SEND_SMS) }
-            if (sendSmsPermission == PackageManager.PERMISSION_DENIED) {
-                checkPermissionSendSms()
-            } else {
-                viewModel.saveNewMessage()
-            }
-
             NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_chainFragment)
         })
 
@@ -140,16 +128,6 @@ class NewMessageFragment : DaggerFragment() {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val readContactsPermission = context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.READ_PHONE_STATE) }
-        if (readContactsPermission == PackageManager.PERMISSION_DENIED) {
-            checkPermissionReadPhoneState()
-        } else {
-            loadSimInfo()
-        }
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -163,39 +141,11 @@ class NewMessageFragment : DaggerFragment() {
 
     }
 
-    private fun checkPermissionSendSms() {
-
-        //TODO: show permission dialog
-
-        ActivityCompat.requestPermissions(activity!!,
-            arrayOf(Manifest.permission.SEND_SMS),
-            Constants.REQUEST_CODE_PERMISSION_SEND_SMS)
-
-    }
-
-    private fun checkPermissionReadPhoneState() {
-
-        //TODO: show permission dialog
-
-        ActivityCompat.requestPermissions(activity!!,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE)
-
-    }
-
     private fun loadSimInfo() {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewMessageViewModel::class.java)
 
         viewModel.loadSimInfo()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            Constants.REQUEST_CODE_PERMISSION_READ_PHONE_STATE -> loadSimInfo()
-            Constants.REQUEST_CODE_PERMISSION_SEND_SMS -> Toast.makeText(context, "Повторите попытку", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun showDatePickerDialog() {
