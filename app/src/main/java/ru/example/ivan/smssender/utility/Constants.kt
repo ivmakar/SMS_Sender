@@ -3,6 +3,9 @@ package ru.example.ivan.smssender.utility
 class Constants {
     companion object {
 
+        //Notifications
+        const val NOTIFICATION_CHANNEL_ID = "sendSmsId"
+
         //showRequestPermissionRationale
         const val DIALOG_RATIONALE_TEXT = "Для корректной работы приложения необходимо предоставить разрешения.\n\n" +
                 "Разрешение на осуществление телефонных звонков и управление ими необходимо для доступа к списку активных SIM-карт."
@@ -16,6 +19,7 @@ class Constants {
         const val KEY_GROUP_NAME = "group_name"
         const val KEY_GROUP_MEMBERS = "group_members"
         const val KEY_MESSAGE_TO_USER_ID = "message_to_user_id"
+        const val KEY_MESSAGE_ID = "message_id"
 
         //Broadcast keys
         const val SELECTED_TEMPLATE = "selected-template"

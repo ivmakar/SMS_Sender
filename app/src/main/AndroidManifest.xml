@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
           package="ru.example.ivan.smssender">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -21,16 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.screens.group.GroupActivity">
-        </activity>
-        <activity android:name=".ui.screens.messages.MessagesActivity">
-        </activity>
-        <activity android:name=".ui.screens.new_group.NewGroupActivity">
-        </activity>
-        <activity android:name=".ui.screens.contacts.ContactActivity">
-        </activity>
-        <activity android:name=".ui.screens.new_message.NewMessageActivity">
-        </activity>
+
+        <provider
+                android:name="androidx.work.impl.WorkManagerInitializer"
+                android:authorities="ru.example.ivan.smssender.workmanager-init"
+                android:enabled="false"
+                android:exported="false"
+                tools:replace="android:authorities" />
     </application>
+
+
 
 </manifest>

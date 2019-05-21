@@ -13,6 +13,7 @@ import ru.example.ivan.smssender.ui.screens.new_template.NewTemplateFragmentModu
 import ru.example.ivan.smssender.ui.screens.template.TemplateFragmentModule
 import ru.example.ivan.smssender.utility.di.ViewModelBuilder
 import ru.example.ivan.smssender.utility.roomdb.DatabaseModule
+import ru.example.ivan.smssender.utility.send_sms.SendExecutorModule
 import javax.inject.Singleton
 
 
@@ -29,7 +30,8 @@ import javax.inject.Singleton
         ChainViewModule::class,
         NewMessageFragmentModule::class,
         TemplateFragmentModule::class,
-        NewTemplateFragmentModule::class])
+        NewTemplateFragmentModule::class,
+        SendExecutorModule::class])
 
 interface AppComponent : AndroidInjector<App> {
 

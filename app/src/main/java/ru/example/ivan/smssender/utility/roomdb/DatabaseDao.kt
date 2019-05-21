@@ -19,7 +19,7 @@ interface DatabaseDao {
     fun delete(message: Message)
 
     @Query("SELECT * FROM Message AS m WHERE m.id = :messageId ORDER BY sendDate")
-    fun getMessageById(messageId: Long): List<Message>
+    fun getMessageById(messageId: Long): Message
 
     @Query("SELECT * FROM Message AS m WHERE m.groupId = :groupId ORDER BY sendDate")
     fun getMessagesByGroupId(groupId: Long): List<Message>

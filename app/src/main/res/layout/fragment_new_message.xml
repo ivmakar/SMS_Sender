@@ -67,61 +67,14 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:padding="4dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintTop_toBottomOf="@+id/new_message_group_name"
-                            android:id="@+id/linear_layout_random">
-
-                        <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="left"
-                                android:padding="2dp">
-
-                            <CheckBox
-                                    android:id="@+id/is_random_sending_check_box"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="@={viewModel.randomInterval}"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="2dp">
-
-                            <TextView
-                                    android:id="@+id/random_interval_sending_text_view1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/random_interval_sending_text_view1"
-                                    android:textSize="@dimen/text_large"/>
-
-                            <TextView
-                                    android:id="@+id/random_interval_sending_text_view2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/random_interval_sending_text_view2"
-                                    android:textSize="@dimen/text_small"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="4dp"
                             android:id="@+id/linear_layout_schedule"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintTop_toBottomOf="@+id/linear_layout_random">
+                            app:layout_constraintTop_toBottomOf="@+id/new_message_group_name"
+                            android:layout_marginTop="8dp">
 
                         <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:gravity="left"
+                                android:gravity="end"
                                 android:padding="2dp">
 
                             <CheckBox
@@ -157,28 +110,18 @@
                     </LinearLayout>
 
 
-                    <TextView
-                            android:text="Интервал отправки"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintTop_toBottomOf="@+id/linear_layout_schedule"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginStart="8dp"/>
-
                     <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:hint="@{viewModel.randomInterval ? @string/start_interval_caption : @string/interval_caption}"
+                            android:hint="@string/interval_caption"
                             android:id="@+id/start_interval_text_input_layout"
                             android:layout_marginTop="8dp"
-                            app:layout_constraintTop_toBottomOf="@+id/textView"
+                            app:layout_constraintTop_toBottomOf="@id/select_sim_text_view"
                             android:layout_marginStart="8dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/end_interval_text_input_layout"
-                            android:layout_marginEnd="8dp">
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/select_sim_spinner">
 
                         <EditText
                                 android:layout_width="match_parent"
@@ -192,36 +135,13 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:visibility="@{viewModel.randomInterval ? View.VISIBLE : View.GONE}"
-                            android:id="@+id/end_interval_text_input_layout"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            android:layout_marginEnd="8dp"
-                            app:layout_constraintStart_toEndOf="@+id/start_interval_text_input_layout"
-                            android:layout_marginStart="8dp"
-                            app:layout_constraintTop_toTopOf="@+id/start_interval_text_input_layout">
-
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="number"
-                                android:text="@{Integer.toString(viewModel.intarvalEnd)}"
-                                android:hint="@string/end_interval_caption"
-                                android:id="@+id/end_interval_edit_text"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/schedule_time_text_input_layout"
                             android:layout_marginTop="8dp"
-                            app:layout_constraintTop_toBottomOf="@+id/start_interval_text_input_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/linear_layout_schedule"
                             android:layout_marginStart="8dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -232,7 +152,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/schedule_time_edit_text_hint"
                                 android:inputType="datetime"
-                                android:enabled="@{viewModel.scheduleSending}"
+                                android:visibility="@{viewModel.scheduleSending ? View.VISIBLE : View.GONE}"
                                 android:focusableInTouchMode="false"
                                 android:text="@{viewModel.scheduleDateText}"
                                 android:id="@+id/schedule_time_edit_text"/>
@@ -251,13 +171,14 @@
 
                     <androidx.appcompat.widget.AppCompatSpinner
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:hint="@string/sim_text_input_layout_hint"
                             android:id="@+id/select_sim_spinner"
                             android:layout_marginTop="8dp"
                             app:layout_constraintTop_toBottomOf="@+id/select_sim_text_view"
                             android:layout_marginStart="8dp"
-                            app:layout_constraintStart_toStartOf="parent">
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/start_interval_text_input_layout">
 
                     </androidx.appcompat.widget.AppCompatSpinner>
 

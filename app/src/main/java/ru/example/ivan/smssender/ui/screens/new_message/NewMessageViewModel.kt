@@ -9,6 +9,9 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
 import androidx.lifecycle.MutableLiveData
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -30,6 +33,7 @@ import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 import ru.example.ivan.smssender.utility.send_sms.SendExecutor
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -38,8 +42,7 @@ class NewMessageViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val contactRepository: ContactRepository,
     private val simRepository: SimRepository,
-    private val applicationContext: Context,
-    private val sendExecutor: SendExecutor) : ViewModel() {
+    private val applicationContext: Context) : ViewModel() {
 
     private var _navigateComplete = SingleLiveEvent<Any>()
     val navigateComplete: LiveData<Any>
@@ -52,7 +55,7 @@ class NewMessageViewModel @Inject constructor(
     var isRandomInterval = ObservableBoolean(false)
     var isScheduleSending = ObservableBoolean(false)
 
-    var intervalStart = ObservableInt(1)
+    var intervalStart = ObservableInt(5)
     var intarvalEnd = ObservableInt(10)
 
     var scheduleDate: Calendar = Calendar.getInstance()
@@ -183,31 +186,55 @@ class NewMessageViewModel @Inject constructor(
         scheduleDateText.set(sdf.format(Date(scheduleDate.timeInMillis)))
     }
 
-    private fun setMessageToUserList(sendDate: Date) {
+    private fun setMessageToUserList(sendDate: Long) {
         for (i in groupContactList) {
             messageToUserList.add(MessageToUser(null,
                 0,
                 AppFunctions.standartizePhoneNumber(i.phoneNumber),
-                sendDate.time,
+                sendDate,
                 Constants.STATUS_SENDED,
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).simName} else {Constants.NO_SIM},
-                if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0}))
+                if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0},
+                intervalStart.get()))
         }
     }
 
-    fun saveNewMessage() {
+    fun saveNewMessage(): Boolean {
         //TODO: analize input fields
-        val sendDate = Date()
-        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate.time, Constants.STATUS_SENDED, isScheduleSending.get()!!)
+        val duration = scheduleDate.timeInMillis - Date().time
+        val sendDate = if (isScheduleSending.get() && duration > 0) {
+            scheduleDate.time.time
+        } else {
+            Date().time
+        }
+        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate, Constants.STATUS_SENDED, isScheduleSending.get()!!)
 
         setMessageToUserList(sendDate)
-        message.id = messageRepository.saveMessage(message, messageToUserList)
+        val messageId = messageRepository.saveMessage(message, messageToUserList)
 
-        sendExecutor.initSending(message)
+        var mData = Data.Builder()
+            .putLong(Constants.KEY_MESSAGE_ID, messageId)
+            .build()
+
+        val sendExecutorBuilder = OneTimeWorkRequestBuilder<SendExecutor>()
+            .addTag("sendSms")
+            .setInputData(mData)
+
+        if (isScheduleSending.get() && duration > 0) {
+
+            sendExecutorBuilder.setInitialDelay(duration, TimeUnit.MILLISECONDS)
+        }
+
+        val sendExecutor = sendExecutorBuilder.build()
+
+        WorkManager.getInstance().enqueue(sendExecutor)
+        return true
     }
 
     fun sendOnClick() {
-        _navigateComplete.call()
+        if (saveNewMessage()) {
+            _navigateComplete.call()
+        }
     }
 
     override fun onCleared() {

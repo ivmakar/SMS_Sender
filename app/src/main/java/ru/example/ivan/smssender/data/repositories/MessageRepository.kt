@@ -45,4 +45,6 @@ class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao
     fun updateMessage(message: Message) {
         databaseDao.update(message)
     }
+
+    fun getMessageById(messageId: Long) = databaseDao.getMessageById(messageId)
 }

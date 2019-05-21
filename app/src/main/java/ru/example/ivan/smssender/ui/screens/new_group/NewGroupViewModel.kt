@@ -134,6 +134,10 @@ class NewGroupViewModel @Inject constructor(
 
         groupRepository.saveGroup(Group(null, groupName.get()!!, groupContacts.size), groupContacts)
 
+        groupName.set("")
+        selectedContacts.value = sortedSetOf()
+        loadContacts()
+
         Toast.makeText(applicationContext, "Сохранено", Toast.LENGTH_LONG).show()
 
         _navigateComplete.call()

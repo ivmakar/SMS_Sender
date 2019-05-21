@@ -25,7 +25,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    private fun checkPermissions() {
+    private fun checkPermissions(): ArrayList<String> {
         var permissionArray = ArrayList<String>()
         //READ_CONTACTS
         val readContactsPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
@@ -43,12 +43,17 @@ class MainActivity : DaggerAppCompatActivity() {
             permissionArray.add(Manifest.permission.READ_PHONE_STATE)
         }
 
+        return permissionArray
+    }
+
+    private fun requestPermisson(permissionArray: ArrayList<String>) {
         if (permissionArray.isNotEmpty()) {
             ActivityCompat.requestPermissions(this,
                 permissionArray.toTypedArray(),
                 Constants.REQUEST_CODE_PERMISSION)
         }
     }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -61,12 +66,16 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun showRequestPermissionRationale(isFirst: Boolean) {
+        if (checkPermissions().isNullOrEmpty()) {
+            return
+        }
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Предоставьте разрешения")
         builder.setMessage(Constants.DIALOG_RATIONALE_TEXT)
 
         builder.setPositiveButton(if (isFirst) {Constants.DIALOG_BUTTON_OK} else {Constants.DIALOG_BUTTON_PROVIDE}) { dialog, which ->
-            checkPermissions()
+            requestPermisson(checkPermissions())
         }
 
         if (!isFirst) {

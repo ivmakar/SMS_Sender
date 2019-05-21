@@ -9,27 +9,69 @@ import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 import android.content.IntentFilter
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.app.PendingIntent
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.data.dbmodels.MessageToUser
 
 
 class SendExecutor @Inject constructor(
-    private val messageRepository: MessageRepository,
-    private val applicationContext: Context) {
+    appContext: Context,
+    workerParams: WorkerParameters): Worker(appContext, workerParams) {
 
     private var messageToUserList = ArrayList<MessageToUser>()
     private val subscriptionManager
             = applicationContext.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
 
     private var sendingMessageCount = 0
+    private var sentStatusMessageCount = 0
     private lateinit var message: Message
 
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var notification: NotificationCompat.Builder
+
+
+    lateinit var messageRepository: MessageRepository
+
+    override fun doWork(): Result {
+
+        Log.d("UnicTag", "start1")
+        val messageId = inputData.getLong(Constants.KEY_MESSAGE_ID, 0)
+        Log.d("UnicTag", "start2")
+        val message = messageRepository.getMessageById(messageId)
+        Log.d("UnicTag", "start3")
+
+        initSending(message)
+        Log.d("UnicTag", "end")
+
+        return Result.success()
+    }
 
     fun initSending(msg: Message) {
+
+        notifyStartMessaging()
+
+        Log.d("UnicTag", "startInitSending")
         message = msg
         messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
+
+        for (i in messageToUserList) {
+
+            sendSms(message, i)
+            notifyProgressUpdate(messageToUserList.size, sendingMessageCount)
+            Thread.sleep(1000*i.interval.toLong())
+
+        }
+
+        notifyStopMessaging()
 
         applicationContext.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -51,9 +93,9 @@ class SendExecutor @Inject constructor(
                         Constants.STATUS_FAILURE_SEND)
                 }
 
-                if (sendingMessageCount < messageToUserList.size) {
-                    sendSms(message, messageToUserList[sendingMessageCount])
-                } else {
+                sentStatusMessageCount++
+
+                if (sentStatusMessageCount >= messageToUserList.size) {
                     calculateMessageStatus()
                 }
             }
@@ -70,12 +112,49 @@ class SendExecutor @Inject constructor(
                 }
             }
         }, IntentFilter(Constants.SMS_DELIVERED_INTENT))
+    }
 
-        sendSms(message, messageToUserList[sendingMessageCount])
+    private fun notifyStartMessaging() {
+
+        notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                Constants.NOTIFICATION_CHANNEL_ID,
+                "Отправка SMS",
+                NotificationManager.IMPORTANCE_LOW)
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+
+        notification = NotificationCompat.Builder(applicationContext, Constants.NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("Отправка SMS")
+            .setProgress(0, 0, false)
+            .setOngoing(true)
+
+        notificationManager.notify(1, notification.build())
+
+    }
+
+    private fun notifyProgressUpdate(maxValue: Int, progress: Int) {
+        notification.setProgress(maxValue, progress, false)
+
+        notificationManager.notify(1, notification.build())
+    }
+
+    private fun notifyStopMessaging() {
+        notification.setContentText("Отправка завершена")
+            .setProgress(0,0,false)
+            .setOngoing(false)
+
+        notificationManager.notify(1, notification.build())
     }
 
     private fun sendSms(message: Message, messageToUser: MessageToUser) {
         sendingMessageCount++
+
+        Log.d("UnicTag", "send $sendingMessageCount")
         val smsManager = SmsManager.getSmsManagerForSubscriptionId(messageToUser.subId)
 
         val requestCode: Int = messageToUser.id!!.toInt()
@@ -90,8 +169,9 @@ class SendExecutor @Inject constructor(
             requestCode,
             Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
             0)
-
-        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+//TODO:uncomment
+//        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+//        Toast.makeText(applicationContext, "send to ${messageToUser.userPhoneNumber}", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateMessageToUser(id: Long, status: String) {
@@ -114,5 +194,6 @@ class SendExecutor @Inject constructor(
         message.status = status
         messageRepository.updateMessage(message)
     }
+
 
 }

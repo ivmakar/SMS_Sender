@@ -70,6 +70,7 @@ android {
 dependencies {
     def room_version = "2.1.0-beta01"
     def dagger_version = "2.22.1"
+    def work_version = "2.0.1"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -96,6 +97,11 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime:$work_version"
+
 
 
     implementation 'androidx.navigation:navigation-fragment:2.0.0-rc02'
