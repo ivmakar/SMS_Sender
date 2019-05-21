@@ -41,4 +41,8 @@ class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao
 
         databaseDao.delete(message)
     }
+
+    fun updateMessage(message: Message) {
+        databaseDao.update(message)
+    }
 }

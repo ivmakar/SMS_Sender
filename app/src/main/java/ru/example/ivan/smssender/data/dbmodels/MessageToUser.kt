@@ -7,12 +7,11 @@ import java.sql.Date
 
 @Entity
 class MessageToUser (
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) var id: Long?,
     var messageId: Long,
     val userPhoneNumber: String,
     val sendDate: Long,
-    val status: String,
-    val isSend: Boolean,
+    var status: String,
     val sim: String,
     val subId: Int
 )

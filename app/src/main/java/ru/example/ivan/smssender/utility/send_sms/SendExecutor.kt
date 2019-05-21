@@ -1,7 +1,6 @@
 package ru.example.ivan.smssender.utility.send_sms
 
 import android.content.Context
-import android.os.AsyncTask
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
 import ru.example.ivan.smssender.data.dbmodels.Message
@@ -9,99 +8,111 @@ import ru.example.ivan.smssender.data.repositories.MessageRepository
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 import android.content.IntentFilter
-import android.widget.Toast
 import android.app.Activity
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.app.PendingIntent
-
+import ru.example.ivan.smssender.data.dbmodels.MessageToUser
 
 
 class SendExecutor @Inject constructor(
     private val messageRepository: MessageRepository,
-    private val applicationContext: Context) : AsyncTask<Message, Int, Int>() {
+    private val applicationContext: Context) {
 
-    override fun onProgressUpdate(vararg values: Int?) {
+    private var messageToUserList = ArrayList<MessageToUser>()
+    private val subscriptionManager
+            = applicationContext.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
 
-    }
+    private var sendingMessageCount = 0
+    private lateinit var message: Message
 
-    override fun onPostExecute(result: Int?) {
 
-    }
+    fun initSending(msg: Message) {
+        message = msg
+        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
 
-    override fun onPreExecute() {
-
-    }
-
-    override fun doInBackground(vararg params: Message?): Int {
-        if (params.first() == null){
-            return Constants.STATUS_ERROR_NO_PARAMETERS
-        }
-
-        val list = messageRepository.getMessageToUserListByMessageId(params.first()!!.id!!)
-
-        val subscriptionManager = applicationContext.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
-
-        for ((count, i) in list.withIndex()) {
-            val smsManager = SmsManager.getSmsManagerForSubscriptionId(i.subId)
-
-            val SENT = "SMS_SENT"
-            val DELIVERED = "SMS_DELIVERED"
-
-            val sentIntent = PendingIntent.getBroadcast(applicationContext, 0, Intent(SENT), 0)
-            val deliveredIntent = PendingIntent.getBroadcast(applicationContext, 0, Intent(DELIVERED), 0)
-
-            applicationContext.registerReceiver(object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    when (resultCode) {
-                        Activity.RESULT_OK -> Toast.makeText(applicationContext, "SMS sent", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_GENERIC_FAILURE -> Toast.makeText(
-                            applicationContext,
-                            "Generic failure",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        SmsManager.RESULT_ERROR_NO_SERVICE -> Toast.makeText(
-                            applicationContext,
-                            "No service",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        SmsManager.RESULT_ERROR_NULL_PDU -> Toast.makeText(
-                            applicationContext,
-                            "Null PDU",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        SmsManager.RESULT_ERROR_RADIO_OFF -> Toast.makeText(
-                            applicationContext,
-                            "Radio off",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+        applicationContext.registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (resultCode) {
+                    Activity.RESULT_OK -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_SENT_OK)
+                    SmsManager.RESULT_ERROR_GENERIC_FAILURE -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_FAILURE_SEND)
+                    SmsManager.RESULT_ERROR_NO_SERVICE -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_FAILURE_SEND)
+                    SmsManager.RESULT_ERROR_NULL_PDU -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_FAILURE_SEND)
+                    SmsManager.RESULT_ERROR_RADIO_OFF -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_FAILURE_SEND)
                 }
 
-            }, IntentFilter(SENT))
-
-            applicationContext.registerReceiver(object : BroadcastReceiver() {
-                override fun onReceive(arg0: Context, arg1: Intent) {
-                    when (resultCode) {
-                        Activity.RESULT_OK -> Toast.makeText(
-                            applicationContext,
-                            "SMS delivered",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Activity.RESULT_CANCELED -> Toast.makeText(
-                            applicationContext,
-                            "SMS not delivered",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                if (sendingMessageCount < messageToUserList.size) {
+                    sendSms(message, messageToUserList[sendingMessageCount])
+                } else {
+                    calculateMessageStatus()
                 }
-            }, IntentFilter(DELIVERED))
+            }
 
-            smsManager.sendTextMessage(i.userPhoneNumber, null, params.first()!!.messageText, sentIntent, deliveredIntent)
-        }
+        }, IntentFilter(Constants.SMS_SENT_INTENT))
 
-        return 0
+        applicationContext.registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (resultCode) {
+                    Activity.RESULT_OK -> updateMessageToUser(
+                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
+                        Constants.STATUS_DELIVERED)
+//                    Activity.RESULT_CANCELED ->
+                }
+            }
+        }, IntentFilter(Constants.SMS_DELIVERED_INTENT))
+
+        sendSms(message, messageToUserList[sendingMessageCount])
     }
 
+    private fun sendSms(message: Message, messageToUser: MessageToUser) {
+        sendingMessageCount++
+        val smsManager = SmsManager.getSmsManagerForSubscriptionId(messageToUser.subId)
+
+        val requestCode: Int = messageToUser.id!!.toInt()
+
+        val sentIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            requestCode,
+            Intent(Constants.SMS_SENT_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
+            0)
+        val deliveredIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            requestCode,
+            Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
+            0)
+
+        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+    }
+
+    private fun updateMessageToUser(id: Long, status: String) {
+        var messageTuUser = messageToUserList.find { it.id == id }
+        messageTuUser?.let { it ->
+            it.status = status
+
+            messageRepository.updateMessageToUser(it)
+            this.messageToUserList.find {it1 -> it1.id == id }?.let { it2 -> it2.id = it.id }
+        }
+    }
+
+    private fun calculateMessageStatus() {
+        var status = Constants.STATUS_SENT_OK
+        for (i in messageToUserList) {
+            if (i.status == Constants.STATUS_FAILURE_SEND) {
+                status = Constants.STATUS_FAILURE_SEND
+            }
+        }
+        message.status = status
+        messageRepository.updateMessage(message)
+    }
 
 }

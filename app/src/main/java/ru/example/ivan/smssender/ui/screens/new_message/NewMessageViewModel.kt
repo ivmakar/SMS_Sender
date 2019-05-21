@@ -8,8 +8,6 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
-import android.view.View
-import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -188,8 +186,7 @@ class NewMessageViewModel @Inject constructor(
                 0,
                 AppFunctions.standartizePhoneNumber(i.phoneNumber),
                 sendDate.time,
-                Constants.STATUS_SEND,
-                false,
+                Constants.STATUS_SENDED,
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).simName} else {Constants.NO_SIM},
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0}))
         }
@@ -198,12 +195,12 @@ class NewMessageViewModel @Inject constructor(
     fun saveNewMessage() {
         //TODO: analize input fields
         val sendDate = Date()
-        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate.time, isScheduleSending.get()!!)
+        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate.time, Constants.STATUS_SENDED, isScheduleSending.get()!!)
 
         setMessageToUserList(sendDate)
         message.id = messageRepository.saveMessage(message, messageToUserList)
 
-        sendExecutor.execute(message)
+        sendExecutor.initSending(message)
     }
 
     fun sendOnClick() {

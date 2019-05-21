@@ -49,18 +49,10 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun testSmsDivide() {
-        //170
-        divideSms("qwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoijqwertyuiopasdfghjklzxcvbnmpoij")
-        //170
-        divideSms("йцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмитьйцукенгшщзхъфывапролджэячсмить")
-    }
+    fun testLongToInt() {
+        var long: Long = 256
 
-    fun divideSms(message: String) {
-        val m = SmsManager.getDefault().divideMessage(message)
-        print("\n******message*******\n$message\n******message*******\n")
-        for (i in m) {
-            print("\n***part***\nsymbols: ${i.length}\n")
-        }
+        var int: Int = long.toInt()
+        print(int)
     }
 }
