@@ -81,6 +81,9 @@ interface DatabaseDao {
     @Query("SELECT * FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId ORDER BY sendDate")
     fun getMessageToUserByMessageId(messageId: Long): List<MessageToUser>
 
+    @Query("SELECT * FROM MessageToUser AS mtu WHERE mtu.id = :messageToUserId")
+    fun getMessageToUserById(messageToUserId: Long): MessageToUser
+
 
 
     //UserToGroup

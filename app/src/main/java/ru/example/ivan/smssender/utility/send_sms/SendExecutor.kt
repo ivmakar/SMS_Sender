@@ -52,10 +52,10 @@ class SendExecutor @Inject constructor(
     }
 
     fun initSending(msg: Message) {
+        message = msg
 
         notifyStartMessaging()
 
-        message = msg
         messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
 
         for (i in messageToUserList) {
@@ -89,6 +89,7 @@ class SendExecutor @Inject constructor(
                 }
 
                 sentStatusMessageCount++
+                Log.d("smssenderWorker", "sentMessageCount = $sentStatusMessageCount")
 
                 if (sentStatusMessageCount >= messageToUserList.size) {
                     calculateMessageStatus()
@@ -125,19 +126,19 @@ class SendExecutor @Inject constructor(
         notification = NotificationCompat.Builder(applicationContext, Constants.NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_message_black_18)
             .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.app_icon))
-            .setSubText("subtext")
             .setContentTitle("Отправка SMS")
             .setProgress(0, 0, false)
             .setOngoing(true)
 
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(message.id!!.toInt(), notification.build())
 
     }
 
     private fun notifyProgressUpdate(maxValue: Int, progress: Int) {
         notification.setProgress(maxValue, progress, false)
+            .setContentText("Отправка $progress/$maxValue")
 
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(message.id!!.toInt(), notification.build())
     }
 
     private fun notifyStopMessaging() {
@@ -145,13 +146,13 @@ class SendExecutor @Inject constructor(
             .setProgress(0,0,false)
             .setOngoing(false)
 
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(message.id!!.toInt(), notification.build())
     }
 
     private fun sendSms(message: Message, messageToUser: MessageToUser) {
         sendingMessageCount++
 
-        Log.d("UnicTag", "send $sendingMessageCount")
+        Log.d("smssenderWorker", "send $sendingMessageCount")
         val smsManager = SmsManager.getSmsManagerForSubscriptionId(messageToUser.subId)
 
         val requestCode: Int = messageToUser.id!!.toInt()
@@ -166,28 +167,34 @@ class SendExecutor @Inject constructor(
             requestCode,
             Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
             0)
-//TODO:uncomment
-//        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
-//        Toast.makeText(applicationContext, "send to ${messageToUser.userPhoneNumber}", Toast.LENGTH_SHORT).show()
+
+        Log.d("smssenderWorker", "send Message. id = ${messageToUser.id}")
+
+        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+
     }
 
     private fun updateMessageToUser(id: Long, status: String) {
-        var messageTuUser = messageToUserList.find { it.id == id }
-        messageTuUser?.let { it ->
+
+        Log.d("smssenderWorker", "update messageToUser. Id = $id")
+        var messageToUser = messageRepository.getMessageToUserById(id)
+        messageToUser?.let { it ->
             it.status = status
 
             messageRepository.updateMessageToUser(it)
-            this.messageToUserList.find {it1 -> it1.id == id }?.let { it2 -> it2.id = it.id }
         }
     }
 
     private fun calculateMessageStatus() {
+        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
         var status = Constants.STATUS_SENT_OK
         for (i in messageToUserList) {
             if (i.status == Constants.STATUS_FAILURE_SEND) {
                 status = Constants.STATUS_FAILURE_SEND
             }
         }
+
+        Log.d("smssenderWorker", "calculate message status = $status")
         message.status = status
         messageRepository.updateMessage(message)
     }
