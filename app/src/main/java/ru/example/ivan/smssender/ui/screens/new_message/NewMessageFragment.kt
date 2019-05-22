@@ -1,7 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.new_message
 
 
-import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.lifecycle.Observer
@@ -11,7 +10,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputEditText
@@ -21,11 +19,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentNewMessageBinding
@@ -51,6 +47,13 @@ class NewMessageFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private fun setupUi() {
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
+
+        activity?.let { it.title = "Новое сообщение" }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,27 +61,40 @@ class NewMessageFragment : DaggerFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_message, container, false)
         var view = binding.root
 
+        setupUi()
+
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewMessageViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        activity!!.title = "Новое сообщение"
-
         arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
 
         viewModel.navigateComplete.observe(this, Observer {
-            NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_chainFragment)
+
+            var bundle = Bundle()
+            bundle.putLong(Constants.KEY_GROUP_ID, viewModel.group.id!!)
+            NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_messagesFragment, bundle)
+//            NavHostFragment.findNavController(this).popBackStack()
         })
 
         var selectTemplateButton = view.findViewById<Button>(R.id.select_template_button)
         selectTemplateButton.setOnClickListener {
-            NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_templateFragment)
+            var bundle = Bundle()
+            bundle.putBoolean(Constants.KEY_IS_SELECTION_FRAGMENT, true)
+            NavHostFragment.findNavController(this).navigate(R.id.action_newMessageFragment_to_templateFragment, bundle)
         }
 
         var timeEditText = view.findViewById<TextInputEditText>(R.id.schedule_time_edit_text)
         timeEditText.setOnClickListener {
             showDatePickerDialog()
+        }
+
+        var groupEditText = view.findViewById<TextInputEditText>(R.id.group_edit_text)
+        groupEditText.setOnClickListener {
+            var bundle = Bundle()
+            bundle.putBoolean(Constants.KEY_IS_SELECTION_FRAGMENT, true)
+            NavHostFragment.findNavController(this).navigate(R.id.groupFragment, bundle)
         }
 
         broadcastReceiver = object : BroadcastReceiver() {
@@ -91,11 +107,16 @@ class NewMessageFragment : DaggerFragment() {
                             isDraftMessageTextChanged = true
                         }
                     }
+                    Constants.SELECTED_GROUP -> {
+                        val bundle = intent.extras
+                        bundle?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+                    }
                 }
             }
         }
 
         val filter = IntentFilter(Constants.SELECTED_TEMPLATE)
+        filter.addAction(Constants.SELECTED_GROUP)
         androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!)
             .registerReceiver(broadcastReceiver!!, filter)
 
@@ -164,6 +185,7 @@ class NewMessageFragment : DaggerFragment() {
                 curCalendar.get(Calendar.MONTH),
                 curCalendar.get(Calendar.DAY_OF_MONTH)
             )
+        datePicker.datePicker.minDate = Date().time
         datePicker.show()
     }
 

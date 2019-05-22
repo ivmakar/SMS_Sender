@@ -9,17 +9,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.DaggerAppCompatActivity
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ru.example.ivan.smssender.utility.navigation.OnBackPressedListener
 
 
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-//    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,18 +29,27 @@ class MainActivity : DaggerAppCompatActivity() {
 
         showRequestPermissionRationale(true)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.action_messages -> {
-                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.chainFragment)
+                    Navigation.findNavController(this, R.id.fr_container).popBackStack(R.id.chainFragment, false)
                 }
                 R.id.action_groups -> {
-                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.groupFragment)
+                    var bundle = Bundle()
+                    bundle.putBoolean(Constants.KEY_IS_SELECTION_FRAGMENT, false)
+                    val navController = Navigation.findNavController(this, R.id.fr_container)
+                    navController.popBackStack(R.id.chainFragment, false)
+                    navController.navigate(R.id.groupFragment, bundle)
                 }
                 R.id.action_templates -> {
-                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.templateFragment)
+                    var bundle = Bundle()
+                    bundle.putBoolean(Constants.KEY_IS_SELECTION_FRAGMENT, false)
+
+                    val navController = Navigation.findNavController(this, R.id.fr_container)
+                    navController.popBackStack(R.id.chainFragment, false)
+                    navController.navigate(R.id.templateFragment, bundle)
                 }
             }
             true
@@ -108,6 +119,18 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun exit() {
         finish()
+    }
+
+    override fun onBackPressed() {
+        val curLabel = Navigation.findNavController(this, R.id.fr_container).currentDestination?.label.toString()
+        if (curLabel == "GroupFragment" ||
+            curLabel == "TemplateFragment") {
+            val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+            val fragment = navHostFragment?.childFragmentManager?.fragments?.last()
+            (fragment as? OnBackPressedListener)?.onBackPressed()
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

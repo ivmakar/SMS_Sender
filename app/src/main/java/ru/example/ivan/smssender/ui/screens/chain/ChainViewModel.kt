@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ChainViewModel @Inject constructor(private var chainRepository: ChainRepository): ViewModel() {
 
     private var _navigateToGroups = SingleLiveEvent<Any>()
-    val navigateToGroups: LiveData<Any>
+    val navigateToNewMessage: LiveData<Any>
         get() = _navigateToGroups
 
     val isLoading = ObservableBoolean()

@@ -4,15 +4,14 @@ package ru.example.ivan.smssender.ui.screens.chain
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentChainBinding
@@ -37,18 +36,26 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private fun setupUi() {
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.VISIBLE
+
+        activity?.let { it.title = "Рассылка СМС" }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chain, container, false)
         var view = binding.root
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(ChainViewModel::class.java)
+
+        setupUi()
+
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
@@ -57,8 +64,9 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
         viewModel.chains.observe(this,
             Observer<ArrayList<Chain>> { it?.let{ chainRecyclerViewAdapter.replaceData(it)} })
 
-        viewModel.navigateToGroups.observe(this, Observer {
-            findNavController(this).navigate(R.id.action_chainFragment_to_groupFragment)
+        viewModel.navigateToNewMessage.observe(this, Observer {
+
+            findNavController(this).navigate(R.id.newMessageFragment)
         })
 
         return view

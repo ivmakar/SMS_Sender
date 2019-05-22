@@ -13,6 +13,6 @@ class MessageToUser (
     val sendDate: Long,
     var status: String,
     val sim: String,
-    val interval: Int,
-    val subId: Int
+    val subId: Int,
+    val interval: Int
 )

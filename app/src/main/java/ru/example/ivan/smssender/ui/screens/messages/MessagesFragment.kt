@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.data.dbmodels.Group
@@ -40,6 +41,9 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_messages, container, false)
         var view = binding.root
+
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MessagesViewModel::class.java)

@@ -21,9 +21,11 @@ class Constants {
         const val KEY_MESSAGE_TO_USER_ID = "message_to_user_id"
         const val KEY_MESSAGE_ID = "message_id"
         const val KEY_MESSAGE_DETAIL_ID = "message_detail_id"
+        const val KEY_IS_SELECTION_FRAGMENT = "is_selection_fragment"
 
         //Broadcast keys
         const val SELECTED_TEMPLATE = "selected-template"
+        const val SELECTED_GROUP = "selected_group"
 
         //Permissions
         const val REQUEST_CODE_PERMISSION = 4

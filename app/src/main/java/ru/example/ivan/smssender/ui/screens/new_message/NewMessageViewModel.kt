@@ -8,6 +8,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import android.text.Editable
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -49,19 +50,20 @@ class NewMessageViewModel @Inject constructor(
         get() = _navigateComplete
 
     var group = Group(null, "", 0) //TODO:
+    var groupName = ObservableField<String>("")
 
     var groupContactList = ArrayList<Contact>()
 
     var isRandomInterval = ObservableBoolean(false)
     var isScheduleSending = ObservableBoolean(false)
 
-    var intervalStart = ObservableInt(5)
+    var intervalStart = ObservableField<String>("5")
     var intarvalEnd = ObservableInt(10)
 
     var scheduleDate: Calendar = Calendar.getInstance()
-    var scheduleDateText = ObservableField<String>()
+    var scheduleDateText = ObservableField<String>("")
 
-    var messageText = ObservableField<String>()
+    var messageText = ObservableField<String>("")
 
     var maxSimb = ObservableInt(160)
     var curSimb = ObservableInt(0)
@@ -97,6 +99,7 @@ class NewMessageViewModel @Inject constructor(
                 }
 
                 override fun onComplete() {
+                    groupName.set(group.groupName)
                     loadContactsByGroupId(group.id!!)
                 }
 
@@ -170,6 +173,10 @@ class NewMessageViewModel @Inject constructor(
 
         }
 
+        if (curMessageCount.get() > 3) {
+            messageText.set(messageText.get()!!.substring(0, maxSimb.get() * 3))
+        }
+
         curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
 
     }
@@ -195,12 +202,43 @@ class NewMessageViewModel @Inject constructor(
                 Constants.STATUS_SENDED,
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).simName} else {Constants.NO_SIM},
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0},
-                intervalStart.get()))
+                intervalStart.get()?.toInt() ?: 5
+            ))
         }
     }
 
-    fun saveNewMessage(): Boolean {
-        //TODO: analize input fields
+    private fun checkInputFields(): Boolean {
+        if (group.groupName.equals("")) {
+            Toast.makeText(applicationContext, "Выберите группу", Toast.LENGTH_LONG).show()
+            return false
+        }
+        if (isScheduleSending.get() && scheduleDateText.get().equals("")) {
+            Toast.makeText(applicationContext, "Выберите время отправки или отмените запланированную отправку", Toast.LENGTH_LONG).show()
+            return false
+        }
+        try {
+            val interval = intervalStart.get()?.toInt()!!
+            if (interval < 0 || interval > 100) {
+                Toast.makeText(applicationContext, "Введите целое число не более 100 в поле 'интервал'", Toast.LENGTH_LONG).show()
+                return false
+            }
+        } catch (e: NumberFormatException) {
+            Toast.makeText(applicationContext, "Введите целое число в поле 'интервал'", Toast.LENGTH_LONG).show()
+            return false
+        }
+        if (messageText.get().equals("")) {
+            Toast.makeText(applicationContext, "Введите текст сообщения", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
+
+    private fun saveNewMessage(): Boolean {
+
+        if (!checkInputFields()) {
+            return false
+        }
+
         val duration = scheduleDate.timeInMillis - Date().time
         val sendDate = if (isScheduleSending.get() && duration > 0) {
             scheduleDate.time.time

@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.ui.rvadapters.NewGroupRecyclerViewAdapter
@@ -39,6 +40,9 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_group, container, false)
         var view = binding.root
+
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewGroupViewModel::class.java)

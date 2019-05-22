@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.databinding.FragmentMessageDetailsBinding
@@ -29,6 +30,13 @@ class MessageDetailsFragment : DaggerFragment(), MessageDetailsRecyclerViewAdapt
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private fun setupUi() {
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
+
+        activity?.let { it.title = "О сообщении" }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +44,8 @@ class MessageDetailsFragment : DaggerFragment(), MessageDetailsRecyclerViewAdapt
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_message_details, container, false)
         var view = binding.root
+
+        setupUi()
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(MessageDetailsViewModel::class.java)

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
 
 import ru.example.ivan.smssender.R
@@ -28,12 +29,24 @@ class NewTemplateFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private fun setupUi() {
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
+
+        activity?.let { it.title = "Новый шаблон" }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_template, container, false)
         var view = binding.root
+
+        setupUi()
+
+        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.visibility = View.GONE
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(NewTemplateViewModel::class.java)
