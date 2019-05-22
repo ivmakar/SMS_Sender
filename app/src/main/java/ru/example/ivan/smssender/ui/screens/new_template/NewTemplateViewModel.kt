@@ -1,8 +1,10 @@
 package ru.example.ivan.smssender.ui.screens.new_template
 
 
+import android.text.Editable
 import androidx.lifecycle.ViewModel
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -19,6 +21,10 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
     var templateText = ObservableField<String>()
     var errMessage = String()
     var templates = ArrayList<Template>()
+
+    var maxSimb = ObservableInt(160)
+    var curSimb = ObservableInt(0)
+    var curMessageCount = ObservableInt(1)
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -63,6 +69,49 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
         }
 
         return true
+    }
+
+    fun onMessageTextChanged(s: Editable) {
+        templateText.set(s.toString())
+        if (templateText.get().isNullOrEmpty()){
+            maxSimb.set(160)
+            curSimb.set(0)
+            curMessageCount.set(1)
+            return
+        }
+        curSimb.set(templateText.get()!!.length)
+
+        maxSimb.set(160)
+
+        val str = templateText.get()!!
+        for (i in str) {
+            if (isRussianText(i)) {
+                maxSimb.set(70)
+                break
+            }
+        }
+
+        if (curSimb.get() > maxSimb.get()) {
+            if (maxSimb.get() == 160)
+                maxSimb.set(153)
+            else
+                maxSimb.set(67)
+
+        }
+
+        if (curMessageCount.get() > 3) {
+            templateText.set(templateText.get()!!.substring(0, maxSimb.get() * 3))
+        }
+
+        curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
+
+    }
+
+    private fun isRussianText (ch: Char): Boolean {
+        if (ch in 'а'..'я' || ch in 'А'..'Я') {
+            return true
+        }
+        return false
     }
 
     fun saveTemplate(){

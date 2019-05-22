@@ -17,7 +17,7 @@ class ChainRepository @Inject constructor(private val databaseDao: DatabaseDao) 
             val countMessages = databaseDao.getMessageCountByGroupId(i.id!!)
             if (!(countMessages.isEmpty() || countMessages.first() == 0)) {
                 val lastMessage = databaseDao.getLastMessagesByGroupId(i.id)
-                chainsList.add(Chain(i.id, i.groupName, lastMessage.last().messageText, countMessages.first(), "")) //TODO:LastDate
+                chainsList.add(Chain(i.id, i.groupName, lastMessage.last().messageText, countMessages.first(), lastMessage.last().getDateFormated())) //TODO:LastDate
             }
         }
 

@@ -26,11 +26,7 @@ class ChainViewModel @Inject constructor(private var chainRepository: ChainRepos
 
     private var compositeDisposable = CompositeDisposable()
 
-    init{
-        loadChains()
-    }
-
-    private fun loadChains(){
+    fun loadChains(){
         isLoading.set(true)
         compositeDisposable += chainRepository
             .getChains()
