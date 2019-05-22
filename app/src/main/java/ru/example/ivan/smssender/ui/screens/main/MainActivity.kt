@@ -8,21 +8,41 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
 import dagger.android.support.DaggerAppCompatActivity
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+//    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         showRequestPermissionRationale(true)
 
-        setContentView(R.layout.activity_main)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_messages -> {
+                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.chainFragment)
+                }
+                R.id.action_groups -> {
+                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.groupFragment)
+                }
+                R.id.action_templates -> {
+                    Navigation.findNavController(this, R.id.fr_container).navigate(R.id.templateFragment)
+                }
+            }
+            true
+        }
     }
 
     private fun checkPermissions(): ArrayList<String> {

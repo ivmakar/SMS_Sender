@@ -29,4 +29,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="messages_bottom_navigation">Сообщения</string>
+    <string name="groups_bottom_navigation">Группы</string>
+    <string name="templates_bottom_navigation">Шаблоны</string>
 </resources>
