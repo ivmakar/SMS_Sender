@@ -14,6 +14,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.app.PendingIntent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -42,15 +43,10 @@ class SendExecutor @Inject constructor(
     lateinit var messageRepository: MessageRepository
 
     override fun doWork(): Result {
-
-        Log.d("UnicTag", "start1")
         val messageId = inputData.getLong(Constants.KEY_MESSAGE_ID, 0)
-        Log.d("UnicTag", "start2")
         val message = messageRepository.getMessageById(messageId)
-        Log.d("UnicTag", "start3")
 
         initSending(message)
-        Log.d("UnicTag", "end")
 
         return Result.success()
     }
@@ -59,7 +55,6 @@ class SendExecutor @Inject constructor(
 
         notifyStartMessaging()
 
-        Log.d("UnicTag", "startInitSending")
         message = msg
         messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
 
@@ -128,7 +123,9 @@ class SendExecutor @Inject constructor(
         }
 
         notification = NotificationCompat.Builder(applicationContext, Constants.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.baseline_message_black_18)
+            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.app_icon))
+            .setSubText("subtext")
             .setContentTitle("Отправка SMS")
             .setProgress(0, 0, false)
             .setOngoing(true)

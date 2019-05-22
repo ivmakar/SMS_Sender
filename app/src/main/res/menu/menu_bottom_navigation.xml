@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/action_messages"
-            android:icon="@android:drawable/ic_dialog_map"
+            android:icon="@drawable/baseline_message_black_24"
             android:title="@string/messages_bottom_navigation"/>
     <item
             android:id="@+id/action_groups"
-            android:icon="@android:drawable/ic_dialog_dialer"
+            android:icon="@drawable/baseline_group_black_24"
             android:title="@string/groups_bottom_navigation" />
     <item
             android:id="@+id/action_templates"
-            android:icon="@android:drawable/ic_dialog_email"
+            android:icon="@drawable/baseline_drafts_black_24"
             android:title="@string/templates_bottom_navigation" />
 </menu>
