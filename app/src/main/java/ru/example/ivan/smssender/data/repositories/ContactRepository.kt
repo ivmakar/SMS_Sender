@@ -49,7 +49,7 @@ class ContactRepository @Inject constructor(private val applicationContext: Cont
     private fun getUserToGroupByGroupIdFromDb(groupId: Long) : ArrayList<UserToGroup>
             = databaseDao.getUserToGroupByGroupId(groupId) as ArrayList<UserToGroup>
 
-    private fun readContactsFromPhone(): ArrayList<Contact> {
+    fun readContactsFromPhone(): ArrayList<Contact> {
 
         val CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
         val DISPLAY_NAME = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME

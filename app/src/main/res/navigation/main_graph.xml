@@ -27,6 +27,8 @@
               android:label="MessagesFragment">
         <action android:id="@+id/action_messagesFragment_to_newMessageFragment"
                 app:destination="@id/newMessageFragment"/><argument android:name="group"/><argument android:name="group"/>
+        <action android:id="@+id/action_messagesFragment_to_messageDetailsFragment"
+                app:destination="@id/messageDetailsFragment"/>
     </fragment>
     <fragment android:id="@+id/newMessageFragment"
               android:name="ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragment"
@@ -47,4 +49,7 @@
         <action android:id="@+id/action_templateFragment_to_newTemplateFragment"
                 app:destination="@id/newTemplateFragment"/>
     </fragment>
+    <fragment android:id="@+id/messageDetailsFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.message_details.MessageDetailsFragment"
+              android:label="MessageDetailsFragment"/>
 </navigation>

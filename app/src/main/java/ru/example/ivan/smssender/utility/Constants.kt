@@ -20,6 +20,7 @@ class Constants {
         const val KEY_GROUP_MEMBERS = "group_members"
         const val KEY_MESSAGE_TO_USER_ID = "message_to_user_id"
         const val KEY_MESSAGE_ID = "message_id"
+        const val KEY_MESSAGE_DETAIL_ID = "message_detail_id"
 
         //Broadcast keys
         const val SELECTED_TEMPLATE = "selected-template"

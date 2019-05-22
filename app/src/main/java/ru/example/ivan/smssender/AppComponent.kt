@@ -6,6 +6,7 @@ import dagger.android.support.AndroidSupportInjectionModule
 import ru.example.ivan.smssender.ui.screens.chain.ChainViewModule
 import ru.example.ivan.smssender.ui.screens.group.GroupFragmentModule
 import ru.example.ivan.smssender.ui.screens.main.MainActivityModule
+import ru.example.ivan.smssender.ui.screens.message_details.MessageDetailsFragmentModule
 import ru.example.ivan.smssender.ui.screens.messages.MessagesFragmentModule
 import ru.example.ivan.smssender.ui.screens.new_group.NewGroupFragmentModule
 import ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragmentModule
@@ -31,7 +32,8 @@ import javax.inject.Singleton
         NewMessageFragmentModule::class,
         TemplateFragmentModule::class,
         NewTemplateFragmentModule::class,
-        SendExecutorModule::class])
+        SendExecutorModule::class,
+        MessageDetailsFragmentModule::class])
 
 interface AppComponent : AndroidInjector<App> {
 

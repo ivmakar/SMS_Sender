@@ -77,6 +77,10 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
             })
     }
 
+    fun getMessageIdByPosition(position: Int): Long {
+        return messages.value?.get(position)?.id!!
+    }
+
     fun messageOnClick() {
         _navigateToNewMessage.call()
     }

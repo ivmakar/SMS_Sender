@@ -15,16 +15,12 @@ import dagger.android.support.DaggerFragment
 import ru.example.ivan.smssender.R
 import ru.example.ivan.smssender.data.dbmodels.Group
 import ru.example.ivan.smssender.databinding.FragmentMessagesBinding
-import ru.example.ivan.smssender.ui.rvadapters.MessageRecyclerViewAdapter
+import ru.example.ivan.smssender.ui.rvadapters.MessageDetailsRecyclerViewAdapter
 import ru.example.ivan.smssender.data.dbmodels.Message
+import ru.example.ivan.smssender.ui.rvadapters.MessageRecyclerViewAdapter
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -73,7 +69,12 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
     }
 
     override fun onItemClick(position: Int) {
-        //TODO: show delivery status by users
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(MessagesViewModel::class.java)
+        var bundle = Bundle()
+        bundle.putLong(Constants.KEY_MESSAGE_DETAIL_ID, viewModel.getMessageIdByPosition(position))
+        NavHostFragment.findNavController(this).navigate(R.id.action_messagesFragment_to_messageDetailsFragment, bundle)
+
     }
 
 }
