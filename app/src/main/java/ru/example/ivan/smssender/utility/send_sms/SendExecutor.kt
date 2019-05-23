@@ -2,21 +2,16 @@ package ru.example.ivan.smssender.utility.send_sms
 
 import android.content.Context
 import android.telephony.SmsManager
-import android.telephony.SubscriptionManager
 import ru.example.ivan.smssender.data.dbmodels.Message
 import ru.example.ivan.smssender.data.repositories.MessageRepository
 import ru.example.ivan.smssender.utility.Constants
 import javax.inject.Inject
-import android.content.IntentFilter
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.BroadcastReceiver
 import android.app.PendingIntent
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -31,18 +26,17 @@ class SendExecutor @Inject constructor(
     private var messageToUserList = ArrayList<MessageToUser>()
 
     private var sendingMessageCount = 0
-    private var sentStatusMessageCount = 0
+//    private var sentStatusMessageCount = 0
     private lateinit var message: Message
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var notification: NotificationCompat.Builder
 
-
     lateinit var messageRepository: MessageRepository
 
     override fun doWork(): Result {
         val messageId = inputData.getLong(Constants.KEY_MESSAGE_ID, 0)
-        val message = messageRepository.getMessageById(messageId)
+        message = messageRepository.getMessageById(messageId)
 
         initSending()
 
@@ -53,19 +47,23 @@ class SendExecutor @Inject constructor(
 
 //        applicationContext.registerReceiver(MessageStatusReceiver(), IntentFilter(Constants.SMS_SENT_INTENT).also { it.addAction(Constants.SMS_DELIVERED_INTENT) })
 
-        applicationContext.startService(Intent(applicationContext, MessageStatusService::class.java))
 
         notifyStartMessaging()
 
         messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
 
         for (i in messageToUserList) {
-
-            sendSms(message, i)
+            if (i.status != Constants.STATUS_SENDED) {
+                sendSms(message, i)
+            } else {
+                sendingMessageCount++
+            }
             notifyProgressUpdate(messageToUserList.size, sendingMessageCount)
             Thread.sleep(1000*i.interval.toLong())
 
         }
+
+        calculateMessageStatus()
 
         notifyStopMessaging()
 
@@ -153,7 +151,6 @@ class SendExecutor @Inject constructor(
     private fun sendSms(message: Message, messageToUser: MessageToUser) {
         sendingMessageCount++
 
-        Log.d("MyReceiver", "send $sendingMessageCount")
         val smsManager = SmsManager.getSmsManagerForSubscriptionId(messageToUser.subId)
 
         val requestCode: Int = messageToUser.id!!.toInt()
@@ -169,15 +166,14 @@ class SendExecutor @Inject constructor(
             Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
             0)
 
-        Log.d("MyReceiver", "send Message. id = ${messageToUser.id}")
-
         smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+
+        updateMessageToUser(messageToUser.id!!, Constants.STATUS_SENDED)
 
     }
 
     private fun updateMessageToUser(id: Long, status: String) {
 
-        Log.d("MyReceiver", "update messageToUser. Id = $id")
         var messageToUser = messageRepository.getMessageToUserById(id)
         messageToUser?.let { it ->
             it.status = status
@@ -188,20 +184,15 @@ class SendExecutor @Inject constructor(
 
     private fun calculateMessageStatus() {
         messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
-        var status = Constants.STATUS_SENT_OK
+//        var status = Constants.STATUS_SENT_OK
+        var status = Constants.STATUS_SENDED
         for (i in messageToUserList) {
             if (i.status == Constants.STATUS_FAILURE_SEND) {
                 status = Constants.STATUS_FAILURE_SEND
             }
         }
 
-        Log.d("MyReceiver", "calculate message status = $status")
         message.status = status
         messageRepository.updateMessage(message)
-    }
-
-    override fun onStopped() {
-        super.onStopped()
-        Log.d("MyReceiver", "onStoppedWorker")
     }
 }

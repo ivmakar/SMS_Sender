@@ -199,7 +199,7 @@ class NewMessageViewModel @Inject constructor(
                 0,
                 AppFunctions.standartizePhoneNumber(i.phoneNumber),
                 sendDate,
-                Constants.STATUS_SENDED,
+                Constants.STATUS_SCHEDULE,
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).simName} else {Constants.NO_SIM},
                 if(selectedSimPosition != null) {simAdapter.getItem(selectedSimPosition!!).subId} else {0},
                 intervalStart.get()?.toInt() ?: 5
@@ -245,7 +245,7 @@ class NewMessageViewModel @Inject constructor(
         } else {
             Date().time
         }
-        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate, Constants.STATUS_SENDED, isScheduleSending.get()!!)
+        val message = Message(null, group.id!!, messageText.get()!!, "send", sendDate, Constants.STATUS_SCHEDULE, isScheduleSending.get()!!)
 
         setMessageToUserList(sendDate)
         val messageId = messageRepository.saveMessage(message, messageToUserList)

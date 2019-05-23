@@ -37,8 +37,8 @@ class Constants {
         const val DATE_FORMAT = "EE, d MMMM, HH:mm"
 
         //Message status
-        const val STATUS_SCHEDULE = "schedule"
-        const val STATUS_SENDED = "sended"
+        const val STATUS_SCHEDULE = "Ожидает"
+        const val STATUS_SENDED = "Отправлено"
         const val STATUS_SENT_OK = "sent"
         const val STATUS_DELIVERED = "delivered"
         const val STATUS_FAILURE_SEND = "failure"

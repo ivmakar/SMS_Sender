@@ -61,7 +61,10 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
         arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadMessages(it) }
 
         viewModel.messages.observe(this,
-            Observer<ArrayList<Message>> { it?.let{ messageRecyclerViewAdapter.replaceData(it)} })
+            Observer<ArrayList<Message>> { it?.let{
+                messageRecyclerViewAdapter.replaceData(it)
+                binding.messageRv.scrollToPosition(it.size - 1)
+            } })
 
         viewModel.navigateToNewMessage.observe(this, Observer {
             var bundle = Bundle()
