@@ -1,14 +1,13 @@
 package ru.example.ivan.smssender.ui.rvadapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import ru.example.ivan.smssender.databinding.RvItemGroupBinding
-import ru.example.ivan.smssender.ui.uimodels.Group
+import ru.example.ivan.smssender.data.dbmodels.Group
 
 class GroupRecyclerViewAdapter(private var items: ArrayList<Group>,
                                private var listener: OnItemClickListener)
-    : RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>()  {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -31,7 +30,7 @@ class GroupRecyclerViewAdapter(private var items: ArrayList<Group>,
     }
 
     class ViewHolder(private var binding: RvItemGroupBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ch: Group, listener: OnItemClickListener?) {
             binding.group = ch

@@ -7,16 +7,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "ru.examples.ivan.smssender"
-        minSdkVersion 17
-        targetSdkVersion 27
+        minSdkVersion 22
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
     }
@@ -34,19 +34,19 @@ android {
 
         finalProduction {
             dimension "default"
-            applicationId "ru.examples.ivan.smssender"
+            applicationId "ru.example.ivan.smssender"
             resValue "string", "app_name", "SMS Sender"
         }
 
         demoProduction {
             dimension "default"
-            applicationId "ru.examples.ivan.smssender.demoproduction"
+            applicationId "ru.example.ivan.smssender.demoproduction"
             resValue "string", "app_name", "SMS Sender Demo P"
         }
 
         demoTesting {
             dimension "default"
-            applicationId "ru.examples.ivan.smssender.demotesting"
+            applicationId "ru.example.ivan.smssender.demotesting"
             resValue "string", "app_name", "SMS Sender Demo T"
         }
 
@@ -68,33 +68,44 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    def room_version = "2.1.0-beta01"
+    def dagger_version = "2.22.1"
+    def work_version = "2.0.1"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
+    //LifeCycle
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    //RXjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    //Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+//    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:27.1.1'
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
-    kapt 'com.android.databinding:compiler:3.1.2'
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.work:work-runtime:$work_version"
 
-    //LifCycle
-    implementation "android.arch.lifecycle:runtime:1.1.1"
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-    kapt "android.arch.lifecycle:compiler:1.1.1"
 
-    implementation "io.reactivex.rxjava2:rxjava:2.1.9"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
-
-    implementation "com.google.dagger:dagger:2.14.1"
-    implementation "com.google.dagger:dagger-android:2.14.1"
-    implementation "com.google.dagger:dagger-android-support:2.14.1"
-    kapt "com.google.dagger:dagger-compiler:2.14.1"
-    kapt "com.google.dagger:dagger-android-processor:2.14.1"
+    implementation 'androidx.navigation:navigation-fragment:2.0.0-rc02'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }

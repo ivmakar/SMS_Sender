@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/main_graph" app:startDestination="@id/chainFragment">
+
+    <fragment android:id="@+id/chainFragment" android:name="ru.example.ivan.smssender.ui.screens.chain.ChainFragment"
+              android:label="ChainFragment">
+        <action android:id="@+id/action_chainFragment_to_messagesFragment" app:destination="@id/messagesFragment"/>
+    </fragment>
+    <fragment android:id="@+id/groupFragment" android:name="ru.example.ivan.smssender.ui.screens.group.GroupFragment"
+              android:label="GroupFragment">
+        <action android:id="@+id/action_groupFragment_to_newGroupFragment" app:destination="@id/newGroupFragment"/>
+        <action android:id="@+id/action_groupFragment_to_messagesFragment" app:destination="@id/messagesFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newGroupFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_group.NewGroupFragment"
+              android:label="NewGroupFragment">
+        <action android:id="@+id/action_newGroupFragment_to_contactFragment" app:destination="@id/contactFragment"/>
+    </fragment>
+    <fragment android:id="@+id/contactFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_group.ContactFragment"
+              android:label="ContactFragment">
+    </fragment>
+    <fragment android:id="@+id/messagesFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.messages.MessagesFragment"
+              android:label="MessagesFragment">
+        <action android:id="@+id/action_messagesFragment_to_newMessageFragment"
+                app:destination="@id/newMessageFragment"
+                app:popUpTo="@+id/messagesFragment"
+                app:popUpToInclusive="true"/>
+        <action android:id="@+id/action_messagesFragment_to_messageDetailsFragment"
+                app:destination="@id/messageDetailsFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newMessageFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_message.NewMessageFragment"
+              android:label="NewMessageFragment">
+        <action android:id="@+id/action_newMessageFragment_to_messagesFragment"
+                app:destination="@id/messagesFragment"
+                app:popUpTo="@+id/newMessageFragment"
+                app:popUpToInclusive="true"/>
+        <action android:id="@+id/action_newMessageFragment_to_templateFragment" app:destination="@id/templateFragment"/>
+    </fragment>
+    <fragment android:id="@+id/newTemplateFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.new_template.NewTemplateFragment"
+              android:label="NewTemplateFragment">
+    </fragment>
+    <fragment android:id="@+id/templateFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.template.TemplateFragment"
+              android:label="TemplateFragment">
+        <action android:id="@+id/action_templateFragment_to_newTemplateFragment"
+                app:destination="@id/newTemplateFragment"/>
+    </fragment>
+    <fragment android:id="@+id/messageDetailsFragment"
+              android:name="ru.example.ivan.smssender.ui.screens.message_details.MessageDetailsFragment"
+              android:label="MessageDetailsFragment"/>
+</navigation>

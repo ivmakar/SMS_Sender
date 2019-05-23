@@ -1,6 +1,6 @@
 package ru.example.ivan.smssender.ui.screens.main
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -15,8 +15,8 @@ internal abstract class MainActivityModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ChainViewModel::class)
-    abstract fun bindMainViewModel(viewModel: ChainViewModel): ViewModel
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 
 
 }
