@@ -29,8 +29,6 @@ class SendExecutor @Inject constructor(
     workerParams: WorkerParameters): Worker(appContext, workerParams) {
 
     private var messageToUserList = ArrayList<MessageToUser>()
-    private val subscriptionManager
-            = applicationContext.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
 
     private var sendingMessageCount = 0
     private var sentStatusMessageCount = 0
@@ -46,13 +44,16 @@ class SendExecutor @Inject constructor(
         val messageId = inputData.getLong(Constants.KEY_MESSAGE_ID, 0)
         val message = messageRepository.getMessageById(messageId)
 
-        initSending(message)
+        initSending()
 
         return Result.success()
     }
 
-    fun initSending(msg: Message) {
-        message = msg
+    fun initSending() {
+
+//        applicationContext.registerReceiver(MessageStatusReceiver(), IntentFilter(Constants.SMS_SENT_INTENT).also { it.addAction(Constants.SMS_DELIVERED_INTENT) })
+
+        applicationContext.startService(Intent(applicationContext, MessageStatusService::class.java))
 
         notifyStartMessaging()
 
@@ -68,7 +69,7 @@ class SendExecutor @Inject constructor(
 
         notifyStopMessaging()
 
-        applicationContext.registerReceiver(object : BroadcastReceiver() {
+        /*applicationContext.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (resultCode) {
                     Activity.RESULT_OK -> updateMessageToUser(
@@ -107,7 +108,7 @@ class SendExecutor @Inject constructor(
 //                    Activity.RESULT_CANCELED ->
                 }
             }
-        }, IntentFilter(Constants.SMS_DELIVERED_INTENT))
+        }, IntentFilter(Constants.SMS_DELIVERED_INTENT))*/
     }
 
     private fun notifyStartMessaging() {
@@ -152,7 +153,7 @@ class SendExecutor @Inject constructor(
     private fun sendSms(message: Message, messageToUser: MessageToUser) {
         sendingMessageCount++
 
-        Log.d("smssenderWorker", "send $sendingMessageCount")
+        Log.d("MyReceiver", "send $sendingMessageCount")
         val smsManager = SmsManager.getSmsManagerForSubscriptionId(messageToUser.subId)
 
         val requestCode: Int = messageToUser.id!!.toInt()
@@ -168,7 +169,7 @@ class SendExecutor @Inject constructor(
             Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
             0)
 
-        Log.d("smssenderWorker", "send Message. id = ${messageToUser.id}")
+        Log.d("MyReceiver", "send Message. id = ${messageToUser.id}")
 
         smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
 
@@ -176,7 +177,7 @@ class SendExecutor @Inject constructor(
 
     private fun updateMessageToUser(id: Long, status: String) {
 
-        Log.d("smssenderWorker", "update messageToUser. Id = $id")
+        Log.d("MyReceiver", "update messageToUser. Id = $id")
         var messageToUser = messageRepository.getMessageToUserById(id)
         messageToUser?.let { it ->
             it.status = status
@@ -194,10 +195,13 @@ class SendExecutor @Inject constructor(
             }
         }
 
-        Log.d("smssenderWorker", "calculate message status = $status")
+        Log.d("MyReceiver", "calculate message status = $status")
         message.status = status
         messageRepository.updateMessage(message)
     }
 
-
+    override fun onStopped() {
+        super.onStopped()
+        Log.d("MyReceiver", "onStoppedWorker")
+    }
 }
