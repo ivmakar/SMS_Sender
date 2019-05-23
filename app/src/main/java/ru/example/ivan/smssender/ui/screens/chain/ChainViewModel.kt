@@ -22,33 +22,9 @@ class ChainViewModel @Inject constructor(private var chainRepository: ChainRepos
 
     val isLoading = ObservableBoolean()
 
-    var chains = MutableLiveData<ArrayList<Chain>>()
-
-    private var compositeDisposable = CompositeDisposable()
-
-    fun loadChains(){
-        isLoading.set(true)
-        compositeDisposable += chainRepository
-            .getChains()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Chain>>() {
+    var chains = chainRepository.getChains()
 
 
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Chain>) {
-                    chains.value = t
-                }
-
-                override fun onComplete() {
-                    isLoading.set(false)
-                }
-
-            })
-    }
 
     fun chainOnClick() {
         _navigateToGroups.call()
@@ -56,12 +32,5 @@ class ChainViewModel @Inject constructor(private var chainRepository: ChainRepos
 
     fun getChainByPosition(position: Int) : Chain {
         return chains.value?.get(position)!!
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        if(!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
     }
 }

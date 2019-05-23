@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.Transformations
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -24,57 +25,11 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
 
     val isLoading = ObservableBoolean()
 
-    var messages = MutableLiveData<ArrayList<Message>>()
+    var messages = messageRepository.getMessagesByGroupId(-1)
 
-    var curGroup = MutableLiveData<Group>()
-
-    private var compositeDisposable = CompositeDisposable()
-
-    fun loadGroup(groupId: Long){
-        compositeDisposable += groupRepository
-            .getGroupById(groupId)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<Group>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: Group) {
-                    curGroup.value = t
-                }
-
-                override fun onComplete() {
-                }
-
-            })
-    }
-
-    fun loadMessages(groupId: Long){
-
-        isLoading.set(true)
-        compositeDisposable += messageRepository
-            .getMessagesByGroupId(groupId)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Message>>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Message>) {
-                    messages.value = t
-                }
-
-                override fun onComplete() {
-                    isLoading.set(false)
-                }
-
-            })
+    fun loadMessages(groupId: Long): LiveData<List<Message>> {
+        messages = messageRepository.getMessagesByGroupId(groupId)
+        return messages
     }
 
     fun getMessageIdByPosition(position: Int): Long {
@@ -83,12 +38,5 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
 
     fun messageOnClick() {
         _navigateToNewMessage.call()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        if(!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
     }
 }

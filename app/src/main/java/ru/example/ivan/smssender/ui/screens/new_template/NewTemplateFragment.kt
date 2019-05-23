@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerFragment
@@ -52,6 +53,8 @@ class NewTemplateFragment : DaggerFragment() {
             .get(NewTemplateViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
+
+        viewModel.templatesLiveData.observe(this, Observer { viewModel.templates = it })
 
         var fab = view.findViewById<FloatingActionButton>(R.id.fab_new_template)
         fab.setOnClickListener {

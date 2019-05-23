@@ -1,6 +1,7 @@
 package ru.example.ivan.smssender.data.repositories
 
-import io.reactivex.Observable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import ru.example.ivan.smssender.ui.uimodels.MessageDetail
 import ru.example.ivan.smssender.utility.phone_number_parsing.AppFunctions
 import javax.inject.Inject
@@ -10,29 +11,30 @@ class MessageDetailsRepository @Inject constructor(
     private val messageRepository: MessageRepository
 ) {
 
-    fun getMessageDetailListByMessageId(messageId: Long): Observable<ArrayList<MessageDetail>> {
+    fun getMessageDetailListByMessageId(messageId: Long): LiveData<ArrayList<MessageDetail>>? {
         val contacts = contactRepository.readContactsFromPhone()
-        val messageToUserList = messageRepository.getMessageToUserListByMessageId(messageId)
+        val messageToUserList = messageRepository.getMessageToUserListLiveByMessageId(messageId)
 
-        var messageDetailList = ArrayList<MessageDetail>()
-
-        for (i in messageToUserList) {
-            contacts.find { i.userPhoneNumber == AppFunctions.standartizePhoneNumber(it.phoneNumber) }.let {
-                if (it == null) {
-                    messageDetailList.add(MessageDetail(
-                        AppFunctions.formatPhoneNumber(i.userPhoneNumber),
-                        AppFunctions.formatPhoneNumber(i.userPhoneNumber),
-                        i.status))
-                } else {
-                    messageDetailList.add(MessageDetail(
-                        it.displayName,
-                        it.phoneNumber,
-                        i.status))
+        return Transformations.map(messageToUserList) {
+            var messageDetailList = ArrayList<MessageDetail>()
+            for (i in it) {
+                contacts.find { i.userPhoneNumber == AppFunctions.standartizePhoneNumber(it.phoneNumber) }.let {
+                    if (it == null) {
+                        messageDetailList.add(MessageDetail(
+                            AppFunctions.formatPhoneNumber(i.userPhoneNumber),
+                            AppFunctions.formatPhoneNumber(i.userPhoneNumber),
+                            i.status))
+                    } else {
+                        messageDetailList.add(MessageDetail(
+                            it.displayName,
+                            it.phoneNumber,
+                            i.status))
+                    }
                 }
             }
+            messageDetailList
         }
 
-        return Observable.just(messageDetailList)
     }
 
 }

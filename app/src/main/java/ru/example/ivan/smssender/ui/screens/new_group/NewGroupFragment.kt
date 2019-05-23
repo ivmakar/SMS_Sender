@@ -49,8 +49,6 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        viewModel.loadGroups()
-
         binding.groupRv.layoutManager = LinearLayoutManager(activity)
         binding.groupRv.adapter = newGroupRecyclerViewAdapter
         viewModel.selectedContacts.observe(this,

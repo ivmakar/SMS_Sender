@@ -1,5 +1,7 @@
 package ru.example.ivan.smssender.utility.roomdb
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import ru.example.ivan.smssender.data.dbmodels.*
 
@@ -22,7 +24,7 @@ interface DatabaseDao {
     fun getMessageById(messageId: Long): Message
 
     @Query("SELECT * FROM Message AS m WHERE m.groupId = :groupId ORDER BY sendDate")
-    fun getMessagesByGroupId(groupId: Long): List<Message>
+    fun getMessagesByGroupId(groupId: Long): LiveData<List<Message>>
 
     @Query("SELECT * FROM Message AS m WHERE m.groupId = :groupId ORDER BY m.sendDate")
     fun getLastMessagesByGroupId(groupId: Long): List<Message>
@@ -44,7 +46,7 @@ interface DatabaseDao {
     fun delete(group: Group)
 
     @Query("SELECT * FROM 'Group' ORDER BY groupName")
-    fun getGroups(): List<Group>
+    fun getGroups(): LiveData<List<Group>>
 
     @Query("SELECT * FROM `Group` AS g WHERE g.id = :groupId ORDER BY groupName")
     fun getGroupById(groupId: Long): Group
@@ -63,7 +65,7 @@ interface DatabaseDao {
     fun delete(template: Template)
 
     @Query("SELECT * FROM Template ORDER BY name")
-    fun getTemplates(): List<Template>
+    fun getTemplates(): LiveData<List<Template>>
 
 
 
@@ -77,6 +79,9 @@ interface DatabaseDao {
 
     @Delete
     fun delete(messageToUser: MessageToUser)
+
+    @Query("SELECT * FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId ORDER BY sendDate")
+    fun getMessageToUserLiveByMessageId(messageId: Long): LiveData<List<MessageToUser>>
 
     @Query("SELECT * FROM MessageToUser AS mtu WHERE mtu.messageId = :messageId ORDER BY sendDate")
     fun getMessageToUserByMessageId(messageId: Long): List<MessageToUser>

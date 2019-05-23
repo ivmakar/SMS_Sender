@@ -2,6 +2,7 @@ package ru.example.ivan.smssender.data.repositories
 
 import android.content.Context
 import android.provider.ContactsContract
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.UserToGroup
 import ru.example.ivan.smssender.ui.uimodels.Contact
@@ -12,13 +13,12 @@ import javax.inject.Inject
 
 class ContactRepository @Inject constructor(private val applicationContext: Context, private val databaseDao: DatabaseDao) {
 
+    var contactsList =  MutableLiveData<ArrayList<Contact>>()
 
+    fun getAllContacts(): MutableLiveData<ArrayList<Contact>> {
 
-    fun getAllContacts() : Observable<ArrayList<Contact>> {
-        var contactsList = ArrayList<Contact>()
-
-        contactsList = readContactsFromPhone()
-        return Observable.just(contactsList)
+        contactsList.value = readContactsFromPhone()
+        return contactsList
     }
 
     fun getUserToGroupListByGroupId(groupId: Long)

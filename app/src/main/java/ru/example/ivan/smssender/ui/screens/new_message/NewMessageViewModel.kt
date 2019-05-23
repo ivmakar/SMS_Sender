@@ -83,27 +83,9 @@ class NewMessageViewModel @Inject constructor(
     }
 
     fun loadGroup(groupId: Long){
-        compositeDisposable += groupRepository
-            .getGroupById(groupId)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<Group>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: Group) {
-                    group = t
-                }
-
-                override fun onComplete() {
-                    groupName.set(group.groupName)
-                    loadContactsByGroupId(group.id!!)
-                }
-
-            })
+        group = groupRepository.getGroupById(groupId)
+        groupName.set(group.groupName)
+        loadContactsByGroupId(group.id!!)
     }
 
     fun loadContactsByGroupId(groupId: Long){

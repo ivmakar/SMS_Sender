@@ -1,5 +1,6 @@
 package ru.example.ivan.smssender.data.repositories
 
+import androidx.lifecycle.LiveData
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Template
 import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
@@ -7,12 +8,9 @@ import javax.inject.Inject
 
 class TemplateRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getTemplates(): Observable<ArrayList<Template>> {
+    private var templates = databaseDao.getTemplates()
 
-        val templates = databaseDao.getTemplates() as ArrayList<Template>
-
-        return Observable.just(templates)
-    }
+    fun getTemplates() : LiveData<List<Template>> = templates
 
     fun saveNewTemplate(tmp: Template){
         databaseDao.insert(tmp)

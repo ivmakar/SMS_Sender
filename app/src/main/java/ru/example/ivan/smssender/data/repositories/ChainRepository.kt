@@ -1,5 +1,9 @@
 package ru.example.ivan.smssender.data.repositories
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Group
 import ru.example.ivan.smssender.ui.uimodels.Chain
@@ -8,19 +12,18 @@ import javax.inject.Inject
 
 class ChainRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getChains() : Observable<ArrayList<Chain>> {
-        var chainsList = ArrayList<Chain>()
-
-        val groupsList = databaseDao.getGroups() as ArrayList<Group>
-
-        for (i in groupsList) {
+    val groupsList = databaseDao.getGroups()
+    var chainList = Transformations.map(groupsList) {
+        val chains = ArrayList<Chain>()
+        for (i in it) {
             val countMessages = databaseDao.getMessageCountByGroupId(i.id!!)
             if (!(countMessages.isEmpty() || countMessages.first() == 0)) {
                 val lastMessage = databaseDao.getLastMessagesByGroupId(i.id)
-                chainsList.add(Chain(i.id, i.groupName, lastMessage.last().messageText, countMessages.first(), lastMessage.last().getDateFormated())) //TODO:LastDate
+                chains.add(Chain(i.id, i.groupName, lastMessage.last().messageText, countMessages.first(), lastMessage.last().getDateFormated())) //TODO:LastDate
             }
         }
-
-        return Observable.just(chainsList)
+        chains
     }
+
+    fun getChains() = chainList
 }

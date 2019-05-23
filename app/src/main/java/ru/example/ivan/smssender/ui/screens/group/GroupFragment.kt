@@ -66,7 +66,7 @@ class GroupFragment : DaggerFragment(), GroupRecyclerViewAdapter.OnItemClickList
         binding.groupRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.groupRv.adapter = groupRecyclerViewAdapter
         viewModel.groups.observe(this,
-            Observer<ArrayList<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it)} })
+            Observer<List<Group>> { it?.let{ groupRecyclerViewAdapter.replaceData(it as ArrayList<Group>)} })
 
         viewModel.navigateToNewGroup.observe(this, Observer {
             var args = Bundle()

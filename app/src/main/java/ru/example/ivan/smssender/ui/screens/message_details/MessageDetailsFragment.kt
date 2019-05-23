@@ -29,6 +29,7 @@ class MessageDetailsFragment : DaggerFragment(), MessageDetailsRecyclerViewAdapt
     private val messageDetailsRecyclerViewAdapter = MessageDetailsRecyclerViewAdapter(arrayListOf(), this)
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private var messageId: Long = -1
 
     private fun setupUi() {
         val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -57,10 +58,10 @@ class MessageDetailsFragment : DaggerFragment(), MessageDetailsRecyclerViewAdapt
         binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.messageRv.adapter = messageDetailsRecyclerViewAdapter
 
-        arguments?.getLong(Constants.KEY_MESSAGE_DETAIL_ID)?.let { viewModel.loadMessageDetailList(it) }
+        arguments?.getLong(Constants.KEY_MESSAGE_DETAIL_ID)?.let { messageId = it }
 
-        viewModel.messageDetailList.observe(this,
-            Observer<ArrayList<MessageDetail>> { it?.let{ messageDetailsRecyclerViewAdapter.replaceData(it) } })
+        viewModel.loadData(messageId)?.observe(this,
+            Observer<ArrayList<MessageDetail>?> { it?.let{ messageDetailsRecyclerViewAdapter.replaceData(it) } })
 
         return view
     }

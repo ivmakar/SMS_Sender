@@ -56,8 +56,6 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
 
         setupUi()
 
-        viewModel.loadChains()
-
         binding.viewModel = viewModel
         binding.executePendingBindings()
 

@@ -33,6 +33,7 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
     private val messageRecyclerViewAdapter = MessageRecyclerViewAdapter(arrayListOf(), this)
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private var groupId: Long = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,22 +54,17 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
         binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.messageRv.adapter = messageRecyclerViewAdapter
 
-        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { groupId = it }
 
-        viewModel.curGroup.observe(this,
-            Observer<Group> { it?.let{ activity!!.title = it.groupName } })
-
-        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadMessages(it) }
-
-        viewModel.messages.observe(this,
-            Observer<ArrayList<Message>> { it?.let{
-                messageRecyclerViewAdapter.replaceData(it)
+        viewModel.loadMessages(groupId).observe(this,
+            Observer<List<Message>?> { it?.let{
+                messageRecyclerViewAdapter.replaceData(it as ArrayList<Message>)
                 binding.messageRv.scrollToPosition(it.size - 1)
             } })
 
         viewModel.navigateToNewMessage.observe(this, Observer {
             var bundle = Bundle()
-            bundle.putLong(Constants.KEY_GROUP_ID, viewModel.curGroup.value?.id!!)
+            bundle.putLong(Constants.KEY_GROUP_ID, groupId)
             NavHostFragment.findNavController(this).navigate(R.id.action_messagesFragment_to_newMessageFragment, bundle)
         })
 

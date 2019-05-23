@@ -1,6 +1,5 @@
 package ru.example.ivan.smssender.data.repositories
 
-import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Message
 import ru.example.ivan.smssender.data.dbmodels.MessageToUser
 import ru.example.ivan.smssender.utility.roomdb.DatabaseDao
@@ -8,13 +7,7 @@ import javax.inject.Inject
 
 class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getMessagesByGroupId(groupId: Long): Observable<ArrayList<Message>> {
-        var messagesList = ArrayList<Message>()
-
-        messagesList = databaseDao.getMessagesByGroupId(groupId) as ArrayList<Message>
-
-        return Observable.just(messagesList)
-    }
+    fun getMessagesByGroupId(groupId: Long) = databaseDao.getMessagesByGroupId(groupId)
 
     fun saveMessage(message: Message, messageToUserList: ArrayList<MessageToUser>): Long {
         val messageId = databaseDao.insert(message)
@@ -25,7 +18,9 @@ class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao
         return messageId
     }
 
-    fun getMessageToUserListByMessageId(messageId: Long) = databaseDao.getMessageToUserByMessageId(messageId) as java.util.ArrayList<MessageToUser>
+    fun getMessageToUserListLiveByMessageId(messageId: Long) = databaseDao.getMessageToUserLiveByMessageId(messageId)
+
+    fun getMessageToUserListByMessageId(messageId: Long) = databaseDao.getMessageToUserByMessageId(messageId)
 
     fun updateMessageToUser(messaageToUser: MessageToUser) {
         databaseDao.update(messaageToUser)
@@ -33,7 +28,7 @@ class MessageRepository @Inject constructor(private val databaseDao: DatabaseDao
 
     fun deleteMessage(message: Message) {
         val messageToUserList
-                = databaseDao.getMessageToUserByMessageId(message.id!!) as ArrayList<MessageToUser>
+                = databaseDao.getMessageToUserLiveByMessageId(message.id!!) as ArrayList<MessageToUser>
 
         for (i in messageToUserList) {
             databaseDao.delete(i)

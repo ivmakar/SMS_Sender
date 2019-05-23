@@ -50,7 +50,7 @@ class SendExecutor @Inject constructor(
 
         notifyStartMessaging()
 
-        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
+        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!) as ArrayList<MessageToUser>
 
         for (i in messageToUserList) {
             if (i.status != Constants.STATUS_SENDED) {
@@ -59,7 +59,8 @@ class SendExecutor @Inject constructor(
                 sendingMessageCount++
             }
             notifyProgressUpdate(messageToUserList.size, sendingMessageCount)
-            Thread.sleep(1000*i.interval.toLong())
+            if (sendingMessageCount < messageToUserList.size)
+                Thread.sleep(1000*i.interval.toLong())
 
         }
 
@@ -183,7 +184,7 @@ class SendExecutor @Inject constructor(
     }
 
     private fun calculateMessageStatus() {
-        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!)
+        messageToUserList = messageRepository.getMessageToUserListByMessageId(message.id!!) as ArrayList<MessageToUser>
 //        var status = Constants.STATUS_SENT_OK
         var status = Constants.STATUS_SENDED
         for (i in messageToUserList) {

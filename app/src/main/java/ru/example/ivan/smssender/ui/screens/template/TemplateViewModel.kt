@@ -17,41 +17,8 @@ class TemplateViewModel @Inject constructor(private var templateRepository: Temp
 
     val isLoading = ObservableBoolean()
 
-    var templates = MutableLiveData<ArrayList<Template>>()
-
-    private var compositeDisposable = CompositeDisposable()
-
-    fun loadTemplates(){
-
-        isLoading.set(true)
-        compositeDisposable += templateRepository
-            .getTemplates()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Template>>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Template>) {
-                    templates.value = t
-                }
-
-                override fun onComplete() {
-                    isLoading.set(false)
-                }
-
-            })
-    }
+    var templates = templateRepository.getTemplates()
 
     fun getTemplateTextByPosition(position: Int) = templates.value!![position].templateText
 
-    override fun onCleared() {
-        super.onCleared()
-        if(!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
-    }
 }

@@ -20,7 +20,8 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
     var templateName = ObservableField<String>()
     var templateText = ObservableField<String>()
     var errMessage = String()
-    var templates = ArrayList<Template>()
+    var templatesLiveData = templateRepository.getTemplates()
+    var templates: List<Template>? = null
 
     var maxSimb = ObservableInt(160)
     var curSimb = ObservableInt(0)
@@ -28,46 +29,20 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
 
     private var compositeDisposable = CompositeDisposable()
 
-    init {
-        loadTemplates()
-    }
-
-    private fun loadTemplates(){
-
-        compositeDisposable += templateRepository
-            .getTemplates()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Template>>() {
-
-
-                override fun onError(e: Throwable) {
-                    //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Template>) {
-                    templates = t
-                }
-
-                override fun onComplete() {
-                }
-
-            })
-    }
-
     fun isCorrectData(): Boolean {
         if (templateName.get().isNullOrEmpty() || templateText.get().isNullOrEmpty()) {
             errMessage = "Заполните все поля"
             return false
         }
 
-        for (i in templates) {
-            if (i.name.equals(templateName.get())) {
-                errMessage = "Шаблон с таким названием уже существует"
-                return false
+        if (templates != null) {
+            for (i in templates!!) {
+                if (i.name.equals(templateName.get())) {
+                    errMessage = "Шаблон с таким названием уже существует"
+                    return false
+                }
             }
         }
-
         return true
     }
 

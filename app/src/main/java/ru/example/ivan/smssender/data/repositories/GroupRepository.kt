@@ -1,5 +1,7 @@
 package ru.example.ivan.smssender.data.repositories
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
 import ru.example.ivan.smssender.data.dbmodels.Group
 import ru.example.ivan.smssender.data.dbmodels.UserToGroup
@@ -11,11 +13,12 @@ import kotlin.collections.ArrayList
 
 class GroupRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
-    fun getAllGroups() : Observable<ArrayList<Group>>
-            = Observable.just(databaseDao.getGroups() as ArrayList<Group>)
+    private var groups = databaseDao.getGroups()
 
-    fun getGroupById(groupId: Long) : Observable<Group>
-            = Observable.just(databaseDao.getGroupById(groupId))
+    fun getAllGroups() : LiveData<List<Group>> = groups
+
+
+    fun getGroupById(groupId: Long) = databaseDao.getGroupById(groupId)
 
     fun saveGroup(group: Group, contactList: ArrayList<Contact>) {
         val groupId = databaseDao.insert(group)

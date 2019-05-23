@@ -40,65 +40,10 @@ class NewGroupViewModel @Inject constructor(
     val isLoading = ObservableBoolean()
     val hasContacts = ObservableBoolean(false)
 
-    var contacts = MutableLiveData<ArrayList<Contact>>()
+    var contacts = contactRepository.getAllContacts()
     var selectedContacts = MutableLiveData<Set<Int>>()
 
-    var groups = MutableLiveData<ArrayList<Group>>()
-
-    private var compositeDisposable = CompositeDisposable()
-
-    init {
-        loadContacts()
-    }
-
-    fun loadGroups() {
-        compositeDisposable += groupRepository
-            .getAllGroups()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Group>>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Group>) {
-                    groups.value = t
-                }
-
-                override fun onComplete() {
-                }
-
-            })
-    }
-
-    fun loadContacts(){
-        isLoading.set(true)
-        hasContacts.set(true)
-        compositeDisposable += contactRepository
-            .getAllContacts()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<ArrayList<Contact>>() {
-
-
-                override fun onError(e: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onNext(t: ArrayList<Contact>) {
-                    if (t == null)
-                        hasContacts.set(false)
-                    contacts.value = t
-                }
-
-                override fun onComplete() {
-                    isLoading.set(false)
-                }
-
-            })
-    }
+    var groups: LiveData<List<Group>> = groupRepository.getAllGroups()
 
     private fun isGroupsContainsName(name: String): Boolean {
         if (groups.value.isNullOrEmpty())
@@ -136,7 +81,6 @@ class NewGroupViewModel @Inject constructor(
 
         groupName.set("")
         selectedContacts.value = sortedSetOf()
-        loadContacts()
 
         Toast.makeText(applicationContext, "Сохранено", Toast.LENGTH_LONG).show()
 
@@ -177,13 +121,5 @@ class NewGroupViewModel @Inject constructor(
         }
 
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        if (!compositeDisposable.isDisposed){
-            compositeDisposable.dispose()
-        }
-    }
-
     //TODO: get droupName.messageText
 }

@@ -61,12 +61,10 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        viewModel.loadTemplates()
-
         binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.messageRv.adapter = templateRecyclerViewAdapter
         viewModel.templates.observe(this,
-            Observer<ArrayList<Template>> { it?.let { templateRecyclerViewAdapter.replaceData(it) } })
+            Observer<List<Template>> { it?.let { templateRecyclerViewAdapter.replaceData(it as ArrayList<Template>) } })
 
         var fab = view.findViewById<FloatingActionButton>(R.id.fab_template)
         fab.setOnClickListener {
