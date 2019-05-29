@@ -25,7 +25,11 @@ class ContactRepository @Inject constructor(private val applicationContext: Cont
             = Observable.just(getUserToGroupByGroupIdFromDb(groupId))
 
     fun getContactsByGroupId(groupId: Long) : Observable<ArrayList<Contact>> {
-        val allContacts = readContactsFromPhone()
+        val allContacts = if (contactsList.value.isNullOrEmpty()) {
+            readContactsFromPhone()
+        } else {
+            contactsList.value!!
+        }
 
         val userToGroupList = getUserToGroupByGroupIdFromDb(groupId)
         var contactsByGroup = ArrayList<Contact>()

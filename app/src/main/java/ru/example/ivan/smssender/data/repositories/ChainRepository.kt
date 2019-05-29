@@ -13,7 +13,8 @@ import javax.inject.Inject
 class ChainRepository @Inject constructor(private val databaseDao: DatabaseDao) {
 
     val groupsList = databaseDao.getGroups()
-    var chainList = Transformations.map(groupsList) {
+
+    fun getChains() = Transformations.map(groupsList) {
         val chains = ArrayList<Chain>()
         for (i in it) {
             val countMessages = databaseDao.getMessageCountByGroupId(i.id!!)
@@ -24,6 +25,4 @@ class ChainRepository @Inject constructor(private val databaseDao: DatabaseDao) 
         }
         chains
     }
-
-    fun getChains() = chainList
 }

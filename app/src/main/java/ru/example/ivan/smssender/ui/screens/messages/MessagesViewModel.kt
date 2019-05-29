@@ -25,7 +25,13 @@ class MessagesViewModel @Inject constructor(private var messageRepository: Messa
 
     val isLoading = ObservableBoolean()
 
+    var group = MutableLiveData<Group>()
+
     var messages = messageRepository.getMessagesByGroupId(-1)
+
+    fun loadGroup(groupId: Long) {
+        group.value = groupRepository.getGroupById(groupId)
+    }
 
     fun loadMessages(groupId: Long): LiveData<List<Message>> {
         messages = messageRepository.getMessagesByGroupId(groupId)

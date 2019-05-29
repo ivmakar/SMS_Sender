@@ -54,7 +54,15 @@ class MessagesFragment : DaggerFragment(), MessageRecyclerViewAdapter.OnItemClic
         binding.messageRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.messageRv.adapter = messageRecyclerViewAdapter
 
-        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { groupId = it }
+        arguments?.getLong(Constants.KEY_GROUP_ID)?.let {
+            groupId = it
+            viewModel.loadGroup(it)
+        }
+
+        viewModel.group.observe(this,
+            Observer<Group> {
+                activity?.let { it1 -> it1.title = it.groupName }
+            })
 
         viewModel.loadMessages(groupId).observe(this,
             Observer<List<Message>?> { it?.let{

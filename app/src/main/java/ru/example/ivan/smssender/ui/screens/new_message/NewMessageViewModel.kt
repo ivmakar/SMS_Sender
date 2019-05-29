@@ -49,15 +49,15 @@ class NewMessageViewModel @Inject constructor(
     val navigateComplete: LiveData<Any>
         get() = _navigateComplete
 
-    var group = Group(null, "", 0) //TODO:
-    var groupName = ObservableField<String>("")
+    var group = Group(null, "", 0)
+    var groupName = ObservableField<String>()
 
     var groupContactList = ArrayList<Contact>()
 
     var isRandomInterval = ObservableBoolean(false)
     var isScheduleSending = ObservableBoolean(false)
 
-    var intervalStart = ObservableField<String>("5")
+    var intervalStart = ObservableField<String>("3")
     var intarvalEnd = ObservableInt(10)
 
     var scheduleDate: Calendar = Calendar.getInstance()
@@ -159,7 +159,13 @@ class NewMessageViewModel @Inject constructor(
             messageText.set(messageText.get()!!.substring(0, maxSimb.get() * 3))
         }
 
-        curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
+        curMessageCount.set(
+            if (curSimb.get() % maxSimb.get() == 0) {
+                curSimb.get() / maxSimb.get()
+            } else {
+                curSimb.get() / maxSimb.get() + 1
+            }
+        )
 
     }
 

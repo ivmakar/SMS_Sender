@@ -61,11 +61,10 @@ class ChainFragment : DaggerFragment(), ChainRecyclerViewAdapter.OnItemClickList
 
         binding.chainRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         binding.chainRv.adapter = chainRecyclerViewAdapter
-        viewModel.chains.observe(this,
+        viewModel.loadChains()?.observe(this,
             Observer<ArrayList<Chain>> { it?.let{ chainRecyclerViewAdapter.replaceData(it)} })
 
         viewModel.navigateToNewMessage.observe(this, Observer {
-
             findNavController(this).navigate(R.id.newMessageFragment)
         })
 

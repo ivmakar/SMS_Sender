@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatSpinner
@@ -42,6 +43,8 @@ class NewMessageFragment : DaggerFragment() {
     private var broadcastReceiver: BroadcastReceiver? = null
     private var draftMessageText = String()
     private var isDraftMessageTextChanged = false
+    private var groupId: Long = -1
+    private var isGroupSelected = false
 
     private lateinit var binding: FragmentNewMessageBinding
     @Inject
@@ -68,7 +71,9 @@ class NewMessageFragment : DaggerFragment() {
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+        if (!isGroupSelected) {
+            arguments?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+        }
 
         viewModel.navigateComplete.observe(this, Observer {
 
@@ -109,7 +114,10 @@ class NewMessageFragment : DaggerFragment() {
                     }
                     Constants.SELECTED_GROUP -> {
                         val bundle = intent.extras
-                        bundle?.getLong(Constants.KEY_GROUP_ID)?.let { viewModel.loadGroup(it) }
+                        bundle?.getLong(Constants.KEY_GROUP_ID)?.let {
+                            groupId = it
+                            isGroupSelected = true
+                        }
                     }
                 }
             }
@@ -160,13 +168,11 @@ class NewMessageFragment : DaggerFragment() {
             isDraftMessageTextChanged = false
         }
 
-    }
+        if (isGroupSelected) {
+            viewModel.loadGroup(groupId)
+            isGroupSelected = false
+        }
 
-    private fun loadSimInfo() {
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(NewMessageViewModel::class.java)
-
-        viewModel.loadSimInfo()
     }
 
     private fun showDatePickerDialog() {
@@ -207,6 +213,14 @@ class NewMessageFragment : DaggerFragment() {
         timePicker.show()
 
     }
+
+
+    override fun onPause() {
+        super.onPause()
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(activity!!.window.decorView.windowToken, 0)
+    }
+
 
     override fun onDetach() {
         super.onDetach()

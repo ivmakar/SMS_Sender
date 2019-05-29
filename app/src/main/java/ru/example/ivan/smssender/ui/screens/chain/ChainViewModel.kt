@@ -24,7 +24,10 @@ class ChainViewModel @Inject constructor(private var chainRepository: ChainRepos
 
     var chains = chainRepository.getChains()
 
-
+    fun loadChains(): LiveData<ArrayList<Chain>>? {
+        chains = chainRepository.getChains()
+        return chains
+    }
 
     fun chainOnClick() {
         _navigateToGroups.call()

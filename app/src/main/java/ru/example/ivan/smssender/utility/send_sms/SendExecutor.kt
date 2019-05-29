@@ -12,6 +12,7 @@ import android.content.Intent
 import android.app.PendingIntent
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -33,10 +34,13 @@ class SendExecutor @Inject constructor(
     private lateinit var notification: NotificationCompat.Builder
 
     lateinit var messageRepository: MessageRepository
+    lateinit var multipartMessage: ArrayList<String>
 
     override fun doWork(): Result {
         val messageId = inputData.getLong(Constants.KEY_MESSAGE_ID, 0)
         message = messageRepository.getMessageById(messageId)
+        val smsManager = SmsManager.getDefault()
+        multipartMessage = smsManager.divideMessage(message.messageText)
 
         initSending()
 
@@ -67,47 +71,6 @@ class SendExecutor @Inject constructor(
         calculateMessageStatus()
 
         notifyStopMessaging()
-
-        /*applicationContext.registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                when (resultCode) {
-                    Activity.RESULT_OK -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_SENT_OK)
-                    SmsManager.RESULT_ERROR_GENERIC_FAILURE -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_FAILURE_SEND)
-                    SmsManager.RESULT_ERROR_NO_SERVICE -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_FAILURE_SEND)
-                    SmsManager.RESULT_ERROR_NULL_PDU -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_FAILURE_SEND)
-                    SmsManager.RESULT_ERROR_RADIO_OFF -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_FAILURE_SEND)
-                }
-
-                sentStatusMessageCount++
-                Log.d("smssenderWorker", "sentMessageCount = $sentStatusMessageCount")
-
-                if (sentStatusMessageCount >= messageToUserList.size) {
-                    calculateMessageStatus()
-                }
-            }
-
-        }, IntentFilter(Constants.SMS_SENT_INTENT))
-
-        applicationContext.registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                when (resultCode) {
-                    Activity.RESULT_OK -> updateMessageToUser(
-                        intent.getLongExtra(Constants.KEY_MESSAGE_TO_USER_ID, 0),
-                        Constants.STATUS_DELIVERED)
-//                    Activity.RESULT_CANCELED ->
-                }
-            }
-        }, IntentFilter(Constants.SMS_DELIVERED_INTENT))*/
     }
 
     private fun notifyStartMessaging() {
@@ -124,7 +87,7 @@ class SendExecutor @Inject constructor(
         }
 
         notification = NotificationCompat.Builder(applicationContext, Constants.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.baseline_message_black_18)
+            .setSmallIcon(R.drawable.baseline_message_black_24)
             .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.app_icon))
             .setContentTitle("Отправка SMS")
             .setProgress(0, 0, false)
@@ -167,7 +130,13 @@ class SendExecutor @Inject constructor(
             Intent(Constants.SMS_DELIVERED_INTENT).putExtra(Constants.KEY_MESSAGE_TO_USER_ID, messageToUser.id!!),
             0)
 
-        smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+        if (multipartMessage.size > 1) {
+            Log.d("multiparting", "multipart")
+            smsManager.sendMultipartTextMessage(messageToUser.userPhoneNumber, null, multipartMessage, null, null)
+        } else {
+            Log.d("multiparting", "No multipart")
+            smsManager.sendTextMessage(messageToUser.userPhoneNumber, null, message.messageText, sentIntent, deliveredIntent)
+        }
 
         updateMessageToUser(messageToUser.id!!, Constants.STATUS_SENDED)
 

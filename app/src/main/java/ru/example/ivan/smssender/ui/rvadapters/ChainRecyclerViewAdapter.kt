@@ -25,6 +25,10 @@ class ChainRecyclerViewAdapter(private var items: ArrayList<Chain>,
         fun onItemClick(position: Int)
     }
 
+    fun getItemByPosition(position: Int): Chain {
+        return items[position]
+    }
+
     fun replaceData(arrayList: ArrayList<Chain>) {
         items = arrayList
         notifyDataSetChanged()
