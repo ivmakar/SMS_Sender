@@ -1,6 +1,7 @@
 package ru.example.ivan.smssender.ui.screens.new_template
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
@@ -68,4 +70,11 @@ class NewTemplateFragment : DaggerFragment() {
 
         return view
     }
+
+    override fun onPause() {
+        super.onPause()
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(activity!!.window.decorView.windowToken, 0)
+    }
+
 }

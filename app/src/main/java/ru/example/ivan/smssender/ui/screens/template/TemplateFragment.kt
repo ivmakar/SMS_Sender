@@ -92,7 +92,11 @@ class TemplateFragment : DaggerFragment(), TemplateRecyclerViewAdapter.OnItemCli
     }
 
     override fun onBackPressed() {
-        val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.selectedItemId = R.id.action_messages
+        if (isSelectionFragment) {
+            NavHostFragment.findNavController(this).popBackStack()
+        } else {
+            val bottomNavigationView = activity!!.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+            bottomNavigationView.selectedItemId = R.id.action_messages
+        }
     }
 }

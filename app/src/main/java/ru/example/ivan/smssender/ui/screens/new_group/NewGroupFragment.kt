@@ -22,6 +22,11 @@ import ru.example.ivan.smssender.ui.screens.main.MainViewModel
 import ru.example.ivan.smssender.ui.uimodels.Contact
 
 import javax.inject.Inject
+import android.content.Context.INPUT_METHOD_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+
 
 /**
  * A simple [Fragment] subclass.
@@ -63,10 +68,16 @@ class NewGroupFragment : DaggerFragment(), NewGroupRecyclerViewAdapter.OnItemCli
         })
 
         viewModel.navigateAddContacts.observe(this, Observer {
-            NavHostFragment.findNavController(this).navigate(R.id.action_newGroupFragment_to_contactFragment)
+            NavHostFragment.findNavController(this).navigate(ru.example.ivan.smssender.R.id.action_newGroupFragment_to_contactFragment)
         })
 
         return view
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(activity!!.window.decorView.windowToken, 0)
     }
 
     override fun onItemClick(position: Int) {

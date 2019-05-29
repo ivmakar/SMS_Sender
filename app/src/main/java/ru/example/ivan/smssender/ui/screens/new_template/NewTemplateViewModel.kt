@@ -78,7 +78,13 @@ class NewTemplateViewModel @Inject constructor(private var templateRepository: T
             templateText.set(templateText.get()!!.substring(0, maxSimb.get() * 3))
         }
 
-        curMessageCount.set(curSimb.get() / maxSimb.get() + 1)
+        curMessageCount.set(
+            if (curSimb.get() % maxSimb.get() == 0) {
+                curSimb.get() / maxSimb.get()
+            } else {
+                curSimb.get() / maxSimb.get() + 1
+            }
+        )
 
     }
 

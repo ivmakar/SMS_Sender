@@ -81,6 +81,9 @@ class NewGroupViewModel @Inject constructor(
 
         groupName.set("")
         selectedContacts.value = sortedSetOf()
+        for (i in contacts.value!!) {
+            i.isSelected = false
+        }
 
         Toast.makeText(applicationContext, "Сохранено", Toast.LENGTH_LONG).show()
 
